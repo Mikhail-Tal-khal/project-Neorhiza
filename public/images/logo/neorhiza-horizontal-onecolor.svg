@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="600" height="200">
+<title>Neorhiza</title>
+
+<g transform="translate(0 8)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M100 12 L100 58" stroke="#0F4C5C" stroke-width="11"/>
+  <path d="M100 58 C100 80 70 85 52 108" stroke="#0F4C5C" stroke-width="8"/>
+  <path d="M100 58 C100 80 130 85 148 108" stroke="#0F4C5C" stroke-width="8"/>
+  <path d="M100 58 L100 100" stroke="#0F4C5C" stroke-width="7"/>
+  <path d="M52 108 C48 120 38 126 30 138" stroke="#0F4C5C" stroke-width="5"/>
+  <path d="M52 108 C58 126 66 140 62 160" stroke="#0F4C5C" stroke-width="5"/>
+  <path d="M100 100 C100 130 84 150 82 176" stroke="#0F4C5C" stroke-width="4.5"/>
+  <path d="M100 100 C100 130 116 150 118 176" stroke="#0F4C5C" stroke-width="4.5"/>
+  <path d="M148 108 C142 126 134 140 139 158" stroke="#0F4C5C" stroke-width="5"/>
+  <path d="M148 108 C152 120 162 126 170 140" stroke="#0F4C5C" stroke-width="5"/>
+  <circle cx="30" cy="138" r="7" fill="#0F4C5C" stroke="none"/>
+  <circle cx="62" cy="160" r="7" fill="#0F4C5C" stroke="none"/>
+  <circle cx="82" cy="176" r="7" fill="#0F4C5C" stroke="none"/>
+  <circle cx="118" cy="176" r="7" fill="#0F4C5C" stroke="none"/>
+  <circle cx="139" cy="158" r="7" fill="#0F4C5C" stroke="none"/>
+  <circle cx="170" cy="140" r="7" fill="#0F4C5C" stroke="none"/>
+</g>
+<text x="212" y="104" font-family="Manrope, 'DM Sans', Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="64" font-weight="600" letter-spacing="2" fill="#0F4C5C">Neorhiza</text>
+<text x="214" y="140" font-family="Manrope, 'DM Sans', Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" font-weight="500" letter-spacing="2.6" fill="#0F4C5C">PATIENT-SPECIFIC TISSUE ENGINEERING</text>
+</svg>
