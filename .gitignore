@@ -1,0 +1,47 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Next.js / build output
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# environment (only the documented example is committed)
+.env
+.env.*
+!.env.example
+
+# deployment
+.vercel/
+
+# testing & reports
+coverage/
+playwright-report/
+test-results/
+blob-report/
+lighthouse-reports/
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.pem
+
+# local tooling
+.claude/
+.git-old-backup/
