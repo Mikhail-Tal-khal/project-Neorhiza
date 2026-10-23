@@ -38,8 +38,11 @@ const notes = [
 
 export default function ContactPage() {
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-8">
-      <section aria-labelledby="contact-heading" className="py-14 lg:py-20">
+    <>
+      <section
+        aria-labelledby="contact-heading"
+        className="mx-auto w-full max-w-7xl px-4 py-16 md:px-8 lg:py-24"
+      >
         <SectionHeading
           as="h1"
           eyebrow="Contact"
@@ -51,50 +54,52 @@ export default function ContactPage() {
         </ResearchDisclaimer>
       </section>
 
-      <div className="grid gap-8 pb-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
-        <ContactForm />
+      <div className="band">
+        <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-16 md:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start lg:py-24">
+          <ContactForm />
 
-        <div className="grid content-start gap-4">
-          {notes.map(({ Icon, title, text }) => (
-            <GlassPanel key={title} className="flex gap-4 p-6">
-              <span
-                aria-hidden="true"
-                className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-teal-50 text-teal-700 dark:bg-white/5 dark:text-teal-100"
-              >
-                <Icon className="size-5" />
-              </span>
-              <div>
-                <h2 className="font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
-                  {title}
-                </h2>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
-                  {text}
-                </p>
-              </div>
+          <div className="grid content-start gap-4">
+            {notes.map(({ Icon, title, text }) => (
+              <GlassPanel key={title} className="flex gap-4 p-6">
+                <span
+                  aria-hidden="true"
+                  className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-tint text-heading"
+                >
+                  <Icon className="size-5" />
+                </span>
+                <div>
+                  <h2 className="font-semibold tracking-[0.01em] text-heading">
+                    {title}
+                  </h2>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                    {text}
+                  </p>
+                </div>
+              </GlassPanel>
+            ))}
+
+            <GlassPanel className="p-6">
+              <h2 className="label-caps mb-3">Data we collect</h2>
+              <p className="text-sm leading-relaxed text-muted">
+                This form collects only what you enter, for the purpose of
+                responding to your inquiry. We never request medical records,
+                patient histories, genetic information or sensitive health
+                data — and we ask you not to send them. Submissions are
+                validated and rate-limited on our servers; see the{" "}
+                <a
+                  href="/privacy"
+                  className="font-medium text-teal-700 underline underline-offset-4 dark:text-teal-200"
+                >
+                  Privacy Policy
+                </a>{" "}
+                for details.
+              </p>
             </GlassPanel>
-          ))}
-
-          <GlassPanel className="p-6">
-            <h2 className="label-caps mb-3">Data we collect</h2>
-            <p className="text-sm leading-relaxed text-slate-500 dark:text-mist-200">
-              This form collects only what you enter, for the purpose of
-              responding to your inquiry. We never request medical records,
-              patient histories, genetic information or sensitive health
-              data — and we ask you not to send them. Submissions are
-              validated and rate-limited on our servers; see the{" "}
-              <a
-                href="/privacy"
-                className="font-medium text-teal-700 underline underline-offset-4 dark:text-teal-200"
-              >
-                Privacy Policy
-              </a>{" "}
-              for details.
-            </p>
-          </GlassPanel>
+          </div>
         </div>
       </div>
 
       <JsonLd data={breadcrumb} />
-    </div>
+    </>
   );
 }

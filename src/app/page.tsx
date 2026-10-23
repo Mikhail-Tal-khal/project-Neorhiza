@@ -31,31 +31,43 @@ const breadcrumb = breadcrumbJsonLd([]);
 export default function HomePage() {
   return (
     <>
+      {/* Sections alternate between the page background and a neutral
+          stone band for rhythm without color. */}
       <Hero />
-      <HumanNeed />
+      <div className="band">
+        <HumanNeed />
+      </div>
       <VisionFields />
 
       {/* Scientific journey (section 11.4) */}
-      <section
-        aria-labelledby="journey-heading"
-        className="mx-auto w-full max-w-6xl px-4 py-20 md:px-8 md:py-28"
-      >
-        <SectionHeading
-          eyebrow="The scientific pathway"
-          title="From Living Cells to Functional Tissue"
-          lead="Seven conceptual stages connect a patient's own cells to the long-term possibility of functional tissue. Select any stage to focus it — or simply scroll."
-        />
-        <div className="mt-14">
-          <ScientificJourney stages={journeyStages} />
-        </div>
-      </section>
+      <div className="band">
+        <section
+          aria-labelledby="journey-heading"
+          className="mx-auto w-full max-w-6xl px-4 py-20 md:px-8 md:py-28"
+        >
+          <SectionHeading
+            eyebrow="The scientific pathway"
+            title="From Living Cells to Functional Tissue"
+            lead="Seven conceptual stages connect a patient's own cells to the long-term possibility of functional tissue. Select any stage to focus it — or simply scroll."
+          />
+          <div className="mt-14">
+            <ScientificJourney stages={journeyStages} />
+          </div>
+        </section>
+      </div>
 
       <ProgramFeature />
-      <ImpactPreview />
+      <div className="band">
+        <ImpactPreview />
+      </div>
       <WhyExists />
-      <RoadmapPreviewSection />
+      <div className="band">
+        <RoadmapPreviewSection />
+      </div>
       <CollaborationInvite />
-      <Transparency />
+      <div className="band">
+        <Transparency />
+      </div>
       <FinalCta />
 
       <JsonLd data={breadcrumb} />

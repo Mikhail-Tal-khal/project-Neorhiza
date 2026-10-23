@@ -87,7 +87,7 @@ export function ThemeToggle({
               "flex size-11 items-center justify-center rounded-full transition-colors duration-200",
               active
                 ? "bg-teal-700 text-white dark:bg-white/90 dark:text-teal-950"
-                : "text-slate-500 hover:text-teal-700 dark:text-mist-200 dark:hover:text-white"
+                : "text-muted hover:text-teal-700 dark:hover:text-white"
             )}
           >
             <Icon aria-hidden="true" className="size-4" />

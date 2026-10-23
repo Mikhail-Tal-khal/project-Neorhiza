@@ -31,7 +31,7 @@ export function RoadmapTimeline({
             className="relative z-10 mt-1 flex size-6 shrink-0 items-center justify-center"
           >
             {phase.current ? (
-              <span className="size-4 rounded-full border-2 border-coral-500 bg-coral-500 shadow-[0_0_0_5px_rgb(227_111_92/0.18)]" />
+              <span className="size-4 rounded-full border-2 border-coral-500 bg-coral-500 shadow-[0_0_0_5px_rgb(227_111_92/0.08)]" />
             ) : (
               <span className="size-4 rounded-full border-2 border-teal-400 bg-background" />
             )}
@@ -40,11 +40,11 @@ export function RoadmapTimeline({
             className={cn(
               "glass flex-1 rounded-2xl p-5",
               phase.current &&
-                "border-coral-300/60 shadow-[0_12px_36px_-16px_rgb(227_111_92/0.35)]"
+                "border-coral-300/60 shadow-[0_8px_24px_rgb(227_111_92/0.08)]"
             )}
           >
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <h3 className="font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+              <h3 className="font-semibold tracking-[0.01em] text-heading">
                 {phase.name}
               </h3>
               {phase.current && (
@@ -57,7 +57,7 @@ export function RoadmapTimeline({
                 </span>
               )}
             </div>
-            <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+            <p className="mt-2 text-sm leading-relaxed text-muted">
               {phase.description}
             </p>
           </div>

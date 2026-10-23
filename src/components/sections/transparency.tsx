@@ -33,7 +33,7 @@ export function Transparency() {
             {commitments.map((item) => (
               <li
                 key={item}
-                className="glass flex items-start gap-3 rounded-2xl p-4 text-[0.95rem] leading-relaxed text-ink dark:text-teal-50/90"
+                className="glass flex items-start gap-3 rounded-2xl p-4 text-[0.95rem] leading-relaxed text-ink"
               >
                 <span
                   aria-hidden="true"
@@ -46,16 +46,16 @@ export function Transparency() {
 
           <GlassPanel className="p-7 md:p-10">
             <blockquote>
-              <p className="text-balance text-xl font-medium leading-relaxed text-teal-700 md:text-2xl dark:text-teal-50">
+              <p className="text-balance text-xl font-medium leading-relaxed text-heading md:text-2xl">
                 “Scientific progress is not guaranteed. A carefully designed
                 study that identifies a limitation may still provide an
                 important scientific result.”
               </p>
-              <footer className="mt-4 text-sm text-slate-500 dark:text-mist-200">
+              <footer className="mt-4 text-sm text-muted">
                 A principle this project reports by
               </footer>
             </blockquote>
-            <p className="mt-6 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+            <p className="mt-6 text-sm leading-relaxed text-muted">
               Updates are published on the Updates page as the project
               advances, including research-stage changes, governance
               developments and honest accounts of setbacks. Where results are

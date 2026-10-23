@@ -51,7 +51,7 @@ export default function ResearchDisclaimerPage() {
       />
 
       <GlassPanel className="mt-12 border-coral-300/40 p-6 md:p-8 dark:border-coral-500/20">
-        <p className="text-pretty leading-relaxed text-ink dark:text-teal-50/90">
+        <p className="text-pretty leading-relaxed text-ink">
           {disclaimers.footer}
         </p>
       </GlassPanel>
@@ -59,16 +59,16 @@ export default function ResearchDisclaimerPage() {
       <div className="mt-6 grid gap-6">
         {statements.map((statement) => (
           <GlassPanel key={statement.title} className="p-6 md:p-8">
-            <h2 className="text-xl font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+            <h2 className="text-xl font-semibold tracking-[0.01em] text-heading">
               {statement.title}
             </h2>
-            <p className="mt-3 leading-relaxed text-ink/90 dark:text-teal-50/85">
+            <p className="mt-3 leading-relaxed text-ink/90">
               {statement.body}
             </p>
           </GlassPanel>
         ))}
 
-        <p className="text-sm text-slate-500 dark:text-mist-200">
+        <p className="text-sm text-muted">
           This page is the authoritative version of the project&apos;s
           research disclaimer and takes precedence over summaries elsewhere
           on the site. Last updated: October 2026. {site.name}.

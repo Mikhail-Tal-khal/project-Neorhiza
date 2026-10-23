@@ -27,7 +27,7 @@ const initial = {
 };
 
 const inputClass =
-  "glass-input w-full rounded-xl px-4 py-3 text-[0.95rem] text-ink dark:text-teal-50";
+  "glass-input w-full rounded-xl px-4 py-3 text-[0.95rem] text-ink";
 
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
@@ -158,10 +158,10 @@ export function ContactForm() {
           aria-hidden="true"
           className="mx-auto size-10 text-teal-400"
         />
-        <h3 className="mt-4 text-xl font-semibold text-teal-700 dark:text-teal-50">
+        <h3 className="mt-4 text-xl font-semibold text-heading">
           Inquiry received
         </h3>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
           Thank you for reaching out. The project team reviews inquiries
           against the collaboration paths and responds to qualified
           professional inquiries. Please note that we cannot respond to
@@ -170,7 +170,7 @@ export function ContactForm() {
         <button
           type="button"
           onClick={() => setStatus({ kind: "idle" })}
-          className="mt-6 inline-flex min-h-11 items-center rounded-full border border-teal-200 px-5 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-50 dark:border-white/20 dark:text-teal-100 dark:hover:bg-white/10"
+          className="mt-6 inline-flex min-h-11 items-center rounded-full border border-border px-5 text-sm font-medium text-teal-700 transition-colors hover:bg-tint dark:text-heading dark:hover:bg-white/10"
         >
           Send another inquiry
         </button>
@@ -186,7 +186,7 @@ export function ContactForm() {
       aria-describedby="form-required-note"
       className="glass rounded-3xl p-6 md:p-8"
     >
-      <p id="form-required-note" className="mb-5 text-sm text-slate-500 dark:text-mist-200">
+      <p id="form-required-note" className="mb-5 text-sm text-muted">
         Fields marked <span aria-hidden="true">*</span>
         <span className="sr-only">with an asterisk</span> are required.
       </p>
@@ -208,7 +208,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="fullName"
-            className="mb-1.5 block text-sm font-medium text-teal-700 dark:text-teal-50"
+            className="mb-1.5 block text-sm font-medium text-heading"
           >
             Full name <span aria-hidden="true">*</span>
           </label>
@@ -231,7 +231,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="professionalEmail"
-            className="mb-1.5 block text-sm font-medium text-teal-700 dark:text-teal-50"
+            className="mb-1.5 block text-sm font-medium text-heading"
           >
             Professional email <span aria-hidden="true">*</span>
           </label>
@@ -257,7 +257,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="organization"
-            className="mb-1.5 block text-sm font-medium text-teal-700 dark:text-teal-50"
+            className="mb-1.5 block text-sm font-medium text-heading"
           >
             Organization
           </label>
@@ -275,7 +275,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="professionalRole"
-            className="mb-1.5 block text-sm font-medium text-teal-700 dark:text-teal-50"
+            className="mb-1.5 block text-sm font-medium text-heading"
           >
             Professional role
           </label>
@@ -293,7 +293,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="country"
-            className="mb-1.5 block text-sm font-medium text-teal-700 dark:text-teal-50"
+            className="mb-1.5 block text-sm font-medium text-heading"
           >
             Country
           </label>
@@ -311,7 +311,7 @@ export function ContactForm() {
         <div>
           <label
             htmlFor="areaOfInterest"
-            className="mb-1.5 block text-sm font-medium text-teal-700 dark:text-teal-50"
+            className="mb-1.5 block text-sm font-medium text-heading"
           >
             Area of interest <span aria-hidden="true">*</span>
           </label>
@@ -344,7 +344,7 @@ export function ContactForm() {
         <div className="sm:col-span-2">
           <label
             htmlFor="message"
-            className="mb-1.5 block text-sm font-medium text-teal-700 dark:text-teal-50"
+            className="mb-1.5 block text-sm font-medium text-heading"
           >
             Message <span aria-hidden="true">*</span>
           </label>
@@ -363,7 +363,7 @@ export function ContactForm() {
           {clientErrors.message ? (
             <FieldError id="message-error" message={clientErrors.message} />
           ) : (
-            <p id="message-hint" className="mt-2 text-sm text-slate-500 dark:text-mist-200">
+            <p id="message-hint" className="mt-2 text-sm text-muted">
               Briefly describe your background, institutional context and the
               nature of your inquiry. Do not include confidential material at
               this stage.
@@ -387,7 +387,7 @@ export function ContactForm() {
             />
             <label
               htmlFor="consent"
-              className="text-sm leading-relaxed text-slate-500 dark:text-mist-200"
+              className="text-sm leading-relaxed text-muted"
             >
               I consent to Project Neorhiza processing the information in
               this form to respond to my inquiry, in line with the{" "}
@@ -420,7 +420,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={status.kind === "submitting"}
-        className="btn-sweep mt-7 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-teal-700 px-7 text-base font-medium text-white transition-all hover:bg-teal-900 disabled:opacity-60 sm:w-auto dark:bg-white/90 dark:text-teal-950 dark:hover:bg-coral-500"
+        className="mt-7 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-primary px-7 text-base font-medium text-primary-foreground shadow-soft transition-[filter] duration-200 ease-out hover:brightness-[1.18] disabled:opacity-60 sm:w-auto dark:hover:brightness-90"
       >
         {status.kind === "submitting" ? (
           <>

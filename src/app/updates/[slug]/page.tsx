@@ -75,10 +75,10 @@ export default async function ArticlePage({
 
         <header className="mt-8">
           <StatusBadge>{article.category}</StatusBadge>
-          <h1 className="mt-5 text-balance text-3xl font-semibold leading-tight tracking-[0.01em] text-teal-700 md:text-4xl dark:text-teal-50">
+          <h1 className="mt-5 text-balance text-3xl font-semibold leading-tight tracking-[0.01em] text-heading md:text-4xl">
             {article.title}
           </h1>
-          <p className="mt-4 text-pretty leading-relaxed text-slate-500 md:text-lg dark:text-mist-200">
+          <p className="mt-4 text-pretty leading-relaxed text-muted md:text-lg">
             {article.excerpt}
           </p>
           <div className="mt-5">
@@ -86,7 +86,7 @@ export default async function ArticlePage({
           </div>
         </header>
 
-        <hr className="mt-8 border-teal-100/70 dark:border-white/10" />
+        <hr className="mt-8 border-border" />
 
         <div className="mdx-body">
           <ArticleBody article={article} />

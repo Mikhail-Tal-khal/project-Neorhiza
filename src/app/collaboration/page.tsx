@@ -22,7 +22,7 @@ const breadcrumb = breadcrumbJsonLd([{ name: "Collaboration", path: "/collaborat
 export default function CollaborationPage() {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-8">
-      <section aria-labelledby="collab-page-heading" className="py-14 lg:py-20">
+      <section aria-labelledby="collab-page-heading" className="py-16 lg:py-24">
         <SectionHeading
           as="h1"
           eyebrow="Collaboration"
@@ -95,10 +95,10 @@ export default function CollaborationPage() {
               >
                 {item.step}
               </span>
-              <h3 className="mt-4 font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+              <h3 className="mt-4 font-semibold tracking-[0.01em] text-heading">
                 {item.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+              <p className="mt-2 text-sm leading-relaxed text-muted">
                 {item.text}
               </p>
             </li>

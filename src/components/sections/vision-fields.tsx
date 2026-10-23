@@ -66,10 +66,10 @@ export function VisionFields() {
                   aria-hidden="true"
                   className="absolute -top-1.5 left-5 size-3 rounded-full border-2 border-background bg-coral-500"
                 />
-                <h3 className="font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+                <h3 className="font-semibold tracking-[0.01em] text-heading">
                   {field.name}
                 </h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+                <p className="mt-1.5 text-sm leading-relaxed text-muted">
                   {field.note}
                 </p>
               </li>

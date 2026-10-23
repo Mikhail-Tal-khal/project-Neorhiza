@@ -71,14 +71,14 @@ export default function PrivacyPage() {
       <div className="mt-12 grid gap-6">
         {sections.map((section) => (
           <GlassPanel key={section.title} className="p-6 md:p-8">
-            <h2 className="text-xl font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+            <h2 className="text-xl font-semibold tracking-[0.01em] text-heading">
               {section.title}
             </h2>
             <div className="mt-3 space-y-4">
               {section.body.map((paragraph) => (
                 <p
                   key={paragraph.slice(0, 40)}
-                  className="leading-relaxed text-ink/90 dark:text-teal-50/85"
+                  className="leading-relaxed text-ink/90"
                 >
                   {paragraph}
                 </p>
@@ -91,7 +91,7 @@ export default function PrivacyPage() {
           {disclaimers.footer}
         </ResearchDisclaimer>
 
-        <p className="text-sm text-slate-500 dark:text-mist-200">
+        <p className="text-sm text-muted">
           Questions about this policy may be directed through the{" "}
           <a
             href="/contact"

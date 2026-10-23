@@ -19,8 +19,11 @@ const breadcrumb = breadcrumbJsonLd([{ name: "Research Roadmap", path: "/roadmap
 
 export default function RoadmapPage() {
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 pb-24 md:px-8">
-      <section aria-labelledby="roadmap-page-heading" className="py-14 lg:py-20">
+    <>
+      <section
+        aria-labelledby="roadmap-page-heading"
+        className="mx-auto w-full max-w-5xl px-4 py-16 md:px-8 lg:py-24"
+      >
         <SectionHeading
           as="h1"
           eyebrow="Research roadmap"
@@ -32,17 +35,21 @@ export default function RoadmapPage() {
         </div>
       </section>
 
-      <h2 className="sr-only">Roadmap stages</h2>
-      <ExpandableRoadmap stages={roadmapStages} />
+      <div className="band">
+        <div className="mx-auto w-full max-w-5xl px-4 py-16 md:px-8 lg:py-24">
+          <h2 className="sr-only">Roadmap stages</h2>
+          <ExpandableRoadmap stages={roadmapStages} />
 
-      <ResearchDisclaimer className="mt-12">
-        This roadmap describes governance and development stages only. It
-        does not contain — and will not contain — executable laboratory
-        instructions, experimental parameters or proprietary process
-        information.
-      </ResearchDisclaimer>
+          <ResearchDisclaimer className="mt-12">
+            This roadmap describes governance and development stages only. It
+            does not contain — and will not contain — executable laboratory
+            instructions, experimental parameters or proprietary process
+            information.
+          </ResearchDisclaimer>
+        </div>
+      </div>
 
       <JsonLd data={breadcrumb} />
-    </div>
+    </>
   );
 }

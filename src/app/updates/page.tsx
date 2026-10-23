@@ -20,7 +20,7 @@ export default async function UpdatesPage() {
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-8">
-      <section aria-labelledby="updates-heading" className="py-14 lg:py-20">
+      <section aria-labelledby="updates-heading" className="py-16 lg:py-24">
         <SectionHeading
           as="h1"
           eyebrow="Updates"

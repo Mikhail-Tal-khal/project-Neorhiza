@@ -21,10 +21,10 @@ export function WhyExists() {
         {whyPanels.map((panel, index) => (
           <GlassCard key={panel.title} interactive className="reveal-view">
             <span className="label-caps">0{index + 1}</span>
-            <h3 className="mt-2 text-xl font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+            <h3 className="mt-2 text-xl font-semibold tracking-[0.01em] text-heading">
               {panel.title}
             </h3>
-            <p className="mt-3 leading-relaxed text-slate-500 dark:text-mist-200">
+            <p className="mt-3 leading-relaxed text-muted">
               {panel.text}
             </p>
           </GlassCard>
@@ -51,10 +51,10 @@ export function RoadmapPreviewSection() {
           <div className="lg:sticky lg:top-28">
             <GlassCard className="p-7 md:p-8">
               <h3 className="label-caps">Current position</h3>
-              <p className="mt-3 text-2xl font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+              <p className="mt-3 text-2xl font-semibold tracking-[0.01em] text-heading">
                 Foundation Phase
               </p>
-              <p className="mt-4 leading-relaxed text-slate-500 dark:text-mist-200">
+              <p className="mt-4 leading-relaxed text-muted">
                 Project Neorhiza is building its evidence review, scientific
                 advisory relationships and institutional foundation. No
                 laboratory research has begun, and none will until qualified

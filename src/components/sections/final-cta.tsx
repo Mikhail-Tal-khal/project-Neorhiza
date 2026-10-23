@@ -2,30 +2,27 @@ import { GlassButton } from "@/components/ui/glass-button";
 import { BrandMark } from "@/components/ui/brand-mark";
 
 /**
- * Final call to action (section 11.11) — stacked logo on a solid deep-teal
- * panel, exactly as the brand system requires.
+ * Final call to action (section 11.11) — a solid deep-teal panel. The
+ * stacked lockup has no reversed version, so it sits on its own solid
+ * light tile.
  */
 export function FinalCta() {
   return (
     <section
       aria-labelledby="cta-heading"
-      className="mx-auto w-full max-w-7xl px-4 pb-24 pt-4 md:px-8 md:pb-32"
+      className="mx-auto w-full max-w-7xl px-4 py-20 md:px-8 md:py-28"
     >
-      <div className="surface-deep relative overflow-hidden rounded-3xl px-6 py-16 text-center md:rounded-[2.5rem] md:px-16 md:py-24">
+      <div className="surface-deep relative overflow-hidden rounded-3xl px-6 py-16 text-center md:px-16 md:py-24">
         {/* Faint coral halo — restrained glow */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-0 size-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-coral-500/10 blur-3xl"
+          className="pointer-events-none absolute left-1/2 top-0 size-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-coral-500/8 blur-3xl"
         />
 
         <div className="relative mx-auto flex max-w-3xl flex-col items-center">
-          <BrandMark
-            variant="stacked"
-            height={120}
-            decorative
-            tone="reversed"
-            className="mx-auto"
-          />
+          <div className="logo-tile px-6 py-5">
+            <BrandMark variant="stacked" height={104} decorative />
+          </div>
           <h2
             id="cta-heading"
             className="mt-8 text-balance text-3xl font-semibold leading-tight tracking-[0.01em] text-white md:text-4xl"

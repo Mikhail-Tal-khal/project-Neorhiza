@@ -53,7 +53,7 @@ export function SiteHeader() {
           className={cn(
             "glass-strong flex items-center justify-between gap-2 rounded-2xl px-4 py-2.5 transition-shadow duration-300 md:rounded-full",
             scrolled &&
-              "shadow-[0_18px_48px_-20px_rgb(15_76_92/0.4)] dark:shadow-[0_18px_48px_-18px_rgb(0_0_0/0.6)]"
+              "shadow-lift"
           )}
         >
           {/* Logo — full lockup; tagline is part of the asset and is not repeated */}
@@ -77,7 +77,7 @@ export function SiteHeader() {
                     "relative flex min-h-11 items-center whitespace-nowrap rounded-full px-1.5 text-[0.8rem] font-medium transition-colors",
                     isActive(item.href)
                       ? "text-teal-700 dark:text-white"
-                      : "text-slate-500 hover:text-teal-700 dark:text-mist-200 dark:hover:text-white"
+                      : "text-muted hover:text-teal-700 dark:hover:text-white"
                   )}
                 >
                   {item.label}
@@ -139,7 +139,7 @@ export function SiteHeader() {
                     "flex min-h-11 items-center justify-between rounded-2xl px-4 text-[0.95rem] font-medium transition-colors",
                     isActive(item.href)
                       ? "bg-teal-700 text-white dark:bg-white/90 dark:text-teal-950"
-                      : "text-ink hover:bg-white/60 dark:text-teal-50 dark:hover:bg-white/10"
+                      : "text-ink hover:bg-white/60 dark:hover:bg-white/10"
                   )}
                 >
                   {item.label}
@@ -153,7 +153,7 @@ export function SiteHeader() {
               </li>
             ))}
           </ul>
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-teal-100/70 px-2 pt-4 dark:border-white/10">
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-border px-2 pt-4">
             <ThemeToggle />
             <GlassButton href="/collaboration" size="md" className="flex-1 md:hidden">
               Collaborate

@@ -6,7 +6,7 @@ import { GlassButton } from "@/components/ui/glass-button";
 export default function NotFound() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col items-center px-4 pb-24 pt-16 text-center md:px-8">
-      <div className="surface-deep w-full rounded-3xl px-6 py-14 md:rounded-[2.5rem] md:py-20">
+      <div className="surface-deep w-full rounded-3xl px-6 py-14 md:py-20">
         <BrandMark variant="horizontal" height={72} decorative tone="reversed" className="mx-auto" />
         <p className="label-caps mt-8 text-mist-200">Error 404</p>
         <h1 className="mt-3 text-balance text-3xl font-semibold leading-tight tracking-[0.01em] text-white md:text-4xl">
@@ -29,7 +29,7 @@ export default function NotFound() {
           </GlassButton>
         </div>
       </div>
-      <p className="mt-6 text-sm text-slate-500 dark:text-mist-200">
+      <p className="mt-6 text-sm text-muted">
         Looking for something specific? The{" "}
         <Link
           href="/"

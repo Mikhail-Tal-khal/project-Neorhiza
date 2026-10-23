@@ -47,7 +47,7 @@ export function GlassCard({
       className={cn(
         "p-6 md:p-8",
         interactive &&
-          "transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_20px_48px_-16px_rgb(15_76_92/0.28)]",
+          "transition-shadow duration-300 ease-out hover:shadow-lift",
         className
       )}
       {...props}

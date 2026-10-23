@@ -59,8 +59,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: brand.sage50 },
-    { media: "(prefers-color-scheme: dark)", color: brand.teal950 },
+    { media: "(prefers-color-scheme: light)", color: brand.pearl },
+    { media: "(prefers-color-scheme: dark)", color: brand.slateTeal },
   ],
 };
 

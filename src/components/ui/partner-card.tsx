@@ -30,15 +30,15 @@ function Row({
     <div className="flex gap-3">
       <span
         aria-hidden="true"
-        className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700 dark:bg-white/5 dark:text-teal-100"
+        className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-xl bg-tint text-heading"
       >
         {icon}
       </span>
       <div className="min-w-0">
-        <h4 className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-teal-700 dark:text-teal-50">
+        <h4 className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-heading">
           {label}
         </h4>
-        <div className="mt-1 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+        <div className="mt-1 text-sm leading-relaxed text-muted">
           {children}
         </div>
       </div>
@@ -63,10 +63,10 @@ export function PartnerCard({
   return (
     <GlassCard as="article" className={cn("flex flex-col gap-6", className)}>
       <div>
-        <h3 className="text-xl font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+        <h3 className="text-xl font-semibold tracking-[0.01em] text-heading">
           {title}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-ink/85 dark:text-teal-50/85">
+        <p className="mt-2 text-sm leading-relaxed text-ink/85">
           {why}
         </p>
       </div>
@@ -74,19 +74,19 @@ export function PartnerCard({
       <div className="flex gap-3">
         <span
           aria-hidden="true"
-          className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700 dark:bg-white/5 dark:text-teal-100"
+          className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-xl bg-tint text-heading"
         >
           <CheckCircle2 className="size-4" />
         </span>
         <div>
-          <h4 className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-teal-700 dark:text-teal-50">
+          <h4 className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-heading">
             What Neorhiza is seeking
           </h4>
           <ul className="mt-2 space-y-1.5">
             {seeking.map((item) => (
               <li
                 key={item}
-                className="flex gap-2 text-sm leading-relaxed text-slate-500 dark:text-mist-200"
+                className="flex gap-2 text-sm leading-relaxed text-muted"
               >
                 <span
                   aria-hidden="true"

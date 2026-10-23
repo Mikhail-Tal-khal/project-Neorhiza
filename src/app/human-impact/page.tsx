@@ -45,7 +45,7 @@ const icons: Record<string, React.ReactNode> = {
 export default function HumanImpactPage() {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-8">
-      <section aria-labelledby="impact-page-heading" className="py-14 lg:py-20">
+      <section aria-labelledby="impact-page-heading" className="py-16 lg:py-24">
         <SectionHeading
           as="h1"
           eyebrow="Human impact"
@@ -81,11 +81,11 @@ export default function HumanImpactPage() {
         <GlassPanel className="p-7 md:p-10">
           <h2
             id="context-heading"
-            className="text-2xl font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50"
+            className="text-2xl font-semibold tracking-[0.01em] text-heading"
           >
             The reality of organ shortages
           </h2>
-          <div className="mt-5 space-y-4 leading-relaxed text-ink/90 dark:text-teal-50/90">
+          <div className="mt-5 space-y-4 leading-relaxed text-ink/90">
             <p>
               Transplantation is one of modern medicine&apos;s quiet
               miracles, and donated organs save lives every single day.
@@ -114,10 +114,10 @@ export default function HumanImpactPage() {
 
         <div className="grid content-start gap-4">
           <GlassPanel className="p-7 md:p-10">
-            <h3 className="text-xl font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+            <h3 className="text-xl font-semibold tracking-[0.01em] text-heading">
               Scientific capacity-building
             </h3>
-            <p className="mt-4 leading-relaxed text-slate-500 dark:text-mist-200">
+            <p className="mt-4 leading-relaxed text-muted">
               Advanced regenerative research is concentrated in a handful
               of regions. Building capacity elsewhere is not charity — it
               widens the talent pool attacking these problems and makes
@@ -127,10 +127,10 @@ export default function HumanImpactPage() {
             </p>
           </GlassPanel>
           <GlassPanel className="p-7 md:p-10">
-            <h3 className="text-xl font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+            <h3 className="text-xl font-semibold tracking-[0.01em] text-heading">
               Research education
             </h3>
-            <p className="mt-4 leading-relaxed text-slate-500 dark:text-mist-200">
+            <p className="mt-4 leading-relaxed text-muted">
               The Updates page publishes plain-language scientific
               education — what organoids are, what bioreactors do, why
               vascularization is hard — so that students, journalists and
@@ -140,10 +140,10 @@ export default function HumanImpactPage() {
             </p>
           </GlassPanel>
           <GlassPanel className="p-7 md:p-10">
-            <h3 className="text-xl font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+            <h3 className="text-xl font-semibold tracking-[0.01em] text-heading">
               Participation by underrepresented communities
             </h3>
-            <p className="mt-4 leading-relaxed text-slate-500 dark:text-mist-200">
+            <p className="mt-4 leading-relaxed text-muted">
               Scientific questions benefit from many perspectives. The
               collaboration framework explicitly welcomes scientists,
               engineers and institutions from regions underrepresented in

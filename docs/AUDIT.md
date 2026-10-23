@@ -79,13 +79,15 @@ Consequences:
 
 ### 1.4 Color system (spec §7)
 
+> **2026-10-23:** the color, background and glass rules were refined (softer, neutral pearl palette, teal as an accent). The current tokens, proportion rule and measurements are in [THEME.md](THEME.md). That document supersedes this section where they differ.
+
 | Requirement | Status | Evidence / change |
 |---|---|---|
 | All colors from tokens | Fixed | Hex literals in `layout.tsx` (themeColor) and `manifest.ts` now come from `src/lib/brand-colors.ts` (documented token mirror for non-CSS contexts). Remaining hex: `globals.css` (token source), `brand-colors.ts`, generated lockup SVG strings (official logo files) |
 | No medical blue / navy / violet | Pass | No Tailwind default hue classes in used components. `placeholder:text-slate-400` (Tailwind's bluish slate) removed |
 | Coral never small text on light | Fixed | `text-coral-700` small text in light mode (evidence-card label, "Current Position" chip, form error text) changed to teal/ink text; coral kept for icons, dots and borders. Dark mode keeps coral-300 text on deep teal |
 | Coral buttons use dark text | Pass | `coral` variant: teal-950 on coral-500 (5.27:1) |
-| Dark mode is deep teal | Pass | `--background: #06222a` (teal-950) |
+| Dark mode is deep teal | Superseded | 2026-10-23 theme refinement: calm slate-teal `--bg: #0D262C`. See [THEME.md](THEME.md) |
 | Light / dark / system + manual control | Fixed | Toggle buttons were 32 px (→ 44 px) and used `role=radio` without arrow keys (→ `aria-pressed` toggle buttons). Desktop uses a compact 44 px cycle button so the nav pill fits at 1280 px |
 | No flash of wrong theme | Pass | `next-themes` inline script; e2e verifies `html.dark` is set before the first content element is parsed |
 

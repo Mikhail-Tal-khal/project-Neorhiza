@@ -27,15 +27,15 @@ function VerifiedPending({ label }: { label: string }) {
     <div className="glass flex items-start gap-3 rounded-2xl p-5">
       <span
         aria-hidden="true"
-        className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700 dark:bg-white/5 dark:text-teal-100"
+        className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-xl bg-tint text-heading"
       >
         <ImageOff aria-hidden="true" className="size-4" />
       </span>
       <div>
-        <p className="text-sm font-semibold text-teal-700 dark:text-teal-50">
+        <p className="text-sm font-semibold text-heading">
           {label}
         </p>
-        <p className="mt-1 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+        <p className="mt-1 text-sm leading-relaxed text-muted">
           Verified profile in preparation. This section will be completed
           when verified content is available — nothing is invented here.
         </p>
@@ -53,16 +53,16 @@ export default function WhyNeorhizaPage() {
           <p className="label-caps mb-3">Why Neorhiza</p>
           <h1
             id="name-heading"
-            className="text-balance text-4xl font-semibold leading-[1.12] tracking-[0.01em] text-teal-700 md:text-5xl dark:text-teal-50"
+            className="text-balance text-4xl font-semibold leading-[1.12] tracking-[0.01em] text-heading md:text-5xl"
           >
             A New Root, From Which Possibility May Grow
           </h1>
-          <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-ink dark:text-teal-50/90">
+          <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-ink">
             Neorhiza combines the idea of the new with the image of a
             root — a new biological foundation from which possibility may
             grow.
           </p>
-          <p className="mt-4 max-w-xl text-pretty leading-relaxed text-slate-500 dark:text-mist-200">
+          <p className="mt-4 max-w-xl text-pretty leading-relaxed text-muted">
             The mark expresses this as one branching root system that is
             also a vascular tree: a thick trunk splitting into progressively
             thinner curved branches, each ending in a small coral circle —
@@ -79,7 +79,7 @@ export default function WhyNeorhizaPage() {
             <AnnotatedMark />
           </div>
           {/* The stacked lockup has no reversed version: it sits on a solid light tile in both themes. */}
-          <div className="mt-6 rounded-2xl bg-white px-6 py-6 ring-1 ring-teal-100 dark:ring-white/10">
+          <div className="logo-tile mt-6 px-6 py-6">
             <BrandMark variant="stacked" height={96} className="mx-auto" />
           </div>
         </GlassPanel>
@@ -94,7 +94,7 @@ export default function WhyNeorhizaPage() {
         </h2>
         <GlassCard>
           <h3 className="label-caps mb-3">Mission</h3>
-          <p className="leading-relaxed text-ink dark:text-teal-50/90">
+          <p className="leading-relaxed text-ink">
             To advance the scientific and engineering foundation of
             patient-specific tissue engineering through responsible,
             partnership-driven research — and to communicate that journey
@@ -104,7 +104,7 @@ export default function WhyNeorhizaPage() {
         </GlassCard>
         <GlassCard>
           <h3 className="label-caps mb-3">Vision</h3>
-          <p className="leading-relaxed text-ink dark:text-teal-50/90">
+          <p className="leading-relaxed text-ink">
             A future in which living cells obtained from a patient may
             contribute to the development of functional replacement tissue
             designed for that same patient — developed through disciplined
@@ -113,7 +113,7 @@ export default function WhyNeorhizaPage() {
         </GlassCard>
         <GlassCard>
           <h3 className="label-caps mb-3">Governance status</h3>
-          <p className="leading-relaxed text-ink dark:text-teal-50/90">
+          <p className="leading-relaxed text-ink">
             Project Neorhiza is an early-stage initiative founded by REREU.
             It is not yet institutionally affiliated; establishing
             qualified institutional supervision and advisory structures is
@@ -122,7 +122,7 @@ export default function WhyNeorhizaPage() {
         </GlassCard>
         <GlassCard>
           <h3 className="label-caps mb-3">Current development phase</h3>
-          <p className="leading-relaxed text-ink dark:text-teal-50/90">
+          <p className="leading-relaxed text-ink">
             Foundation Phase: evidence review, scientific advising,
             partnership building and project governance. No laboratory
             research has begun, and none will begin without institutional
@@ -131,7 +131,7 @@ export default function WhyNeorhizaPage() {
         </GlassCard>
         <GlassCard>
           <h3 className="label-caps mb-3">Long-term ambition</h3>
-          <p className="leading-relaxed text-ink dark:text-teal-50/90">
+          <p className="leading-relaxed text-ink">
             To contribute — through decades of careful work — to patient-specific
             functional tissues and, ultimately, replacement-organ
             technologies, within fully authorized scientific and regulatory
@@ -140,7 +140,7 @@ export default function WhyNeorhizaPage() {
         </GlassCard>
         <GlassCard>
           <h3 className="label-caps mb-3">How we speak</h3>
-          <p className="leading-relaxed text-ink dark:text-teal-50/90">
+          <p className="leading-relaxed text-ink">
             Every public statement distinguishes established evidence,
             proposed research and long-term objectives. Where methodology
             would normally appear, the project explains that detailed
@@ -161,14 +161,14 @@ export default function WhyNeorhizaPage() {
         <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {values.map((value) => (
             <GlassCard as="li" key={value.title} interactive>
-              <h3 className="flex items-center gap-2.5 font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+              <h3 className="flex items-center gap-2.5 font-semibold tracking-[0.01em] text-heading">
                 <span
                   aria-hidden="true"
                   className="size-2 rounded-full bg-coral-500"
                 />
                 {value.title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+              <p className="mt-3 text-sm leading-relaxed text-muted">
                 {value.text}
               </p>
             </GlassCard>
@@ -193,10 +193,10 @@ export default function WhyNeorhizaPage() {
                 <UserRound className="size-10" strokeWidth={1.5} />
                 <span className="label-caps">Professional photograph</span>
               </div>
-              <p className="mt-4 text-lg font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+              <p className="mt-4 text-lg font-semibold tracking-[0.01em] text-heading">
                 REREU
               </p>
-              <p className="text-sm text-slate-500 dark:text-mist-200">
+              <p className="text-sm text-muted">
                 Founder, {site.name}
               </p>
             </div>
@@ -205,7 +205,7 @@ export default function WhyNeorhizaPage() {
               <VerifiedPending label="Motivation for establishing Project Neorhiza" />
               <VerifiedPending label="Relevant professional background" />
               <VerifiedPending label="Founder's statement" />
-              <p className="text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+              <p className="text-sm leading-relaxed text-muted">
                 To avoid inventing credentials, this page deliberately
                 shows no degrees, affiliations, laboratory access or
                 research experience until verified content is supplied.
@@ -229,7 +229,7 @@ export default function WhyNeorhizaPage() {
             {notList.map((item) => (
               <li
                 key={item}
-                className="flex items-start gap-3 text-[0.95rem] leading-relaxed text-ink dark:text-teal-50/90"
+                className="flex items-start gap-3 text-[0.95rem] leading-relaxed text-ink"
               >
                 <span
                   aria-hidden="true"

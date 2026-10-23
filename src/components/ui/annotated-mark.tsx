@@ -52,7 +52,7 @@ export function AnnotatedMark({ className }: { className?: string }) {
           fontSize="13"
           fontFamily="inherit"
           fontWeight="500"
-          className="text-slate-500 dark:text-mist-200"
+          className="text-muted"
         >
           {/* Trunk — the foundation (trunk center x≈144, y≈48–79) */}
           <circle cx="164" cy="62" r="3" className="fill-coral-500" />
@@ -65,7 +65,7 @@ export function AnnotatedMark({ className }: { className?: string }) {
             strokeWidth="1"
             strokeDasharray="2 4"
           />
-          <text x="288" y="66" className="fill-slate-500 dark:fill-mist-200">
+          <text x="288" y="66" className="fill-muted">
             The foundation — a new biological base
           </text>
 
@@ -80,7 +80,7 @@ export function AnnotatedMark({ className }: { className?: string }) {
             strokeWidth="1"
             strokeDasharray="2 4"
           />
-          <text x="288" y="164" className="fill-slate-500 dark:fill-mist-200">
+          <text x="288" y="164" className="fill-muted">
             Branching — vascular networks, growth
           </text>
 
@@ -95,7 +95,7 @@ export function AnnotatedMark({ className }: { className?: string }) {
             strokeWidth="1"
             strokeDasharray="2 4"
           />
-          <text x="288" y="256" className="fill-slate-500 dark:fill-mist-200">
+          <text x="288" y="256" className="fill-muted">
             Coral tips — living cells
           </text>
         </g>

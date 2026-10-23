@@ -58,7 +58,7 @@ export function CollaborationInvite() {
 
       <GlassPanel className="mx-auto mt-12 max-w-3xl p-6 md:p-8">
         <h3 className="label-caps mb-2">About the public research overview</h3>
-        <p className="text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+        <p className="text-sm leading-relaxed text-muted">
           The public research overview summarizes the high-level scientific
           pathway, the proposed first program and the project&apos;s
           governance principles. It contains no confidential methodologies,

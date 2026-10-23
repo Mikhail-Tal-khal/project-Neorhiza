@@ -18,14 +18,14 @@ export function ImpactCard({
 }) {
   return (
     <GlassCard as="li" interactive className={cn("flex flex-col gap-4", className)}>
-      <div className="flex size-12 items-center justify-center rounded-2xl bg-teal-50 text-teal-700 dark:bg-white/5 dark:text-teal-100">
+      <div className="flex size-12 items-center justify-center rounded-2xl bg-tint text-heading">
         {icon}
       </div>
       <div>
-        <h3 className="font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+        <h3 className="font-semibold tracking-[0.01em] text-heading">
           {title}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+        <p className="mt-2 text-sm leading-relaxed text-muted">
           {text}
         </p>
       </div>

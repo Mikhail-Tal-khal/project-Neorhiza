@@ -35,13 +35,13 @@ export function EvidenceCard({
       label: "Established evidence",
       text: established,
       Icon: FlaskConical,
-      labelClass: "text-teal-700 dark:text-teal-50",
+      labelClass: "text-heading",
     },
     {
       label: "What remains experimental",
       text: experimental,
       Icon: Microscope,
-      labelClass: "text-teal-700 dark:text-teal-50",
+      labelClass: "text-heading",
     },
     {
       label: "What Neorhiza proposes to explore",
@@ -54,7 +54,7 @@ export function EvidenceCard({
       label: "What Neorhiza is not yet claiming",
       text: notClaiming,
       Icon: ShieldCheck,
-      labelClass: "text-slate-500 dark:text-mist-200",
+      labelClass: "text-muted",
     },
   ];
 
@@ -65,7 +65,7 @@ export function EvidenceCard({
         className
       )}
     >
-      <dl className="divide-y divide-teal-100/70 dark:divide-white/10">
+      <dl className="divide-y divide-border">
         {rows.map(({ label, text, Icon, labelClass, iconClass }) => (
           <div key={label} className="flex gap-4 p-5 md:gap-6 md:p-6">
             <dt className="w-40 shrink-0 md:w-52">
@@ -79,7 +79,7 @@ export function EvidenceCard({
                 <span>{label}</span>
               </span>
             </dt>
-            <dd className="text-sm leading-relaxed text-ink dark:text-teal-50/90">
+            <dd className="text-sm leading-relaxed text-ink">
               {text}
             </dd>
           </div>

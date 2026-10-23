@@ -32,13 +32,9 @@ export function ProgramFeature() {
       />
 
       <GlassPanel className="relative mt-12 overflow-hidden p-7 md:p-12">
-        <div
-          aria-hidden="true"
-          className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-bl from-teal-50/70 to-transparent dark:from-teal-400/8"
-        />
         <div className="relative">
           <div className="flex flex-wrap items-center gap-3">
-            <h3 className="text-2xl font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+            <h3 className="text-2xl font-semibold tracking-[0.01em] text-heading">
               Neorhiza Liver Tissue Program
             </h3>
             <StatusBadge>
@@ -46,7 +42,7 @@ export function ProgramFeature() {
             </StatusBadge>
           </div>
 
-          <p className="mt-5 max-w-3xl text-pretty leading-relaxed text-ink dark:text-teal-50/90">
+          <p className="mt-5 max-w-3xl text-pretty leading-relaxed text-ink">
             Project Neorhiza proposes to begin with a small perfused
             liver-tissue research model. The initial objective is{" "}
             <strong className="font-semibold">
@@ -60,7 +56,7 @@ export function ProgramFeature() {
           <div className="mt-8 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
             <div className="glass rounded-2xl p-6">
               <h4 className="label-caps mb-3">Proposed research question</h4>
-              <p className="text-pretty text-lg font-medium leading-relaxed text-teal-700 dark:text-teal-50">
+              <p className="text-pretty text-lg font-medium leading-relaxed text-heading">
                 Can controlled perfusion improve the sustained function and
                 viability of a small multicellular liver-tissue construct
                 compared with an equivalent non-perfused construct?
@@ -74,7 +70,7 @@ export function ProgramFeature() {
                 {measurementCategories.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-500 dark:text-mist-200"
+                    className="flex items-start gap-2.5 text-sm leading-relaxed text-muted"
                   >
                     <span
                       aria-hidden="true"

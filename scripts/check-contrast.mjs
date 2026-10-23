@@ -5,8 +5,9 @@
  * (@theme scale, :root and .dark blocks) and checks every documented
  * text/background pairing. Text on glass is checked at its WORST-CASE
  * backdrop: the glass tint composited over each surface it can float above
- * (page background, decorative glows and blobs, deep-teal panels, white
- * cards), using both the backdrop-filter tint and the opaque fallback.
+ * (page background, section band, hero washes, surface cards, tint wash,
+ * and for the header also deep-teal panels), using both the backdrop-filter
+ * tint and the opaque fallback.
  *
  * Thresholds: 4.5:1 normal text, 3:1 large text and graphics/UI.
  * Exits non-zero on any failure.
@@ -44,15 +45,22 @@ function parseColor(value) {
   throw new Error(`Unparseable color: ${value}`);
 }
 
-function tokenIn(src, name) {
+function rawToken(src, name) {
   const m = src.match(new RegExp(`--${name}:\\s*([^;]+);`));
-  if (!m) throw new Error(`Token --${name} not found`);
-  return parseColor(m[1].replace(/\/\*.*?\*\//g, ""));
+  return m ? m[1].replace(/\/\*.*?\*\//g, "").trim() : undefined;
 }
 
-const scale = (name) => tokenIn(themeBlock, `color-${name}`);
-const light = (name) => tokenIn(rootBlock, name);
-const dark = (name) => tokenIn(darkBlock, name);
+/** Token getter for a theme block; var(--x) resolves in that block, then :root. */
+function resolver(src) {
+  return function get(name) {
+    const v = rawToken(src, name) ?? rawToken(rootBlock, name);
+    if (v === undefined) throw new Error(`Token --${name} not found`);
+    const ref = v.match(/^var\(--([\w-]+)\)$/);
+    return ref ? get(ref[1]) : parseColor(v);
+  };
+}
+
+const scale = (name) => resolver(themeBlock)(`color-${name}`);
 
 /* ------------------------------ color math ------------------------------ */
 
@@ -62,6 +70,9 @@ function over(fg, bg) {
   return [0, 1, 2].map((i) => Math.round(fg[i] * a + bg[i] * (1 - a))).concat(1);
 }
 const withAlpha = (c, a) => [c[0], c[1], c[2], a];
+const opaque = (c, bg) => (c[3] < 1 ? over(c, bg) : c);
+/** CSS brightness(k) filter on an opaque color. */
+const bright = (c, k) => [0, 1, 2].map((i) => Math.min(255, Math.round(c[i] * k))).concat(1);
 
 function luminance([r, g, b]) {
   const lin = (c) => {
@@ -79,9 +90,6 @@ function contrast(fg, bg) {
 
 const WHITE = [255, 255, 255, 1];
 const C = {
-  teal50: scale("teal-50"),
-  teal100: scale("teal-100"),
-  teal200: scale("teal-200"),
   teal400: scale("teal-400"),
   teal700: scale("teal-700"),
   teal900: scale("teal-900"),
@@ -90,60 +98,50 @@ const C = {
   coral300: scale("coral-300"),
   coral500: scale("coral-500"),
   coral700: scale("coral-700"),
-  ink: scale("ink"),
-  slate500: scale("slate-500"),
   mist200: scale("mist-200"),
 };
 
-const L = {
-  bg: light("background"),
-  fg: light("foreground"),
-  muted: light("muted-foreground"),
-  primary: light("primary"),
-  destructive: light("destructive"),
-  glass: light("glass-tint"),
-  glassFallback: light("glass-fallback"),
-  glassStrong: light("glass-strong-tint"),
-  glassStrongFallback: light("glass-strong-fallback"),
-  glow1: light("page-glow-1"),
-  glow2: light("page-glow-2"),
-};
-const D = {
-  bg: dark("background"),
-  fg: dark("foreground"),
-  muted: dark("muted-foreground"),
-  primary: dark("primary"),
-  destructive: dark("destructive"),
-  glass: dark("glass-tint"),
-  glassFallback: dark("glass-fallback"),
-  glassStrong: dark("glass-strong-tint"),
-  glassStrongFallback: dark("glass-strong-fallback"),
-  glow1: dark("page-glow-1"),
-  glow2: dark("page-glow-2"),
-};
+const themeTokens = (get) => ({
+  bg: get("bg"),
+  band: get("bg-band"),
+  surface: get("surface"),
+  tint: get("tint"),
+  ink: get("ink"),
+  heading: get("heading"),
+  muted: get("muted"),
+  primary: get("primary"),
+  primaryFg: get("primary-foreground"),
+  glass: get("glass-tint"),
+  glassFallback: get("glass-fallback"),
+  glassStrong: get("glass-strong-tint"),
+  glassStrongFallback: get("glass-strong-fallback"),
+  washWarm: get("hero-wash-warm"),
+  washCool: get("hero-wash-cool"),
+  focus: get("focus-color"),
+});
+const L = themeTokens(resolver(rootBlock));
+const D = themeTokens(resolver(darkBlock));
 
-/* Every opaque surface glass can float above, per theme (decorative blobs
-   from the hero and section backgrounds included). */
-const LIGHT_BACKDROPS = {
-  page: L.bg,
-  "page glow 1": over(L.glow1, L.bg),
-  "page glow 2 (coral)": over(L.glow2, L.bg),
-  "hero blob teal-50/80": over(withAlpha(C.teal50, 0.8), L.bg),
-  "hero blob coral-100/50": over(withAlpha(C.coral100, 0.5), L.bg),
-  "white card": WHITE,
+/* Every opaque surface glass can float above, per theme. */
+const backdrops = (T) => ({
+  page: T.bg,
+  band: T.band,
+  "hero wash (warm)": over(T.washWarm, T.bg),
+  "hero wash (cool)": over(T.washCool, T.bg),
+  "surface card": T.surface,
+  "tint wash": opaque(T.tint, T.bg),
+});
+const LIGHT_BACKDROPS = backdrops(L);
+const DARK_BACKDROPS = backdrops(D);
+/* The fixed header (glass-strong) scrolls over any content, including the
+   deep-teal panels, the stacked-logo tile and light pills. */
+const LIGHT_HEADER_BACKDROPS = { ...LIGHT_BACKDROPS, "deep panel teal-900": C.teal900 };
+const DARK_HEADER_BACKDROPS = {
+  ...DARK_BACKDROPS,
+  "deep panel teal-900": C.teal900,
+  "white logo tile": WHITE,
+  "light pill": D.primary,
 };
-const DARK_BACKDROPS = {
-  page: D.bg,
-  "page glow 1": over(D.glow1, D.bg),
-  "page glow 2": over(D.glow2, D.bg),
-  "hero blob teal-700/15": over(withAlpha(C.teal700, 0.15), D.bg),
-  "blob coral-500/8": over(withAlpha(C.coral500, 0.08), D.bg),
-  "card teal-900": C.teal900,
-};
-/* The fixed header (glass-strong) scrolls over any content, including
-   deep-teal panels in light mode and white tiles in dark mode. */
-const LIGHT_HEADER_BACKDROPS = { ...LIGHT_BACKDROPS, "deep panel teal-900": C.teal900, "deep panel teal-950": C.teal950 };
-const DARK_HEADER_BACKDROPS = { ...DARK_BACKDROPS, "white logo tile": WHITE, "mist button": D.primary };
 
 /** Worst-case contrast of `fg` over glass `tints` on every backdrop. */
 function worstOnGlass(fg, tints, backdrops) {
@@ -175,60 +173,84 @@ const DGS = { tint: D.glassStrong, fallback: D.glassStrongFallback };
 
 const pairs = [
   // ---------- LIGHT ----------
-  solid("light: body text (ink) on page", L.fg, L.bg, AA),
-  solid("light: body text on white card", L.fg, WHITE, AA),
-  solid("light: muted text (slate-500) on page", L.muted, L.bg, AA),
-  solid("light: muted text on white card", L.muted, WHITE, AA),
-  solid("light: teal-700 heading/link on page", L.primary, L.bg, AA),
-  solid("light: white text on teal-700 button", WHITE, L.primary, AA),
-  solid("light: white text on teal-900 button hover", WHITE, C.teal900, AA),
+  solid("light: body text (ink) on page", L.ink, L.bg, AA),
+  solid("light: body text on band", L.ink, L.band, AA),
+  solid("light: body text on surface card", L.ink, L.surface, AA),
+  solid("light: heading teal on page", L.heading, L.bg, AA),
+  solid("light: heading teal on band", L.heading, L.band, AA),
+  solid("light: heading teal on tint chip", L.heading, opaque(L.tint, L.surface), AA),
+  solid("light: muted text on page", L.muted, L.bg, AA),
+  solid("light: muted text on band", L.muted, L.band, AA),
+  solid("light: muted text on surface card", L.muted, L.surface, AA),
+  solid("light: surface text on primary button", L.primaryFg, L.primary, AA),
+  solid("light: surface text on primary hover (brightness 1.18)", L.primaryFg, bright(L.primary, 1.18), AA),
   solid("light: teal-950 text on coral-500 button", C.teal950, C.coral500, AA),
-  solid("light: teal-950 text on coral-300 button hover", C.teal950, C.coral300, AA),
+  solid("light: teal-950 text on coral hover (brightness 1.05)", C.teal950, bright(C.coral500, 1.05), AA),
+  solid("light: teal text on coral-100 chip", L.heading, C.coral100, AA),
   // Light mode never sets small text in coral: errors are ink text + coral-700 icon.
   solid("light: coral-700 error/accent icon on page (graphics)", C.coral700, L.bg, LARGE),
-  solid("light: teal-700 chip text on coral-100", L.primary, C.coral100, AA),
+  solid("light: coral-700 journey node outline on band (graphics)", C.coral700, L.band, LARGE),
   solid("light: teal-400 icons/lines on page (graphics)", C.teal400, L.bg, LARGE),
-  // Journey state nodes: coral-500 fill carries a coral-700 outline in light mode.
-  solid("light: active journey node outline (coral-700) on page (graphics)", C.coral700, L.bg, LARGE),
-  glass("light: body text on glass", L.fg, LG, LIGHT_BACKDROPS, AA),
+  solid("light: teal-400 icons/lines on band (graphics)", C.teal400, L.band, LARGE),
+  solid("light: focus ring on page (graphics)", L.focus, L.bg, LARGE),
+  solid("light: focus ring on band (graphics)", L.focus, L.band, LARGE),
+  glass("light: body text on glass", L.ink, LG, LIGHT_BACKDROPS, AA),
   glass("light: muted text on glass", L.muted, LG, LIGHT_BACKDROPS, AA),
-  glass("light: teal-700 text on glass", L.primary, LG, LIGHT_BACKDROPS, AA),
+  glass("light: heading teal on glass", L.heading, LG, LIGHT_BACKDROPS, AA),
   glass(
     "light: ink error text on error panel (coral-100/60 over glass)",
-    L.fg,
-    { tint: over(withAlpha(C.coral100, 0.6), over(L.glass, L.bg)), fallback: over(withAlpha(C.coral100, 0.6), L.glassFallback) },
+    L.ink,
+    {
+      tint: over(withAlpha(C.coral100, 0.6), over(L.glass, L.bg)),
+      fallback: over(withAlpha(C.coral100, 0.6), over(L.glassFallback, L.bg)),
+    },
     { page: L.bg },
     AA
   ),
-  glass("light: nav link (slate-500) on header glass", L.muted, LGS, LIGHT_HEADER_BACKDROPS, AA),
-  glass("light: nav current (teal-700) on header glass", L.primary, LGS, LIGHT_HEADER_BACKDROPS, AA),
+  glass("light: nav link (muted) on header glass", L.muted, LGS, LIGHT_HEADER_BACKDROPS, AA),
+  glass("light: nav current (teal) on header glass", L.heading, LGS, LIGHT_HEADER_BACKDROPS, AA),
 
   // ---------- DARK ----------
-  solid("dark: body text on page", D.fg, D.bg, AA),
-  solid("dark: body text on teal-900 card", D.fg, C.teal900, AA),
-  solid("dark: muted text (mist) on page", D.muted, D.bg, AA),
-  solid("dark: mist link/heading on page", D.primary, D.bg, AA),
-  solid("dark: teal-950 text on mist (white/90) button", C.teal950, over(withAlpha(WHITE, 0.9), D.bg), AA),
+  solid("dark: body text on page", D.ink, D.bg, AA),
+  solid("dark: body text on band", D.ink, D.band, AA),
+  solid("dark: body text on surface card", D.ink, D.surface, AA),
+  solid("dark: heading on page", D.heading, D.bg, AA),
+  solid("dark: heading on surface card", D.heading, D.surface, AA),
+  solid("dark: muted text on page", D.muted, D.bg, AA),
+  solid("dark: muted text on band", D.muted, D.band, AA),
+  solid("dark: muted text on surface card", D.muted, D.surface, AA),
+  solid("dark: dark text on light primary pill", D.primaryFg, D.primary, AA),
+  solid("dark: dark text on primary hover (brightness 0.9)", D.primaryFg, bright(D.primary, 0.9), AA),
   solid("dark: teal-950 text on coral-500 button", C.teal950, C.coral500, AA),
   solid("dark: coral-300 error text on page", C.coral300, D.bg, AA),
+  solid("dark: coral-300 text on surface card", C.coral300, D.surface, AA),
+  solid("dark: mist link on page", C.mist200, D.bg, AA),
+  solid("dark: mist link on surface card", C.mist200, D.surface, AA),
   solid("dark: coral-500 node on page (graphics)", C.coral500, D.bg, LARGE),
   solid("dark: teal-400 lines on page (graphics)", C.teal400, D.bg, LARGE),
-  glass("dark: body text on glass", D.fg, DG, DARK_BACKDROPS, AA),
+  solid("dark: focus ring on page (graphics)", D.focus, D.bg, LARGE),
+  solid("dark: focus ring on surface card (graphics)", D.focus, D.surface, LARGE),
+  glass("dark: body text on glass", D.ink, DG, DARK_BACKDROPS, AA),
   glass("dark: muted text on glass", D.muted, DG, DARK_BACKDROPS, AA),
+  glass("dark: heading on glass", D.heading, DG, DARK_BACKDROPS, AA),
   glass(
     "dark: coral-300 error on error panel (coral-500/10 over glass)",
     C.coral300,
-    { tint: over(withAlpha(C.coral500, 0.1), over(D.glass, D.bg)), fallback: over(withAlpha(C.coral500, 0.1), over(D.glassFallback, D.bg)) },
+    {
+      tint: over(withAlpha(C.coral500, 0.1), over(D.glass, D.bg)),
+      fallback: over(withAlpha(C.coral500, 0.1), over(D.glassFallback, D.bg)),
+    },
     { page: D.bg },
     AA
   ),
-  glass("dark: nav link (mist) on header glass", D.muted, DGS, DARK_HEADER_BACKDROPS, AA),
+  glass("dark: nav link (muted) on header glass", D.muted, DGS, DARK_HEADER_BACKDROPS, AA),
   glass("dark: nav current (white) on header glass", WHITE, DGS, DARK_HEADER_BACKDROPS, AA),
 
   // ---------- DEEP BRAND SURFACES (final CTA, footer, 404) ----------
   solid("deep: white text on teal-900", WHITE, C.teal900, AA),
-  solid("deep: white text on teal-950", WHITE, C.teal950, AA),
   solid("deep: mist text on teal-900", C.mist200, C.teal900, AA),
+  solid("deep: mist/80 small text on teal-900", over(withAlpha(C.mist200, 0.8), C.teal900), C.teal900, AA),
+  solid("deep: white text on white/10 pill over teal-900", WHITE, over(withAlpha(WHITE, 0.1), C.teal900), AA),
   solid("deep: coral-300 text on teal-900", C.coral300, C.teal900, AA),
   solid("deep: reversed logo (white) on teal-900 (graphics)", WHITE, C.teal900, LARGE),
   solid("deep: coral tips on teal-900 (graphics)", C.coral500, C.teal900, LARGE),

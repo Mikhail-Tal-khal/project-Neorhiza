@@ -116,6 +116,13 @@ BASE_URL=http://localhost:3000 npm run check:links   # crawl internal links and 
 BASE_URL=http://localhost:3000 npm run lighthouse    # mobile Lighthouse on key pages (set CHROME_PATH if needed)
 ```
 
+Theme proportion check (see [docs/THEME.md](docs/THEME.md)):
+
+```bash
+npm run screenshots      # Home, Our Science, Roadmap, Contact at 1280 px, light + dark → test-results/palette/
+npm run check:palette    # light mode: teal wash < 12%, pure white < 10%; fails otherwise
+```
+
 ## Brand and logo rules
 
 - The official logo files in `brand/originals/` are **never altered**. `npm run generate:logos` copies them byte for byte into `public/images/logo/`.

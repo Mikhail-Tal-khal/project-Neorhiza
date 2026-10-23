@@ -5,25 +5,18 @@ type Variant = "primary" | "secondary" | "coral" | "ghost";
 type Size = "md" | "lg";
 
 const base =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-medium tracking-[0.01em] transition-all duration-300 ease-out focus-visible:outline-[3px] disabled:pointer-events-none disabled:opacity-60";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-medium tracking-[0.01em] transition-[background-color,border-color,color,box-shadow] duration-200 ease-out focus-visible:outline-[3px] disabled:pointer-events-none disabled:opacity-60";
 
 const variants: Record<Variant, string> = {
-  /* Light: solid brand teal with white text. Dark: mist glass pill. */
-  primary: cn(
-    "btn-sweep bg-teal-700 text-white shadow-[0_10px_28px_-12px_rgb(15_76_92/0.5)]",
-    "hover:bg-teal-900 hover:shadow-[0_14px_34px_-12px_rgb(15_76_92/0.55)]",
-    "dark:bg-white/90 dark:text-teal-950 dark:shadow-[0_10px_28px_-14px_rgb(0_0_0/0.5)] dark:hover:bg-coral-500 dark:hover:text-teal-950"
-  ),
-  /* Frosted outline pill in both themes. */
-  secondary: cn(
-    "glass text-teal-700 dark:text-mist-200",
-    "hover:border-teal-400/50 hover:bg-white/80 dark:hover:bg-white/10"
-  ),
+  /* Solid brand teal with off-white text (light pill in dark mode).
+     Hover shifts lightness only. */
+  primary: "bg-primary text-primary-foreground shadow-soft hover:brightness-[1.18] dark:hover:brightness-90",
+  /* Transparent with a hairline outline and teal text. */
+  secondary:
+    "border border-[color:var(--input)] bg-transparent text-heading hover:bg-tint",
   /* Coral is the pulse: dark text on coral, never white. */
-  coral:
-    "btn-sweep bg-coral-500 text-teal-950 shadow-[0_10px_28px_-12px_rgb(180_74_56/0.55)] hover:bg-coral-300",
-  ghost:
-    "text-teal-700 underline-offset-4 hover:bg-teal-50 hover:underline dark:text-mist-200 dark:hover:bg-white/10",
+  coral: "bg-coral-500 text-teal-950 shadow-soft hover:brightness-105",
+  ghost: "text-heading underline-offset-4 hover:bg-tint hover:underline",
 };
 
 const sizes: Record<Size, string> = {
@@ -45,7 +38,7 @@ type ButtonAsButton = CommonProps &
 type GlassButtonProps = ButtonAsLink | ButtonAsButton;
 
 /**
- * Brand pill button. `primary` performs the soft coral light sweep on hover.
+ * Brand pill button. Hover states change lightness only, never hue.
  */
 export function GlassButton(props: GlassButtonProps) {
   const { variant = "primary", size = "md", className, children } = props;

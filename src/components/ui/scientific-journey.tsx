@@ -90,17 +90,17 @@ export function ScientificJourney({ stages }: { stages: JourneyStage[] }) {
                   aria-current={isCurrent ? "step" : undefined}
                   className={cn(
                     "glass block w-full rounded-2xl p-5 text-left transition-all duration-300",
-                    "hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-16px_rgb(15_76_92/0.3)]",
+                    "hover:shadow-lift",
                     isActive
-                      ? "border-coral-300/60 shadow-[0_12px_36px_-16px_rgb(227_111_92/0.35)]"
+                      ? "border-coral-300/60 shadow-[0_8px_24px_rgb(227_111_92/0.08)]"
                       : ""
                   )}
                 >
                   <span className="label-caps mb-1.5 block">Stage {stage.number}</span>
-                  <span className="block font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+                  <span className="block font-semibold tracking-[0.01em] text-heading">
                     {stage.title}
                   </span>
-                  <span className="mt-2 block text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+                  <span className="mt-2 block text-sm leading-relaxed text-muted">
                     {stage.text}
                   </span>
                 </button>
@@ -113,9 +113,9 @@ export function ScientificJourney({ stages }: { stages: JourneyStage[] }) {
               >
                 <span
                   className={cn(
-                    "block rounded-full border-2 transition-all duration-500 ease-out",
+                    "block rounded-full border-2 transition-all duration-300 ease-out",
                     isActive
-                      ? "size-6 border-coral-700 bg-coral-500 shadow-[0_0_0_6px_rgb(227_111_92/0.18)] dark:border-coral-500"
+                      ? "size-6 border-coral-700 bg-coral-500 shadow-[0_0_0_6px_rgb(227_111_92/0.08)] dark:border-coral-500"
                       : "size-5 border-teal-400 bg-background"
                   )}
                 />

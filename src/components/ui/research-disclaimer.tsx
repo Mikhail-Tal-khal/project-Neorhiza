@@ -17,7 +17,7 @@ export function ResearchDisclaimer({
   return (
     <aside
       className={cn(
-        "glass flex items-start gap-3 rounded-2xl p-4 text-sm leading-relaxed text-slate-500 md:items-center dark:text-mist-200",
+        "glass flex items-start gap-3 rounded-2xl p-4 text-sm leading-relaxed text-muted md:items-center",
         className
       )}
       role="note"

@@ -36,7 +36,7 @@ export function HumanNeed() {
             {challenges.map((item) => (
               <li
                 key={item}
-                className="flex items-start gap-3 text-[0.95rem] leading-relaxed text-ink dark:text-teal-50/90"
+                className="flex items-start gap-3 text-[0.95rem] leading-relaxed text-ink"
               >
                 <span
                   aria-hidden="true"
@@ -50,15 +50,15 @@ export function HumanNeed() {
 
         <GlassPanel className="flex flex-col justify-center p-7 md:p-10">
           <blockquote className="relative">
-            <p className="text-balance text-xl font-medium leading-relaxed tracking-[0.005em] text-teal-700 md:text-2xl dark:text-teal-50">
+            <p className="text-balance text-xl font-medium leading-relaxed tracking-[0.005em] text-heading md:text-2xl">
               “Behind every waiting-list number is a person, a family and a
               future placed on hold.”
             </p>
-            <footer className="mt-4 text-sm text-slate-500 dark:text-mist-200">
+            <footer className="mt-4 text-sm text-muted">
               The conviction that motivates this project
             </footer>
           </blockquote>
-          <p className="mt-6 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+          <p className="mt-6 text-sm leading-relaxed text-muted">
             Transplantation saves lives every day, and donated organs remain
             precious and scarce. The World Health Organization has long
             recognized that the need for organs substantially exceeds their

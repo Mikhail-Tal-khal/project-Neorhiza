@@ -5,13 +5,14 @@
  */
 
 export const brand = {
-  teal50: "#E8F1F2",
-  teal200: "#BFD3D8",
   teal700: "#0F4C5C",
   teal900: "#0A3540",
   teal950: "#06222A",
   coral500: "#E36F5C",
   mist: "#BFD3D8",
   foregroundDark: "#EAF2F3",
-  sage50: "#F4F7F2",
+  /** Light-mode page background (--bg). */
+  pearl: "#F6F6F3",
+  /** Dark-mode page background (--bg). */
+  slateTeal: "#0D262C",
 } as const;

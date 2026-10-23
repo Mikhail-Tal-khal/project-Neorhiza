@@ -33,7 +33,7 @@ export function SectionHeading({
       {eyebrow && <p className="label-caps mb-3">{eyebrow}</p>}
       <Tag
         className={cn(
-          "text-balance font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50",
+          "text-balance font-semibold tracking-[0.01em] text-heading",
           as === "h1"
             ? "text-4xl leading-[1.12] md:text-5xl lg:text-[3.4rem]"
             : "text-3xl leading-tight md:text-4xl"
@@ -42,7 +42,12 @@ export function SectionHeading({
         {title}
       </Tag>
       {lead && (
-        <p className="mt-5 text-pretty text-base leading-relaxed text-slate-500 md:text-lg dark:text-mist-200">
+        <p
+          className={cn(
+            "mt-5 max-w-2xl text-pretty text-base leading-relaxed text-muted md:text-lg",
+            align === "center" && "mx-auto"
+          )}
+        >
           {lead}
         </p>
       )}

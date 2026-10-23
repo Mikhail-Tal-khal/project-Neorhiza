@@ -17,7 +17,9 @@
     "check:links": "node scripts/check-links.mjs",
     "test:e2e": "playwright test",
     "lighthouse": "node scripts/lighthouse.mjs",
-    "generate:logos": "node scripts/generate-logos.mjs"
+    "generate:logos": "node scripts/generate-logos.mjs",
+    "screenshots": "node scripts/screenshots.mjs",
+    "check:palette": "node scripts/check-palette.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

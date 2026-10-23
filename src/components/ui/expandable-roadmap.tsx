@@ -13,10 +13,10 @@ export type RoadmapStage = {
 function StageDetail({ label, text }: { label: string; text: string }) {
   return (
     <div>
-      <h4 className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-teal-700 dark:text-teal-50">
+      <h4 className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-heading">
         {label}
       </h4>
-      <p className="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-mist-200">
+      <p className="mt-1.5 text-sm leading-relaxed text-muted">
         {text}
       </p>
     </div>
@@ -40,25 +40,25 @@ export function ExpandableRoadmap({ stages }: { stages: RoadmapStage[] }) {
         <li key={stage.number} className="relative">
           <details
             open={stage.number === 1}
-            className="group glass overflow-hidden rounded-2xl open:shadow-[0_16px_44px_-20px_rgb(15_76_92/0.35)] md:rounded-3xl dark:open:shadow-[0_16px_44px_-20px_rgb(0_0_0/0.5)]"
+            className="group glass overflow-hidden rounded-2xl open:shadow-lift md:rounded-3xl"
           >
             <summary className="flex min-h-11 cursor-pointer list-none items-center gap-4 p-5 text-left transition-colors hover:bg-white/40 md:gap-5 md:p-6 dark:hover:bg-white/5 [&::-webkit-details-marker]:hidden">
               <span
                 aria-hidden="true"
-                className="relative z-10 flex size-6 shrink-0 items-center justify-center rounded-full border-2 border-teal-400 bg-background text-teal-700 transition-colors group-open:border-coral-500 group-open:bg-coral-500 group-open:text-teal-950 dark:bg-teal-950 dark:text-mist-200 dark:group-open:bg-coral-500 dark:group-open:text-teal-950"
+                className="relative z-10 flex size-6 shrink-0 items-center justify-center rounded-full border-2 border-teal-400 bg-background text-teal-700 transition-colors group-open:border-coral-500 group-open:bg-coral-500 group-open:text-teal-950 dark:text-muted dark:group-open:bg-coral-500 dark:group-open:text-teal-950"
               >
                 <span className="text-[0.65rem] font-bold">{stage.number}</span>
               </span>
-              <h3 className="flex-1 font-semibold tracking-[0.01em] text-teal-700 dark:text-teal-50">
+              <h3 className="flex-1 font-semibold tracking-[0.01em] text-heading">
                 <span className="sr-only">Stage {stage.number}: </span>
                 {stage.name}
               </h3>
               <ChevronDown
                 aria-hidden="true"
-                className="size-5 shrink-0 text-slate-500 transition-transform duration-300 group-open:rotate-180 dark:text-mist-200"
+                className="size-5 shrink-0 text-muted transition-transform duration-300 group-open:rotate-180"
               />
             </summary>
-            <div className="border-t border-teal-100/70 px-5 py-6 md:px-6 dark:border-white/10">
+            <div className="border-t border-border px-5 py-6 md:px-6">
               <div className="grid gap-5 pl-0 sm:grid-cols-2 md:pl-11">
                 <StageDetail label="Purpose" text={stage.purpose} />
                 <StageDetail label="Expected output" text={stage.expectedOutput} />
