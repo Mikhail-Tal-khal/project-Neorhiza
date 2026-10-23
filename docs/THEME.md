@@ -34,7 +34,7 @@ All values live in `src/styles/globals.css` (`:root` and `.dark`) and are expose
 | `--border` | `rgba(15, 76, 92, 0.12)` | Hairlines and card borders |
 | `--ink` | `#1C353C` | Body text |
 | `--heading` | `#0F4C5C` | Headings (brand teal) |
-| `--muted` | `#5A6D74` | Secondary text. **Spec value `#5F7279` gives 4.36:1 on `--bg-band`, below AA; darkened by the smallest step that passes (4.70:1).** |
+| `--muted` | `#5A6D74` | Secondary text. The spec value `#5F7279` gives 4.36:1 on `--bg-band`, below AA, so it was darkened by the smallest step that passes (4.70:1). Confirmed by the owner. |
 | `--tint` | `#E7ECEC` | Pale teal-gray wash, low area only |
 | `--coral-500` | `#E36F5C` | Nodes and small highlights |
 | `--coral-100` | `#F9E6E1` | Soft warm highlight wash |
@@ -135,13 +135,18 @@ Before and after, 1280 px, light and dark: `docs/theme/before/` and `docs/theme/
 - **Light mode** now reads as pearl and stone rather than pale green. Sections have a visible rhythm (pearl `#F6F6F3` / stone `#EEEFEC`) without any color, and cards are off-white with soft neutral shadows instead of blue-green glows. Teal is confined to type, buttons, icons and the two deep panels. There is no pure white anywhere large. The hero no longer has the hard horizontal edge where the clipped blurred blob ended.
 - **Dark mode** is a flat, calm slate-teal (`#0D262C` / `#102E35`). The glowing gradient at the top of each glass card is reduced to a faint highlight.
 - **Still teal-heavy by area:** Contact and Roadmap are short, so the required deep footer covers about a quarter of their screenshots. This is by design (one of the two allowed panels), but it is the largest single colored area on those pages.
-- **Unchanged by design:** the hero illustration keeps coral cell nodes (see open decisions), and the CTA/footer keep teal-900.
+- **Unchanged by design:** the hero illustration keeps coral cell nodes (see §5), and the CTA/footer keep teal-900.
 
-## 5. Open decisions
+## 5. Decisions
+
+Decided by the owner on 2026-10-23:
+
+- **Wash metric:** keep the lightness split. The 12% limit applies to light tints (lightness ≥ 50%). Deep-teal panels are reported separately and count toward the ~18% teal share.
+- **`--muted`:** keep `#5A6D74`, not the spec's `#5F7279`, so muted text meets AA on `--bg-band`. The band stays `#EEEFEC`.
+
+Still open:
 
 - **Pearl temperature.** `--bg #F6F6F3` is very slightly warm. A cooler option is `#F5F6F5`; a warmer one is `#F7F6F2`. Both keep every contrast pairing.
-- **Wash metric.** Confirm the lightness split above, or define a different rule for the deep panels.
-- **`--muted`.** `#5A6D74` instead of the spec's `#5F7279` (required for AA on the band). The alternative is a lighter band.
 - **Hero illustration coral.** The cell, cluster and tissue stages are coral nodes because they represent cells. The rule "coral limited to the tips" was applied only to the vessel tree. Making the cell stages teal would reduce coral further but would weaken the cell-to-tissue story.
 
 ## 6. Regression checks (2026-10-23)
