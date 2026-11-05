@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/sections/site-header";
 import { SiteFooter } from "@/components/sections/site-footer";
@@ -130,6 +131,7 @@ export default function RootLayout({
         </ThemeProvider>
 
         <JsonLd data={structuredData} />
+        <Analytics />
       </body>
     </html>
   );
