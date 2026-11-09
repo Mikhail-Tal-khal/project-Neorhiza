@@ -32,12 +32,16 @@ const csp = [
 // Surface a missing shared rate-limit store in the Vercel production build
 // log. Names only — values are never printed.
 if (process.env.VERCEL_ENV === "production") {
-  const hasStore =
-    Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) ||
-    Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+  const set = (name: string) => Boolean(process.env[name]?.trim().replace(/^(["'])(.*)\1$/s, "$2").trim());
+  // Same pairs as REDIS_CREDENTIAL_PAIRS in src/lib/rate-limit.ts.
+  const hasStore = [
+    ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"],
+    ["KV_REST_API_URL", "KV_REST_API_TOKEN"],
+    ["NEORHIZA_KV_REST_API_URL", "NEORHIZA_KV_REST_API_TOKEN"],
+  ].some(([url, token]) => set(url) && set(token));
   if (!hasStore) {
     console.error(
-      "⚠ Production has no shared rate-limit store (UPSTASH_REDIS_REST_URL/TOKEN or KV_REST_API_URL/TOKEN). " +
+      "⚠ Production has no shared rate-limit store (UPSTASH_REDIS_REST_URL/TOKEN, KV_REST_API_URL/TOKEN or NEORHIZA_KV_REST_API_URL/TOKEN). " +
         "The contact form will fall back to per-instance in-memory limiting, which is not adequate production protection."
     );
   }

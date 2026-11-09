@@ -12,8 +12,8 @@
  */
 
 const env = process.env;
-const has = (name) => typeof env[name] === "string" && env[name].trim() !== "";
 const unquote = (v = "") => v.trim().replace(/^(["'])(.*)\1$/s, "$2").trim();
+const has = (name) => typeof env[name] === "string" && unquote(env[name]) !== "";
 
 const results = [];
 const check = (level, label, ok, hint) => results.push({ level, label, ok, hint });
@@ -40,9 +40,24 @@ if (has("RESEND_API_KEY")) {
 }
 
 // Rate limiting
-const upstash = has("UPSTASH_REDIS_REST_URL") && has("UPSTASH_REDIS_REST_TOKEN");
-const kv = has("KV_REST_API_URL") && has("KV_REST_API_TOKEN");
-check("required", "Shared rate-limit store is configured (Upstash or Vercel KV)", upstash || kv, "the in-memory fallback is per-instance and not adequate in production");
+// Same pairs as REDIS_CREDENTIAL_PAIRS in src/lib/rate-limit.ts.
+const redisPairs = [
+  ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"],
+  ["KV_REST_API_URL", "KV_REST_API_TOKEN"],
+  ["NEORHIZA_KV_REST_API_URL", "NEORHIZA_KV_REST_API_TOKEN"],
+];
+const completePair = redisPairs.find(([url, token]) => has(url) && has(token));
+check(
+  "required",
+  "Shared rate-limit store is configured (Upstash, Vercel KV or NEORHIZA_KV_*)",
+  Boolean(completePair),
+  "the in-memory fallback is per-instance and not adequate in production"
+);
+for (const [url, token] of redisPairs) {
+  if (has(url) !== has(token)) {
+    check("required", `${url} and ${token} are set together`, false, `missing: ${has(url) ? token : url}`);
+  }
+}
 
 // Secrets must never be public
 const leaked = Object.keys(env).filter((n) => n.startsWith("NEXT_PUBLIC_") && /KEY|TOKEN|SECRET|PASSWORD|PRIVATE/i.test(n));

@@ -350,3 +350,8 @@ HTML grew by ~1 KB per page because the header's two buttons are now server-rend
 - *Header logo SVGs* (5.2 KB in the header chunk): moving them to the server would add the same bytes to every page's HTML instead; roughly break-even.
 - *Lazy-loading*: the only sizeable interactive component, the Radix dialog on `/collaboration` (~37 KB), sits above the fold next to its trigger; the scientific journey's client code is 3 KB. No below-the-fold candidate would save a meaningful amount.
 
+
+### 5.4 Prefixed Redis credentials and Node 24 (2026-11-09)
+
+- **`NEORHIZA_KV_REST_API_URL` / `NEORHIZA_KV_REST_API_TOKEN`** (the names Vercel injects when a store is connected with the custom prefix `NEORHIZA`) are accepted everywhere Redis credentials are detected: the rate limiter (`REDIS_CREDENTIAL_PAIRS` in `src/lib/rate-limit.ts`), the production build warning (`next.config.ts`) and `npm run check:config`. Existing names keep priority (Upstash, then KV, then NEORHIZA_KV). Only a complete URL + token pair counts; halves of different schemes are never combined, and values are never printed. `tests/production-config.spec.ts` fails if the three lists drift apart, and runs the config check against each pair with fake values to prove no value is printed.
+- **Node.js pinned to `24.x`** (`package.json` `engines`, `.nvmrc` → CI). Vercel builds and functions use the `engines` major.

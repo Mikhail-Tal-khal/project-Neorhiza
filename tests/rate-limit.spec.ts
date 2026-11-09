@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { POST } from "@/app/api/contact/route";
 import {
+  REDIS_CREDENTIAL_PAIRS,
   createMemoryLimiter,
   rateLimit,
   rateLimitStoreStatus,
@@ -17,6 +18,8 @@ const ENV_KEYS = [
   "UPSTASH_REDIS_REST_TOKEN",
   "KV_REST_API_URL",
   "KV_REST_API_TOKEN",
+  "NEORHIZA_KV_REST_API_URL",
+  "NEORHIZA_KV_REST_API_TOKEN",
   "VERCEL_ENV",
   "RESEND_API_KEY",
   "CONTACT_TO_EMAIL",
@@ -123,6 +126,38 @@ test.describe("shared rate-limit store", () => {
     expect(rateLimitStoreStatus().store).toBe("shared");
   });
 
+  test("NEORHIZA_-prefixed Vercel KV variable names are accepted", async () => {
+    process.env.NEORHIZA_KV_REST_API_URL = ` '${STORE_URL}' `;
+    process.env.NEORHIZA_KV_REST_API_TOKEN = `${STORE_TOKEN} `;
+    await rateLimit(key(), 5, 600_000);
+    expect(calls[0].url).toBe(`${STORE_URL}/pipeline`);
+    expect(new Headers(calls[0].init.headers).get("authorization")).toBe(`Bearer ${STORE_TOKEN}`);
+    expect(rateLimitStoreStatus()).toMatchObject({ store: "shared", adequate: true });
+    expectNoSecretsLogged();
+  });
+
+  test("a complete NEORHIZA_KV pair is used when the other pairs are incomplete", async () => {
+    process.env.VERCEL_ENV = "production";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "stray-token";
+    process.env.KV_REST_API_URL = "https://half-configured.example";
+    process.env.NEORHIZA_KV_REST_API_URL = STORE_URL;
+    process.env.NEORHIZA_KV_REST_API_TOKEN = STORE_TOKEN;
+    await rateLimit(key(), 5, 600_000);
+    expect(calls).toHaveLength(1);
+    expect(calls[0].url).toBe(`${STORE_URL}/pipeline`);
+    expect(new Headers(calls[0].init.headers).get("authorization")).toBe(`Bearer ${STORE_TOKEN}`);
+    expect(logs).toEqual([]); // no "missing store" warning
+  });
+
+  test("existing names keep priority over NEORHIZA_KV names", async () => {
+    process.env.KV_REST_API_URL = STORE_URL;
+    process.env.KV_REST_API_TOKEN = STORE_TOKEN;
+    process.env.NEORHIZA_KV_REST_API_URL = "https://other-store.example";
+    process.env.NEORHIZA_KV_REST_API_TOKEN = "other-token";
+    await rateLimit(key(), 5, 600_000);
+    expect(calls[0].url).toBe(`${STORE_URL}/pipeline`);
+  });
+
   test("incomplete credential pairs never count as configured", async () => {
     process.env.VERCEL_ENV = "production";
     for (const env of <Record<string, string>[]>[
@@ -136,9 +171,16 @@ test.describe("shared rate-limit store", () => {
       // Blank or whitespace-only values are not credentials.
       { UPSTASH_REDIS_REST_URL: "  ", UPSTASH_REDIS_REST_TOKEN: STORE_TOKEN },
       { KV_REST_API_URL: STORE_URL, KV_REST_API_TOKEN: '""' },
+      { NEORHIZA_KV_REST_API_URL: STORE_URL },
+      { NEORHIZA_KV_REST_API_TOKEN: STORE_TOKEN },
+      { NEORHIZA_KV_REST_API_URL: STORE_URL, NEORHIZA_KV_REST_API_TOKEN: " " },
+      // The prefixed and unprefixed schemes must not be combined either.
+      { NEORHIZA_KV_REST_API_URL: STORE_URL, KV_REST_API_TOKEN: STORE_TOKEN },
+      { KV_REST_API_URL: STORE_URL, NEORHIZA_KV_REST_API_TOKEN: STORE_TOKEN },
+      { UPSTASH_REDIS_REST_URL: STORE_URL, NEORHIZA_KV_REST_API_TOKEN: STORE_TOKEN },
     ]) {
-      for (const k of ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_URL", "KV_REST_API_TOKEN"]) {
-        delete process.env[k];
+      for (const pair of REDIS_CREDENTIAL_PAIRS) {
+        for (const k of pair) delete process.env[k];
       }
       Object.assign(process.env, env);
       calls = [];

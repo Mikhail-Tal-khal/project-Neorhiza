@@ -36,7 +36,7 @@ Project Settings → Environment Variables. Add for **Production** (and for Prev
 | `CONTACT_TO_EMAIL` | inbox that receives inquiries |
 | `CONTACT_FROM_EMAIL` | e.g. `Project Neorhiza <website@mail.your-domain.org>`, using a domain verified in Resend |
 | `CONTACT_WEBHOOK_URL` / `CONTACT_WEBHOOK_TOKEN` | *(alternative or additional)* webhook delivery |
-| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Rate-limit store. If you add Upstash through **Storage → Marketplace**, Vercel injects `KV_REST_API_URL` / `KV_REST_API_TOKEN` instead; both naming schemes work. |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Rate-limit store. If you add Upstash through **Storage → Marketplace**, Vercel injects `KV_REST_API_URL` / `KV_REST_API_TOKEN` instead (or `NEORHIZA_KV_REST_API_URL` / `NEORHIZA_KV_REST_API_TOKEN` when connected with the custom prefix `NEORHIZA`); all three naming schemes work, and only a complete URL + token pair counts. |
 
 `NEXT_PUBLIC_*` values are inlined at build time, so **redeploy after changing them**.
 
