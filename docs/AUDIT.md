@@ -109,7 +109,7 @@ Consequences:
 | Inquiry types | Open (structure Pass) | 7 types in `src/lib/inquiry-types.ts`; e2e asserts the rendered list. Exact wording unverifiable |
 | Form fields | Pass | Full name, professional email, organization, role, country, area of interest, message, consent. No health fields |
 | Navigation / buttons / footer links | Fixed | **Navigation was unreachable from 768–1279 px** (desktop links `xl:` only, hamburger `md:hidden`, F-19). All internal links: 223 checked, 0 broken |
-| Founder (REREU) content | Pass | "Verified profile in preparation" state; no invented credentials |
+| Founder (Rereu Lemein) content | Pass | Owner-supplied biography, photograph, background and statement (2026-11-09); no qualifications beyond those supplied; states his background is engineering and cybersecurity, not clinical or tissue-engineering research |
 | Privacy policy accuracy | Fixed | Now discloses delivery via email provider / webhook and short-lived IP-based rate limiting (these behaviors are new) |
 
 ### 1.7 Forbidden-content scan (whole repo: source, MDX, metadata, alt text, comments)
@@ -120,7 +120,7 @@ Consequences:
 | "apply for treatment", "enroll", "book a consultation" | Pass | "does not offer medical treatment or patient enrollment" (required disclaimer, contact + footer) |
 | testimonial, "clinically proven", "guaranteed", "cure", unsourced stats | Pass | "not guaranteed" / "No guaranteed outcomes" / "A guaranteed medical solution" (in the *What Neorhiza is not* list) are all negations. Stats: "2012 Nobel Prize" (iPSC, public fact); "tens to hundreds of micrometers" (general diffusion limit, educational) |
 | Confidential parameters (concentrations, flow, pressure, O₂ %, densities, seeding, ratios, reagents, genes as methods) | Pass | None. "oxygen and nutrients" and "pressure cycles" are physiology descriptions; "seeding vessel-associated cells" is a literature-level description without parameters |
-| Invented founder credentials | Pass | Only the name "REREU"; the page states credentials are withheld until verified |
+| Invented founder credentials | Pass | Only owner-supplied credentials appear (Computer Science, Technical University of Mombasa; OSINT Forensic Analysis Operations; Google Cybersecurity Professional Certificate) |
 
 ### 1.8 Forms (spec §18)
 
@@ -277,7 +277,6 @@ Git history: new repository (fresh history); old history moved to .git-old-backu
 | Verbatim copy, headings, stages, phases, values, disclaimers, inquiry-type wording | Spec file unavailable | Supply `neorhiza-website-prompt.md` |
 | Logo clear-space / minimum-size rules | Spec §3 unavailable | Spec, or confirm the 120 px horizontal minimum |
 | Annotated mark recolors the logo paths | Brand judgment | Owner decision: keep, or replace with an unaltered placement |
-| Founder profile | No verified content | Verified bio, photo, statement (shown as "Verified profile in preparation") |
 | Production domain | Default `https://neorhiza.org` is a placeholder | Set `NEXT_PUBLIC_SITE_URL` |
 | Form delivery | No provider configured | Resend key + addresses, or a webhook URL |
 | Rate-limit store for serverless | Optional but recommended | Upstash Redis (Vercel Marketplace) |

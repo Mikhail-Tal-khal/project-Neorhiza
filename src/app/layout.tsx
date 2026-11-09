@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     "stem-cell research",
     "scientific collaboration",
   ],
-  authors: [{ name: `${site.name} — Founder: REREU` }],
+  authors: [{ name: `${site.name} — Founder: Rereu Lemein` }],
   creator: site.name,
   publisher: site.name,
   formatDetection: { telephone: false, email: false },
@@ -81,7 +81,9 @@ const structuredData = {
       foundingDate: "2026",
       founder: {
         "@type": "Person",
-        name: "REREU",
+        name: "Rereu Lemein",
+        url: "https://lemein.vercel.app",
+        sameAs: ["https://github.com/Mikhail-Tal-khal"],
       },
       knowsAbout: [
         "Tissue engineering",
