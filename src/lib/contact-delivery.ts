@@ -1,4 +1,5 @@
 import { confirmationEmail, notificationEmail, type EmailContent, type Inquiry } from "@/lib/contact-email";
+import { envValue } from "@/lib/env";
 
 /**
  * Delivers a validated inquiry to every configured destination:
@@ -27,17 +28,6 @@ class DeliveryError extends Error {}
 function webhookTarget() {
   const url = process.env.CONTACT_WEBHOOK_URL;
   return url ? { url, token: process.env.CONTACT_WEBHOOK_TOKEN } : null;
-}
-
-/**
- * Reads an env value, dropping one pair of surrounding quotes. Dashboards
- * such as Vercel's keep quotes typed into the value field literally, which
- * would turn `"Name <a@b.c>"` into an invalid sender.
- */
-function envValue(name: string): string {
-  const value = (process.env[name] ?? "").trim();
-  const match = /^(["'])(.*)\1$/s.exec(value);
-  return (match ? match[2] : value).trim();
 }
 
 function resendTarget(): ResendTarget | null {

@@ -277,9 +277,76 @@ Git history: new repository (fresh history); old history moved to .git-old-backu
 | Verbatim copy, headings, stages, phases, values, disclaimers, inquiry-type wording | Spec file unavailable | Supply `neorhiza-website-prompt.md` |
 | Logo clear-space / minimum-size rules | Spec §3 unavailable | Spec, or confirm the 120 px horizontal minimum |
 | Annotated mark recolors the logo paths | Brand judgment | Owner decision: keep, or replace with an unaltered placement |
-| Production domain | Default `https://neorhiza.org` is a placeholder | Set `NEXT_PUBLIC_SITE_URL` |
-| Form delivery | No provider configured | Resend key + addresses, or a webhook URL |
-| Rate-limit store for serverless | Optional but recommended | Upstash Redis (Vercel Marketplace) |
-| Security contact | Placeholder in `SECURITY.md` | A monitored security mailbox |
+| ~~Production domain~~ | Resolved: `https://www.neorhiza.space` | — |
+| ~~Form delivery~~ | Resolved: Resend configured and verified live (2026-11-09) | — |
+| Rate-limit store for serverless | Upstash not yet connected; the Vercel Firewall rule (5 requests / 600 s per IP on `/api/contact`) limits production meanwhile | Connect Upstash Redis (Vercel Marketplace) |
+| ~~Security contact~~ | Resolved: `inquiries@neorhiza.space`, `/.well-known/security.txt` | — |
 | No-JS mobile navigation | The hamburger needs JS; without JS, the footer carries all links | Acceptable as-is; noted |
-| `'unsafe-inline'` in `script-src` | Needed for the next-themes inline script without nonce middleware (which would make every page dynamic) | Revisit if nonce-based CSP becomes a requirement |
+| `'unsafe-inline'` in `script-src` | Tested 2026-11-09: removing it (even with `experimental.sri`) breaks hydration and theme initialization on static pages; nonces would make every page dynamic. See §5.2 | Revisit per the migration path in `docs/SECURITY-HEADERS.md` |
+
+---
+
+## 5. Post-audit code hardening (2026-11-09, branch `post-audit-code-hardening`)
+
+Baseline: production commit `1d6098f`. All measurements below come from local production builds (`next build` + `next start`) on the same machine.
+
+### 5.1 Development dependency advisories
+
+| | Before | After |
+|---|---|---|
+| `npm audit --omit=dev` | 0 vulnerabilities | **0 vulnerabilities** |
+| `npm audit` (incl. dev) | 8 moderate | **0 vulnerabilities** |
+
+**Chain.** All 8 findings were one advisory, [GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249) (minimatch `>=7.0.0 <11.0.1`, denial of service via glob-pattern amplification), reached through
+`eslint-config-next@16.4.2 → typescript-eslint@8.72.0 → @typescript-eslint/typescript-estree@8.72.0 → minimatch@10.2.6`.
+The other copies of minimatch in the tree (3.1.5 via ESLint and its plugins, 11.0.5 via Lighthouse) are outside the vulnerable range.
+
+**No upstream fix yet.** The newest `@typescript-eslint/typescript-estree` (8.72.2) and `eslint-config-next` (16.4.5) still require `minimatch ^10.2.2`; the patched release is 11.0.1, a new major. npm's suggested fix was a *downgrade* of `eslint-config-next` to 15.5.29 (rejected: breaking, and against the rule not to downgrade to silence an audit).
+
+**Fix: a narrowly scoped override** in `package.json`:
+
+```json
+"overrides": { "@typescript-eslint/typescript-estree": { "minimatch": "^11.0.5" } }
+```
+
+Compatibility was checked rather than assumed: `typescript-estree` makes a single call, `minimatch(filePath, pattern, { dot: true })` in `useProgramFromProjectService.js` (matching `allowDefaultProject` globs). minimatch 11 keeps that function and option; its breaking changes (removed `makeRe()`, `AST`, `debug`, `matchOne()`, `maxExtglobRecursion`) are APIs `typescript-estree` does not use. minimatch 11 supports Node `20 || >=22` (CI uses Node 22 from `.nvmrc`). Only this one package's copy changes (lockfile: 1 entry). `npm run lint` and `npm run typecheck` pass. **Remove the override** once `typescript-estree` depends on minimatch ≥ 11.0.1 (Dependabot will surface the release).
+
+### 5.2 Content-Security-Policy
+
+Unchanged, deliberately. Investigated against the Next.js 16.4.2 guide (`node_modules/next/dist/docs/01-app/02-guides/content-security-policy.md`):
+
+- **Nonces**: the guide states pages "must be dynamically rendered", disabling static optimization and CDN caching. Every public page here is static; not adopted.
+- **Experimental SRI (hash-based)**: tested with a local build (`experimental.sri` + `script-src 'self'`). Pages stayed static, but 7 inline scripts (RSC payload, bootstrap, theme) carried no hash or nonce. In Chromium, `/`, `/contact` and `/collaboration` logged 5–8 CSP violations each, **failed to hydrate** and **lost theme initialization**. Reverted; the current policy hydrates with zero violations.
+
+All other directives are unchanged (`frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, no third-party origins). The residual risk and the recommended migration path are in `docs/SECURITY-HEADERS.md`.
+
+### 5.3 Route-level weight
+
+What a modern browser loads per route: the HTML as served, the RSC payload inlined in it, and the JS files the page references, excluding the `noModule` polyfill modern browsers skip. The audit's "710 KB of JavaScript" was the whole `.next/static` directory across all routes (693 KB in 17 files at baseline), not what any page loads.
+
+| Route | HTML before → after (gzip) | Inline RSC before → after | JS before → after (gzip) |
+|---|---|---|---|
+| `/` | 176.0 → 176.8 KB (30.3 → 30.4) | 93.0 → 94.0 KB | 514.5 → **487.1 KB** (155.4 → **146.8**) |
+| `/our-science` | 150.1 → 151.0 KB (22.5 → 22.6) | 83.0 → 84.0 KB | 511.2 → **483.8 KB** (153.8 → **145.3**) |
+| `/why-neorhiza` | 110.5 → 111.5 KB (20.5 → 20.6) | 58.6 → 59.6 KB | 525.7 → **498.3 KB** (159.3 → **150.7**) |
+| `/collaboration` | 141.7 → 143.7 KB (18.7 → 18.7) | 78.9 → 80.8 KB | 551.9 → **524.3 KB** (167.6 → **158.9**) |
+| `/funding` | 81.3 → 82.2 KB (14.0 → 14.1) | 42.6 → 43.6 KB | 511.2 → **483.8 KB** (153.8 → **145.3**) |
+| `/contact` | 70.4 → 71.4 KB (13.2 → 13.2) | 33.4 → 34.4 KB | 524.5 → **497.2 KB** (158.0 → **149.4**) |
+| `/updates` | 71.1 → 72.0 KB (12.7 → 12.8) | 36.7 → 37.7 KB | 511.2 → **483.8 KB** (153.8 → **145.3**) |
+| article page | 61.2 → 62.1 KB (12.2 → 12.3) | 30.8 → 31.7 KB | 511.2 → **483.8 KB** (153.8 → **145.3**) |
+
+Build-wide `.next/static` JS: 693 KB in 17 files → **666 KB in 16 files**.
+
+**What changed.** `tailwind-merge` (28 KB raw, ~9 KB gzip) was shipped to every page because client components imported `cn()`; the root error boundary (`src/app/error.tsx`, loaded on every route) also pulled it in through `GlassButton`.
+- Client components now use `cx()` (`src/lib/cx.ts`, `clsx` only). Every call site was checked for conflicting classes; the three that relied on merging (`scientific-journey` column and alignment alternation, `brand-mark` `block`/`hidden`, the header's `hidden … xl:inline-flex` theme toggle) were rewritten to be conflict-free.
+- `GlassButton` keeps `cn()` but is now only rendered on the server: the header's and the overview modal's buttons are created by the (server) layout and page and passed in as props; the error boundary uses the shared, merge-free class strings (`glass-button-styles.ts`).
+- Visual output is unchanged: the same classes reach the DOM, and the screenshot and axe suites pass.
+
+HTML grew by ~1 KB per page because the header's two buttons are now server-rendered (their markup moves from the JS bundle into the page).
+
+**Investigated and left unchanged.**
+- *Framework JS* (react-dom 224 KB, Next.js router 159 KB, runtime ~55 KB) is ~85% of every route's JS and cannot be removed.
+- *Inline RSC payload*: App Router serializes each static page's element tree next to its HTML. On `/` the decoded payload is 84 KB: class names 31 KB, text 12 KB, logo SVG and JSON-LD 6 KB, the rest element structure. Nothing is serialized more than that one inherent copy (journey stages, JSON-LD and logos appear once each). Repeated class strings compress to almost nothing under gzip (the whole page is 30 KB gzipped), so extracting them into CSS component classes was not worth the styling churn.
+- *Header logo SVGs* (5.2 KB in the header chunk): moving them to the server would add the same bytes to every page's HTML instead; roughly break-even.
+- *Lazy-loading*: the only sizeable interactive component, the Radix dialog on `/collaboration` (~37 KB), sits above the fold next to its trigger; the scientific journey's client code is 3 KB. No below-the-fold candidate would save a meaningful amount.
+

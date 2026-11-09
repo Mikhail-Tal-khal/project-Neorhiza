@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { RotateCcw } from "lucide-react";
-import { GlassButton } from "@/components/ui/glass-button";
+import { glassButtonClasses } from "@/components/ui/glass-button-styles";
 
 /** Global error boundary — brand-styled, with recovery action. */
 export default function GlobalError({
@@ -29,10 +29,10 @@ export default function GlobalError({
           problem persists, please try again later.
         </p>
         <div className="mt-8 flex justify-center">
-          <GlassButton onClick={reset} size="lg">
+          <button type="button" onClick={reset} className={glassButtonClasses("primary", "lg")}>
             <RotateCcw aria-hidden="true" className="size-4" />
             Try again
-          </GlassButton>
+          </button>
         </div>
       </div>
     </div>

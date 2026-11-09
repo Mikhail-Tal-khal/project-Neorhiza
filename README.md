@@ -147,7 +147,7 @@ npm audit --omit=dev --audit-level=high   # production dependencies (also in CI)
 The contact API and rate-limit tests (`tests/contact-api.spec.ts`, `tests/rate-limit.spec.ts`) call the route handler in-process with a mocked `fetch`; they need no server and can run alone:
 
 ```bash
-E2E_BASE_URL=http://127.0.0.1:9 npx playwright test tests/contact-api.spec.ts tests/rate-limit.spec.ts
+E2E_BASE_URL=http://127.0.0.1:9 npx playwright test tests/contact-api.spec.ts tests/rate-limit.spec.ts tests/verification.spec.ts
 ```
 
 `test:e2e` starts its own production servers (`next start`) and a local webhook sink, so run `npm run build` first. To use an already-installed Chromium instead of Playwright's managed download, set `PLAYWRIGHT_CHROMIUM_PATH=/path/to/chrome`. Screenshots for visual review are saved to `test-results/screenshots/`.

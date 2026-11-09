@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { Monitor, Moon, Sun } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 
 const OPTIONS = [
   { value: "light", label: "Light theme", Icon: Sun },
@@ -54,7 +54,7 @@ export function ThemeToggle({
             : "Color theme"
         }
         title={mounted ? `${current.label} — click for ${next.label.toLowerCase()}` : "Color theme"}
-        className={cn(
+        className={cx(
           "glass inline-flex size-11 items-center justify-center rounded-full text-teal-700 transition-colors hover:text-teal-900 dark:text-mist-200 dark:hover:text-white",
           className
         )}
@@ -68,7 +68,7 @@ export function ThemeToggle({
     <div
       role="group"
       aria-label="Color theme"
-      className={cn(
+      className={cx(
         "glass inline-flex items-center gap-0.5 rounded-full p-1",
         className
       )}
@@ -83,7 +83,7 @@ export function ThemeToggle({
             aria-label={label}
             title={label}
             onClick={() => setTheme(value)}
-            className={cn(
+            className={cx(
               "flex size-11 items-center justify-center rounded-full transition-colors duration-200",
               active
                 ? "bg-teal-700 text-white dark:bg-white/90 dark:text-teal-950"

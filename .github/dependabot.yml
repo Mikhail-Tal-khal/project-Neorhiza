@@ -1,3 +1,6 @@
+# Dependabot only opens pull requests; nothing is merged automatically.
+# Minor and patch updates are grouped. Each major update arrives as its own
+# PR so it can be reviewed and must pass CI before anyone merges it.
 version: 2
 updates:
   - package-ecosystem: npm
@@ -8,7 +11,15 @@ updates:
     groups:
       next-react:
         patterns: ["next", "eslint-config-next", "react", "react-dom", "@types/react*"]
+        update-types: ["minor", "patch"]
+      npm-minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    groups:
+      actions-minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]

@@ -1,5 +1,5 @@
 import { Info } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 
 /**
  * ResearchDisclaimer — frosted panel carrying one of the required verbatim
@@ -16,7 +16,7 @@ export function ResearchDisclaimer({
 }) {
   return (
     <aside
-      className={cn(
+      className={cx(
         "glass flex items-start gap-3 rounded-2xl p-4 text-sm leading-relaxed text-muted md:items-center",
         className
       )}

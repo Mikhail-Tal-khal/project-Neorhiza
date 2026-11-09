@@ -6,17 +6,28 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { GlassButton } from "@/components/ui/glass-button";
 import { navItems } from "@/lib/site";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 
 /**
  * GlassNavigation — floating translucent navigation bar. Becomes more
  * opaque on scroll; expands into an accessible iOS-style glass panel on
  * mobile. The full horizontal lockup sits on glass with at least 85%
  * effective opacity (glass-strong), honoring the brand clear-space rule.
+ *
+ * The call-to-action buttons are rendered by the (server) root layout and
+ * passed in, so GlassButton and its class merging stay out of the browser
+ * bundle.
  */
-export function SiteHeader() {
+export function SiteHeader({
+  cta,
+  mobileCta,
+}: {
+  /** Desktop call to action, shown from the md breakpoint. */
+  cta: React.ReactNode;
+  /** Call to action inside the mobile menu panel. */
+  mobileCta: React.ReactNode;
+}) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -50,7 +61,7 @@ export function SiteHeader() {
       <div className="mx-auto w-full max-w-7xl px-3 md:px-6">
         <nav
           aria-label="Primary"
-          className={cn(
+          className={cx(
             "glass-strong flex items-center justify-between gap-2 rounded-2xl px-4 py-2.5 transition-shadow duration-300 md:rounded-full",
             scrolled &&
               "shadow-lift"
@@ -73,7 +84,7 @@ export function SiteHeader() {
                 <Link
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
-                  className={cn(
+                  className={cx(
                     "relative flex min-h-11 items-center whitespace-nowrap rounded-full px-1.5 text-[0.8rem] font-medium transition-colors",
                     isActive(item.href)
                       ? "text-teal-700 dark:text-white"
@@ -93,15 +104,10 @@ export function SiteHeader() {
           </ul>
 
           <div className="flex items-center gap-1.5">
-            <ThemeToggle compact className="hidden xl:inline-flex" />
-            <GlassButton
-              href="/collaboration"
-              size="md"
-              className="hidden whitespace-nowrap md:inline-flex"
-              analytics={{ event: "collaboration_cta_clicked", location: "header" }}
-            >
-              Collaborate With Neorhiza
-            </GlassButton>
+            <div className="hidden xl:flex">
+              <ThemeToggle compact />
+            </div>
+            {cta}
 
             {/* Mobile menu button — 44px touch target */}
             <button
@@ -136,7 +142,7 @@ export function SiteHeader() {
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   onClick={() => setOpen(false)}
-                  className={cn(
+                  className={cx(
                     "flex min-h-11 items-center justify-between rounded-2xl px-4 text-[0.95rem] font-medium transition-colors",
                     isActive(item.href)
                       ? "bg-teal-700 text-white dark:bg-white/90 dark:text-teal-950"
@@ -156,14 +162,7 @@ export function SiteHeader() {
           </ul>
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-border px-2 pt-4">
             <ThemeToggle />
-            <GlassButton
-              href="/collaboration"
-              size="md"
-              className="flex-1 md:hidden"
-              analytics={{ event: "collaboration_cta_clicked", location: "mobile-menu" }}
-            >
-              Collaborate
-            </GlassButton>
+            {mobileCta}
           </div>
         </div>
       </div>

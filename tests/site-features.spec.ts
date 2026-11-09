@@ -165,16 +165,33 @@ test.describe("search readiness", () => {
     expect(new Set(entries.map((e) => e.lastmod)).size).toBeGreaterThan(1);
   });
 
-  test("verification tags are only emitted when configured", async ({ page }) => {
-    await page.goto("/");
-    const configured = {
-      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
-      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION,
+  test("the sitemap lists /funding and every article, and never the API", async ({ request }) => {
+    const xml = await (await request.get("/sitemap.xml")).text();
+    const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => toPath(m[1]));
+    expect(locs).toContain("/funding");
+    for (const article of ARTICLES) expect(locs).toContain(article);
+    expect(locs.filter((l) => l.startsWith("/api"))).toEqual([]);
+  });
+
+  // The build under test decides the expectation: with the variables unset
+  // (the default) no tag may appear; with values set at build time, every
+  // indexable page must carry the trimmed value.
+  test("verification tags match the build configuration on every page", async ({ request }) => {
+    const expected = {
+      "google-site-verification": process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim() ?? "",
+      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION?.trim() ?? "",
     };
-    for (const [name, value] of Object.entries(configured)) {
-      const tag = page.locator(`meta[name="${name === "google" ? "google-site-verification" : name}"]`);
-      if (value) await expect(tag).toHaveAttribute("content", value);
-      else await expect(tag).toHaveCount(0);
+    for (const path of PAGES) {
+      const html = await (await request.get(path)).text();
+      for (const [name, value] of Object.entries(expected)) {
+        const tags = [...html.matchAll(new RegExp(`<meta name="${name.replace(".", "\\.")}" content="([^"]*)"`, "g"))];
+        if (value) {
+          expect(tags.map((t) => t[1]), `${name} on ${path}`).toEqual([value]);
+        } else {
+          expect(tags, `${name} on ${path}`).toHaveLength(0);
+        }
+      }
+      expect(html, path).not.toMatch(/<meta name="(google-site-verification|msvalidate\.01)" content=""/);
     }
   });
 });

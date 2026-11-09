@@ -36,19 +36,18 @@ Production needs a shared store.
 
 ## 3. Email delivery
 
-- [ ] Resend shows `mail.neorhiza.space` as **Verified**.
+- [x] Resend shows `mail.neorhiza.space` as **Verified** (live delivery confirmed 2026-11-09).
 - [ ] Send a real test inquiry from `/contact` after deployment: the notification reaches `inquiries@neorhiza.space` (reply goes to the visitor) and the visitor receives "We received your inquiry — Project Neorhiza".
 - [ ] The inquiry mailbox is **monitored**, with a named person responsible and a target of replying within ten working days (the site promises this).
 
 ## 4. Vercel protection
 
-- [ ] **Web Analytics**: Vercel → project → Analytics → Enable. (The site only loads the script on Vercel builds; it is first-party and cookieless.)
-- [ ] **Speed Insights**: Vercel → project → Speed Insights → Enable.
+- [x] **Web Analytics**: Vercel → project → Analytics → Enable. (The site only loads the script on Vercel builds; it is first-party and cookieless.)
+- [x] **Speed Insights**: Vercel → project → Speed Insights → Enable.
 - [ ] Custom analytics events (see [analytics-events.md](analytics-events.md)) require a plan that supports custom events; page views work on all plans.
-- [ ] **Bot Protection**: Vercel → Firewall → Bot Management → enable *Bot Protection* (challenge mode) if available on the plan.
-- [ ] **Firewall rate-limit rule** for the API, in addition to the app limiter:
-  - Condition: Request Path *equals* `/api/contact` **and** Method *equals* `POST`
-  - Action: Rate limit — e.g. 10 requests per 60 s per IP → **Deny** (or Challenge)
+- [x] **Bot Protection**: Vercel → Firewall → Bot Management → *Bot Protection* (enabled in **Log** mode).
+  - [ ] After reviewing its logs for a week or two, consider switching to **Challenge** mode.
+- [x] **Firewall rate-limit rule** for the API, in addition to the app limiter: rule `Contact API rate limit` on `/api/contact`, 5 requests per IP every 600 s → HTTP 429. It matches the app limiter's defaults, so it holds the line in production until Upstash is connected; the app keeps working (in-memory fallback) if Upstash is ever unreachable.
 - [ ] Deployment Protection for Preview deployments (Vercel Authentication) so previews are not publicly indexed.
 
 ## 5. GitHub repository
