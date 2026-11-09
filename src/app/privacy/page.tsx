@@ -25,7 +25,7 @@ const sections = [
   {
     title: "How we use it",
     body: [
-      "Information submitted through the contact form is used for one purpose only: reviewing and responding to your professional inquiry in line with the collaboration framework described on the Collaboration page. Qualified inquiries may receive the public research overview or an invitation to a meeting.",
+      "Information submitted through the contact form is used for one purpose only: reviewing and responding to your professional inquiry in line with the collaboration framework described on the Collaboration page. Qualified inquiries may receive the public research overview or an invitation to a meeting. When your inquiry is delivered by email, a single automated confirmation of receipt is sent to the email address you provided; it does not repeat your message.",
       "We do not sell, rent or share your information for marketing purposes, and we do not use it to send newsletters or promotional material.",
     ],
   },

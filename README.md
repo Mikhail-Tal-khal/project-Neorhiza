@@ -43,11 +43,40 @@ All variables are documented in [`.env.example`](.env.example). None are require
 | `NEXT_PUBLIC_SITE_URL` | Base URL for canonical links, sitemap, robots, OG images, structured data | Falls back to `https://neorhiza.org` |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Public contact address in structured data | Omitted |
 | `CONTACT_WEBHOOK_URL`, `CONTACT_WEBHOOK_TOKEN` | Contact form delivery via webhook | — |
-| `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | Contact form delivery via email (Resend) | — |
+| `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | Contact form delivery via email (Resend): internal notification plus a confirmation to the visitor | — |
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (or `KV_REST_API_URL`, `KV_REST_API_TOKEN`) | Shared rate-limit store for serverless | In-memory limiter (per instance) |
 | `CONTACT_RATE_LIMIT_MAX`, `CONTACT_RATE_LIMIT_WINDOW_SECONDS` | Rate-limit tuning | 5 per 600 s |
 
 If **no** delivery destination (webhook or Resend) is configured, the contact form still validates input but then tells the visitor it is temporarily unavailable (HTTP 503). It never pretends a message was sent.
+
+### Contact email delivery (Resend)
+
+With all three Resend variables set, each valid inquiry produces two emails, sent server-side only:
+
+1. **Internal notification** → `CONTACT_TO_EMAIL`, from `CONTACT_FROM_EMAIL`, `reply_to` set to the visitor's professional email. Subject: `[Neorhiza Inquiry] {Area of interest} — {Full name}`. HTML (every visitor value escaped) plus a plain-text fallback. Consent and honeypot fields are never included.
+2. **Visitor confirmation**, sent only after the notification succeeds → the visitor, `reply_to` set to the first `CONTACT_TO_EMAIL` address. Subject: `We received your inquiry — Project Neorhiza`. It contains no visitor-supplied text, so the form cannot relay arbitrary content to a third party.
+
+| Outcome | Response |
+|---|---|
+| Wrong content type | 415 |
+| Invalid JSON or failed validation | 400 (with per-field `errors`) |
+| Body over 16 KB | 413 |
+| Rate limit exceeded | 429 with `Retry-After` |
+| Honeypot filled | 200, nothing delivered |
+| No delivery destination configured | 503 |
+| Notification failed at every destination | 502 |
+| Notification delivered (confirmation sent or not) | 200 |
+
+A failed confirmation never loses the inquiry: the form still succeeds and only a generic reason (for example `email provider responded 500`) is logged. Logs never contain names, addresses, message text or provider response bodies. `RESEND_API_KEY` is read only in `src/lib/contact-delivery.ts` on the server; never give it a `NEXT_PUBLIC_` prefix.
+
+Production values (Vercel → Project Settings → Environment Variables):
+
+```
+RESEND_API_KEY=<from the Resend dashboard>
+CONTACT_TO_EMAIL=inquiries@neorhiza.space
+CONTACT_FROM_EMAIL=Project Neorhiza <website@mail.neorhiza.space>
+NEXT_PUBLIC_CONTACT_EMAIL=inquiries@neorhiza.space
+```
 
 ## Project structure
 

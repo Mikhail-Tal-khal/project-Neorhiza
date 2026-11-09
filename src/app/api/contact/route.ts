@@ -31,10 +31,14 @@ export async function POST(request: Request) {
     return fail(415, "Invalid request format.");
   }
 
+  const tooLarge = () => fail(413, "This message is too large to send.");
+  // Reject declared oversize bodies before reading them.
+  if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) return tooLarge();
+
   let body: Record<string, unknown>;
   try {
     const raw = await request.text();
-    if (raw.length > MAX_BODY_BYTES) return fail(413, "This message is too large to send.");
+    if (Buffer.byteLength(raw, "utf8") > MAX_BODY_BYTES) return tooLarge();
     const parsed: unknown = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error();
     body = parsed as Record<string, unknown>;

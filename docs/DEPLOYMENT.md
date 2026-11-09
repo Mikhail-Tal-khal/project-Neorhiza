@@ -34,7 +34,7 @@ Project Settings → Environment Variables. Add for **Production** (and for Prev
 | `NEXT_PUBLIC_CONTACT_EMAIL` | *(optional)* a real, monitored address |
 | `RESEND_API_KEY` | Resend API key *(email delivery)* |
 | `CONTACT_TO_EMAIL` | inbox that receives inquiries |
-| `CONTACT_FROM_EMAIL` | e.g. `Neorhiza Website <noreply@your-domain.org>`, using a domain verified in Resend |
+| `CONTACT_FROM_EMAIL` | e.g. `Project Neorhiza <website@mail.your-domain.org>`, using a domain verified in Resend |
 | `CONTACT_WEBHOOK_URL` / `CONTACT_WEBHOOK_TOKEN` | *(alternative or additional)* webhook delivery |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Rate-limit store. If you add Upstash through **Storage → Marketplace**, Vercel injects `KV_REST_API_URL` / `KV_REST_API_TOKEN` instead; both naming schemes work. |
 
@@ -78,7 +78,7 @@ Run these against the production URL (`SITE=https://your-domain.org`):
 - [ ] **Home loads**: `curl -sI $SITE | head -1` → `200`
 - [ ] **Theme works**: toggle light / dark / system in the header; reload keeps the choice; no flash of the wrong theme.
 - [ ] **All pages load**: `BASE_URL=$SITE npm run check:links` → zero broken links or anchors; the custom 404 renders.
-- [ ] **Form sends**: submit a real test inquiry on `/contact` → "Inquiry received", and the message arrives in `CONTACT_TO_EMAIL` or at the webhook.
+- [ ] **Form sends**: submit a real test inquiry on `/contact` → "Inquiry received", and the message arrives in `CONTACT_TO_EMAIL` or at the webhook. With Resend, replying to the notification addresses the visitor, and the visitor's address receives "We received your inquiry — Project Neorhiza".
 - [ ] **Form fails honestly** (optional, on a preview without delivery variables): the form shows "temporarily unavailable".
 - [ ] **Sitemap and robots**: `curl -s $SITE/sitemap.xml` lists every page on the real domain; `curl -s $SITE/robots.txt` shows `Sitemap: $SITE/sitemap.xml`.
 - [ ] **OG image renders**: open `$SITE/opengraph-image` and an article's `/opengraph-image`; validate with <https://www.opengraph.xyz> or the LinkedIn Post Inspector.

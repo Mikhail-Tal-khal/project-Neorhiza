@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { contactLimits } from "@/lib/contact-limits";
 import { inquiryTypes } from "@/lib/inquiry-types";
 
 export { inquiryTypes, type InquiryType } from "@/lib/inquiry-types";
@@ -18,7 +19,12 @@ export function sanitizeText(value: string): string {
 const nameRule = z
   .string()
   .transform(sanitizeText)
-  .pipe(z.string().min(2, "Please enter your full name.").max(120, "Name is too long."));
+  .pipe(
+    z
+      .string()
+      .min(contactLimits.fullName.min, "Please enter your full name.")
+      .max(contactLimits.fullName.max, "Name is too long.")
+  );
 
 const optionalText = (max: number, label: string) =>
   z
@@ -30,14 +36,14 @@ const optionalText = (max: number, label: string) =>
 
 export const contactSchema = z.object({
   fullName: nameRule,
-  organization: optionalText(160, "Organization"),
-  professionalRole: optionalText(120, "Professional role"),
-  country: optionalText(80, "Country"),
+  organization: optionalText(contactLimits.organization.max, "Organization"),
+  professionalRole: optionalText(contactLimits.professionalRole.max, "Professional role"),
+  country: optionalText(contactLimits.country.max, "Country"),
   professionalEmail: z
     .string()
     .transform(sanitizeText)
     .pipe(z.email("Please enter a valid professional email address."))
-    .pipe(z.string().max(200, "Email is too long.")),
+    .pipe(z.string().max(contactLimits.professionalEmail.max, "Email is too long.")),
   areaOfInterest: z.enum(inquiryTypes, {
     message: "Please select an area of interest.",
   }),
@@ -47,8 +53,8 @@ export const contactSchema = z.object({
     .pipe(
       z
         .string()
-        .min(20, "Please provide a short message (at least 20 characters).")
-        .max(4000, "Message is too long (maximum 4000 characters).")
+        .min(contactLimits.message.min, "Please provide a short message (at least 20 characters).")
+        .max(contactLimits.message.max, "Message is too long (maximum 4000 characters).")
     ),
   consent: z.literal(true, {
     message: "Please confirm consent to be contacted about this inquiry.",

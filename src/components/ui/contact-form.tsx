@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { AlertCircle, CheckCircle2, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { contactLimits } from "@/lib/contact-limits";
 import { inquiryTypes } from "@/lib/inquiry-types";
 
 type FieldErrors = Record<string, string>;
@@ -53,6 +54,9 @@ export function ContactForm() {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [clientErrors, setClientErrors] = useState<FieldErrors>({});
   const formRef = useRef<HTMLFormElement>(null);
+  // Synchronous guard: state updates are async, so a fast double-click or
+  // repeated Enter could otherwise send the inquiry twice.
+  const submittingRef = useRef(false);
 
   /** Moves focus to the first field with an error so it is announced. */
   function focusFirstError(errors: FieldErrors) {
@@ -83,18 +87,34 @@ export function ContactForm() {
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submittingRef.current) return;
 
     // Light client-side pass for immediate feedback; the server remains
     // authoritative.
     const errors: FieldErrors = {};
-    if (values.fullName.trim().length < 2)
+    const fullName = values.fullName.trim();
+    const email = values.professionalEmail.trim();
+    const message = values.message.trim();
+    if (fullName.length < contactLimits.fullName.min)
       errors.fullName = "Please enter your full name.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.professionalEmail.trim()))
+    else if (fullName.length > contactLimits.fullName.max)
+      errors.fullName = "Name is too long.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       errors.professionalEmail = "Please enter a valid professional email address.";
+    else if (email.length > contactLimits.professionalEmail.max)
+      errors.professionalEmail = "Email is too long.";
+    if (values.organization.trim().length > contactLimits.organization.max)
+      errors.organization = "Organization is too long.";
+    if (values.professionalRole.trim().length > contactLimits.professionalRole.max)
+      errors.professionalRole = "Professional role is too long.";
+    if (values.country.trim().length > contactLimits.country.max)
+      errors.country = "Country is too long.";
     if (!values.areaOfInterest)
       errors.areaOfInterest = "Please select an area of interest.";
-    if (values.message.trim().length < 20)
+    if (message.length < contactLimits.message.min)
       errors.message = "Please provide a short message (at least 20 characters).";
+    else if (message.length > contactLimits.message.max)
+      errors.message = "Message is too long (maximum 4000 characters).";
     if (!values.consent)
       errors.consent = "Please confirm consent to be contacted about this inquiry.";
 
@@ -109,6 +129,7 @@ export function ContactForm() {
       return;
     }
 
+    submittingRef.current = true;
     setStatus({ kind: "submitting" });
     try {
       const response = await fetch("/api/contact", {
@@ -144,6 +165,8 @@ export function ContactForm() {
         message:
           "A network error occurred while sending your inquiry. Please try again.",
       });
+    } finally {
+      submittingRef.current = false;
     }
   }
 
@@ -184,6 +207,7 @@ export function ContactForm() {
       onSubmit={onSubmit}
       noValidate
       aria-describedby="form-required-note"
+      aria-busy={status.kind === "submitting"}
       className="glass rounded-3xl p-6 md:p-8"
     >
       <p id="form-required-note" className="mb-5 text-sm text-muted">
@@ -266,10 +290,13 @@ export function ContactForm() {
             name="organization"
             type="text"
             autoComplete="organization"
+            aria-invalid={Boolean(clientErrors.organization)}
+            aria-describedby={clientErrors.organization ? "organization-error" : undefined}
             value={values.organization}
             onChange={set("organization")}
             className={inputClass}
           />
+          <FieldError id="organization-error" message={clientErrors.organization} />
         </div>
 
         <div>
@@ -284,10 +311,13 @@ export function ContactForm() {
             name="professionalRole"
             type="text"
             autoComplete="organization-title"
+            aria-invalid={Boolean(clientErrors.professionalRole)}
+            aria-describedby={clientErrors.professionalRole ? "professionalRole-error" : undefined}
             value={values.professionalRole}
             onChange={set("professionalRole")}
             className={inputClass}
           />
+          <FieldError id="professionalRole-error" message={clientErrors.professionalRole} />
         </div>
 
         <div>
@@ -302,10 +332,13 @@ export function ContactForm() {
             name="country"
             type="text"
             autoComplete="country-name"
+            aria-invalid={Boolean(clientErrors.country)}
+            aria-describedby={clientErrors.country ? "country-error" : undefined}
             value={values.country}
             onChange={set("country")}
             className={inputClass}
           />
+          <FieldError id="country-error" message={clientErrors.country} />
         </div>
 
         <div>
