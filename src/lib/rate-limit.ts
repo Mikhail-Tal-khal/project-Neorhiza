@@ -2,9 +2,9 @@
  * Rate limiting for Route Handlers.
  *
  * Two stores sit behind one interface:
- *  - Upstash Redis REST (also what Vercel KV exposes), used when
- *    UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN (or KV_REST_API_URL +
- *    KV_REST_API_TOKEN) are set. Shared across serverless instances.
+ *  - Upstash Redis REST (also what Vercel KV exposes), used when a complete
+ *    credential pair is set (see `REDIS_CREDENTIAL_PAIRS`). Shared across
+ *    serverless instances.
  *  - An in-memory sliding window, used for local development, tests and
  *    previews, and as a fallback if the remote store is unreachable. It only
  *    limits within a single server instance, so on Vercel production it is a
@@ -103,15 +103,25 @@ export function createUpstashLimiter(url: string, token: string): RateLimiter {
 const memory = createMemoryLimiter();
 
 /**
- * The shared-store credentials, taken only from a complete pair: Upstash
- * names first, then Vercel KV names. A half-set pair never combines with the
- * other naming scheme (that would send one store's token to another's URL).
+ * Accepted names for the shared store's REST credentials, in priority order:
+ * Upstash's own names, Vercel KV / Upstash-for-Vercel names, and the same
+ * with the `NEORHIZA_` prefix Vercel adds when a store is connected with a
+ * custom environment-variable prefix. Keep in sync with next.config.ts and
+ * scripts/check-production-config.mjs (a test enforces this).
+ */
+export const REDIS_CREDENTIAL_PAIRS = [
+  ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"],
+  ["KV_REST_API_URL", "KV_REST_API_TOKEN"],
+  ["NEORHIZA_KV_REST_API_URL", "NEORHIZA_KV_REST_API_TOKEN"],
+] as const;
+
+/**
+ * The shared-store credentials, taken only from a complete pair, in the
+ * order above. A half-set pair never combines with another naming scheme
+ * (that would send one store's token to another store's URL).
  */
 function remoteConfig() {
-  for (const [urlName, tokenName] of [
-    ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"],
-    ["KV_REST_API_URL", "KV_REST_API_TOKEN"],
-  ] as const) {
+  for (const [urlName, tokenName] of REDIS_CREDENTIAL_PAIRS) {
     const url = envValue(urlName);
     const token = envValue(tokenName);
     if (url && token) return { url, token };
@@ -151,7 +161,7 @@ export function rateLimitStoreStatus(): RateLimitStoreStatus {
       store: "memory",
       adequate: false,
       message:
-        "Production has no shared rate-limit store (UPSTASH_REDIS_REST_URL/TOKEN or KV_REST_API_URL/TOKEN). " +
+        "Production has no shared rate-limit store (UPSTASH_REDIS_REST_URL/TOKEN, KV_REST_API_URL/TOKEN or NEORHIZA_KV_REST_API_URL/TOKEN). " +
         "The in-memory fallback limits each serverless instance separately and is NOT adequate production protection.",
     };
   }

@@ -5,7 +5,7 @@
   "description": "Website of Project Neorhiza, an early-stage patient-specific tissue engineering research initiative.",
   "license": "UNLICENSED",
   "engines": {
-    "node": ">=22.0.0"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "next dev",

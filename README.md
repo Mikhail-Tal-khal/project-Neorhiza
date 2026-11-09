@@ -44,7 +44,7 @@ All variables are documented in [`.env.example`](.env.example). None are require
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Public contact address (founder section, structured data, policies) | `inquiries@neorhiza.space` |
 | `CONTACT_WEBHOOK_URL`, `CONTACT_WEBHOOK_TOKEN` | Contact form delivery via webhook | — |
 | `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | Contact form delivery via email (Resend): internal notification plus a confirmation to the visitor | — |
-| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (or `KV_REST_API_URL`, `KV_REST_API_TOKEN`) | Shared rate-limit store — **required in production** (server-side secrets) | In-memory limiter (per instance); production logs a warning and `npm run check:config` fails |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (or `KV_REST_API_URL`, `KV_REST_API_TOKEN`, or `NEORHIZA_KV_REST_API_URL`, `NEORHIZA_KV_REST_API_TOKEN`) | Shared rate-limit store — **required in production** (server-side secrets) | In-memory limiter (per instance); production logs a warning and `npm run check:config` fails |
 | `CONTACT_RATE_LIMIT_MAX`, `CONTACT_RATE_LIMIT_WINDOW_SECONDS` | Rate-limit tuning | 5 per 600 s |
 | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, `NEXT_PUBLIC_BING_SITE_VERIFICATION` | Search-console meta-tag verification (public tokens, not secrets) | No verification tags emitted |
 

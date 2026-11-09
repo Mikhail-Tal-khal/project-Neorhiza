@@ -15,7 +15,7 @@ The contact form's in-memory limiter only counts per serverless instance.
 Production needs a shared store.
 
 - [ ] Vercel → **Storage → Marketplace → Upstash (Redis)** → create a database in the region closest to the Vercel functions, and connect it to this project for **Production** (Preview optional).
-  - This injects `KV_REST_API_URL` and `KV_REST_API_TOKEN`. Alternatively, add `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` from the Upstash console yourself. Either pair works.
+  - This injects `KV_REST_API_URL` and `KV_REST_API_TOKEN`, or `NEORHIZA_KV_REST_API_URL` and `NEORHIZA_KV_REST_API_TOKEN` if the store is connected with the custom prefix `NEORHIZA`. Alternatively, add `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` from the Upstash console yourself. Any complete pair works.
 - [ ] Confirm both variables are marked **Sensitive** in Vercel → Settings → Environment Variables.
 - [ ] After the next production build, the Vercel build log must **not** show `⚠ Production has no shared rate-limit store`.
 - [ ] Optional: run the config check locally against pulled production values (delete the file afterwards):
