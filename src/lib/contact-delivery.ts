@@ -29,13 +29,24 @@ function webhookTarget() {
   return url ? { url, token: process.env.CONTACT_WEBHOOK_TOKEN } : null;
 }
 
+/**
+ * Reads an env value, dropping one pair of surrounding quotes. Dashboards
+ * such as Vercel's keep quotes typed into the value field literally, which
+ * would turn `"Name <a@b.c>"` into an invalid sender.
+ */
+function envValue(name: string): string {
+  const value = (process.env[name] ?? "").trim();
+  const match = /^(["'])(.*)\1$/s.exec(value);
+  return (match ? match[2] : value).trim();
+}
+
 function resendTarget(): ResendTarget | null {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  const to = (process.env.CONTACT_TO_EMAIL ?? "")
+  const apiKey = envValue("RESEND_API_KEY");
+  const to = envValue("CONTACT_TO_EMAIL")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
-  const from = process.env.CONTACT_FROM_EMAIL?.trim();
+  const from = envValue("CONTACT_FROM_EMAIL");
   return apiKey && to.length > 0 && from ? { apiKey, to, from } : null;
 }
 

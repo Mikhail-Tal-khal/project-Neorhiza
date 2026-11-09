@@ -260,6 +260,19 @@ test.describe("contact API — Resend delivery", () => {
     expectNoPersonalDataLogged();
   });
 
+  test("surrounding quotes pasted into env values are ignored", async () => {
+    process.env.CONTACT_FROM_EMAIL = '"Project Neorhiza <website@mail.neorhiza.space>"';
+    process.env.CONTACT_TO_EMAIL = "'inquiries@neorhiza.space'";
+    process.env.RESEND_API_KEY = ' "re_test_key" ';
+    const res = await post(VALID);
+    expect(res.status).toBe(200);
+    const [notification, confirmation] = emails();
+    expect(notification.from).toBe("Project Neorhiza <website@mail.neorhiza.space>");
+    expect(notification.to).toEqual(["inquiries@neorhiza.space"]);
+    expect(confirmation.reply_to).toBe("inquiries@neorhiza.space");
+    expect(new Headers(calls[0].init.headers).get("authorization")).toBe("Bearer re_test_key");
+  });
+
   test("webhook delivery still works alongside Resend", async () => {
     process.env.CONTACT_WEBHOOK_URL = "https://hooks.example.test/neorhiza";
     process.env.CONTACT_WEBHOOK_TOKEN = "hook-token";
