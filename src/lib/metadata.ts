@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { site } from "@/lib/site";
 
+/** RSS discovery link, repeated on every page (per-page alternates replace the root's). */
+export const feedAlternates = {
+  types: {
+    "application/rss+xml": [{ url: `${site.url}/updates/feed.xml`, title: `${site.name} — Updates` }],
+  },
+};
+
 type PageMetaInput = {
   title: string;
   description: string;
@@ -32,7 +39,7 @@ export function createMetadata({
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: { canonical: url, ...feedAlternates },
     openGraph: {
       title: `${title} — ${site.shortName}`,
       description,

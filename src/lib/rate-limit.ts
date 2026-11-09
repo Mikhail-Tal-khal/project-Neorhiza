@@ -5,9 +5,11 @@
  *  - Upstash Redis REST (also what Vercel KV exposes), used when
  *    UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN (or KV_REST_API_URL +
  *    KV_REST_API_TOKEN) are set. Shared across serverless instances.
- *  - An in-memory sliding window, used for local development and as a
- *    fallback if the remote store is unreachable. It only limits within a
- *    single server instance.
+ *  - An in-memory sliding window, used for local development, tests and
+ *    previews, and as a fallback if the remote store is unreachable. It only
+ *    limits within a single server instance, so on Vercel production it is a
+ *    degraded mode: `rateLimitStoreStatus()` reports it and a warning is
+ *    logged (see also `npm run check:config`).
  */
 
 export type RateLimitResult = {
@@ -105,8 +107,60 @@ function remoteConfig() {
 }
 
 /**
+ * True on a production deployment: Vercel's production environment, or a
+ * production build (`next start`) outside Vercel. Vercel previews and
+ * `next dev` are not production.
+ */
+export function isProductionDeployment(): boolean {
+  if (process.env.VERCEL_ENV) return process.env.VERCEL_ENV === "production";
+  return process.env.NODE_ENV === "production";
+}
+
+export type RateLimitStoreStatus = {
+  /** Which store protects the contact form right now. */
+  store: "shared" | "memory";
+  /** Whether that is acceptable for this environment. */
+  adequate: boolean;
+  /** Human-readable, secret-free explanation. */
+  message: string;
+};
+
+/**
+ * Secret-free description of the rate-limit configuration. Never includes
+ * URLs or tokens — only whether they are present.
+ */
+export function rateLimitStoreStatus(): RateLimitStoreStatus {
+  if (remoteConfig()) {
+    return { store: "shared", adequate: true, message: "Shared rate-limit store configured." };
+  }
+  if (isProductionDeployment()) {
+    return {
+      store: "memory",
+      adequate: false,
+      message:
+        "Production has no shared rate-limit store (UPSTASH_REDIS_REST_URL/TOKEN or KV_REST_API_URL/TOKEN). " +
+        "The in-memory fallback limits each serverless instance separately and is NOT adequate production protection.",
+    };
+  }
+  return {
+    store: "memory",
+    adequate: true,
+    message: "In-memory rate limiting (acceptable for local development, tests and previews).",
+  };
+}
+
+let warnedMissingStore = false;
+
+/** Test hook: resets the once-per-instance warning. */
+export function resetRateLimitWarnings() {
+  warnedMissingStore = false;
+}
+
+/**
  * Applies the configured limiter. If the remote store fails, the in-memory
- * limiter is used for that request so the form keeps working.
+ * limiter is used for that request so the form keeps working, and the
+ * failure is logged. In production without a shared store, a warning is
+ * logged once per instance: in-memory limiting is a degraded mode there.
  */
 export async function rateLimit(
   key: string,
@@ -117,8 +171,18 @@ export async function rateLimit(
   if (remote) {
     try {
       return await createUpstashLimiter(remote.url, remote.token).limit(key, max, windowMs);
-    } catch {
-      console.error("Rate-limit store unavailable; using in-memory fallback.");
+    } catch (error) {
+      const reason =
+        error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")
+          ? "timed out"
+          : "unavailable";
+      console.error(`Rate-limit store ${reason}; using in-memory fallback for this request.`);
+    }
+  } else if (!warnedMissingStore) {
+    const status = rateLimitStoreStatus();
+    if (!status.adequate) {
+      warnedMissingStore = true;
+      console.error(`[rate-limit] ${status.message}`);
     }
   }
   return memory.limit(key, max, windowMs);

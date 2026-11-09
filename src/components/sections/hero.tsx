@@ -41,7 +41,12 @@ export function Hero() {
             <GlassButton href="/our-science" size="lg">
               Explore the Vision
             </GlassButton>
-            <GlassButton href="/collaboration" variant="secondary" size="lg">
+            <GlassButton
+              href="/collaboration"
+              variant="secondary"
+              size="lg"
+              analytics={{ event: "collaboration_cta_clicked", location: "home-hero" }}
+            >
               Collaborate With Neorhiza
             </GlassButton>
           </div>

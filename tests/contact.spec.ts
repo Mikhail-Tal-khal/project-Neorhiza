@@ -149,6 +149,7 @@ test.describe("contact form", () => {
       "Clinical advisory",
       "Engineering collaboration",
       "Ethics and regulation",
+      "Funding and foundation support",
       "Media inquiry",
       "General inquiry",
     ]);

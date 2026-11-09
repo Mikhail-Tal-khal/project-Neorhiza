@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { PAGES, trackConsole } from "./support/site";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://neorhiza.org";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.neorhiza.space";
 
 test.describe("every page", () => {
   for (const path of PAGES) {
@@ -113,6 +113,18 @@ test.describe("metadata routes", () => {
     expect(h["referrer-policy"]).toBe("strict-origin-when-cross-origin");
     expect(h["permissions-policy"]).toContain("camera=()");
     expect(h["x-powered-by"]).toBeUndefined();
+    expect(h["cross-origin-opener-policy"]).toBe("same-origin");
+    expect(h["cross-origin-resource-policy"]).toBe("same-origin");
+    expect(h["x-permitted-cross-domain-policies"]).toBe("none");
+    expect(h["origin-agent-cluster"]).toBe("?1");
+  });
+
+  test("share images stay embeddable cross-origin; the API is never cached", async ({ request }) => {
+    for (const path of ["/opengraph-image", "/updates/what-a-bioreactor-does/opengraph-image", "/images/logo/neorhiza-icon.svg"]) {
+      expect((await request.get(path)).headers()["cross-origin-resource-policy"], path).toBe("cross-origin");
+    }
+    const api = await request.post("/api/contact", { headers: { "content-type": "text/plain" }, data: "x" });
+    expect(api.headers()["cache-control"]).toBe("no-store");
   });
 });
 

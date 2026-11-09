@@ -98,6 +98,7 @@ export function SiteHeader() {
               href="/collaboration"
               size="md"
               className="hidden whitespace-nowrap md:inline-flex"
+              analytics={{ event: "collaboration_cta_clicked", location: "header" }}
             >
               Collaborate With Neorhiza
             </GlassButton>
@@ -155,7 +156,12 @@ export function SiteHeader() {
           </ul>
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-border px-2 pt-4">
             <ThemeToggle />
-            <GlassButton href="/collaboration" size="md" className="flex-1 md:hidden">
+            <GlassButton
+              href="/collaboration"
+              size="md"
+              className="flex-1 md:hidden"
+              analytics={{ event: "collaboration_cta_clicked", location: "mobile-menu" }}
+            >
               Collaborate
             </GlassButton>
           </div>

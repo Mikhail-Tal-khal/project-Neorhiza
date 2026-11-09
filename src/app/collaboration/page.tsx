@@ -31,7 +31,10 @@ export default function CollaborationPage() {
         />
         <div className="mt-10 flex flex-wrap justify-center gap-3">
           <GlassButton href="/contact" size="lg">
-            Discuss a Collaboration
+            Start a Professional Inquiry
+          </GlassButton>
+          <GlassButton href="/funding" variant="secondary" size="lg">
+            Support the Foundation Phase
           </GlassButton>
           <OverviewRequestModal />
         </div>

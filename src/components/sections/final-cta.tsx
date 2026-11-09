@@ -42,6 +42,7 @@ export function FinalCta() {
               href="/collaboration"
               variant="coral"
               size="lg"
+              analytics={{ event: "collaboration_cta_clicked", location: "home-final" }}
             >
               Collaborate With Neorhiza
             </GlassButton>
@@ -50,14 +51,15 @@ export function FinalCta() {
               size="lg"
               className="bg-white/10 text-white hover:bg-white/20 dark:bg-white/10 dark:text-white"
             >
-              Join the Professional Network
+              Start a Professional Inquiry
             </GlassButton>
             <GlassButton
-              href="/contact"
+              href="/funding"
               size="lg"
               className="border border-white/30 bg-transparent text-white hover:bg-white/10 dark:bg-transparent dark:text-white"
+              analytics={{ event: "funding_inquiry_started", location: "home-final" }}
             >
-              Request a Meeting
+              Support the Foundation Phase
             </GlassButton>
           </div>
 

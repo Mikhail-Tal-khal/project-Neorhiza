@@ -40,12 +40,15 @@ All variables are documented in [`.env.example`](.env.example). None are require
 
 | Variable | Purpose | When missing |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Base URL for canonical links, sitemap, robots, OG images, structured data | Falls back to `https://neorhiza.org` |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | Public contact address in structured data | Omitted |
+| `NEXT_PUBLIC_SITE_URL` | Base URL for canonical links, sitemap, robots, OG images, structured data | Falls back to `https://www.neorhiza.space` |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Public contact address (founder section, structured data, policies) | `inquiries@neorhiza.space` |
 | `CONTACT_WEBHOOK_URL`, `CONTACT_WEBHOOK_TOKEN` | Contact form delivery via webhook | — |
 | `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` | Contact form delivery via email (Resend): internal notification plus a confirmation to the visitor | — |
-| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (or `KV_REST_API_URL`, `KV_REST_API_TOKEN`) | Shared rate-limit store for serverless | In-memory limiter (per instance) |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (or `KV_REST_API_URL`, `KV_REST_API_TOKEN`) | Shared rate-limit store — **required in production** (server-side secrets) | In-memory limiter (per instance); production logs a warning and `npm run check:config` fails |
 | `CONTACT_RATE_LIMIT_MAX`, `CONTACT_RATE_LIMIT_WINDOW_SECONDS` | Rate-limit tuning | 5 per 600 s |
+| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, `NEXT_PUBLIC_BING_SITE_VERIFICATION` | Search-console meta-tag verification (public tokens, not secrets) | No verification tags emitted |
+
+Check a production configuration without printing any value: `npm run check:config` (see [docs/production-launch-checklist.md](docs/production-launch-checklist.md)).
 
 If **no** delivery destination (webhook or Resend) is configured, the contact form still validates input but then tells the visitor it is temporarily unavailable (HTTP 503). It never pretends a message was sent.
 
@@ -58,6 +61,7 @@ With all three Resend variables set, each valid inquiry produces two emails, sen
 
 | Outcome | Response |
 |---|---|
+| Browser request from another site (`Origin` / `Sec-Fetch-Site`) | 403 |
 | Wrong content type | 415 |
 | Invalid JSON or failed validation | 400 (with per-field `errors`) |
 | Body over 16 KB | 413 |
@@ -104,7 +108,9 @@ docs/                     AUDIT.md (audit log) and DEPLOYMENT.md
 
 - **Page copy** lives in `src/content/*.ts` and the page files in `src/app/**/page.tsx`.
 - **Required disclaimers** are defined once in `src/lib/site.ts` (`disclaimers`). Do not reword them.
-- **Navigation** items are in `src/lib/site.ts` (`navItems`).
+- **Navigation** items are in `src/lib/site.ts` (`navItems`). The Funding page is linked from the footer and CTAs rather than the main menu, to keep the menu uncrowded.
+- **Sitemap dates** come from `src/lib/page-dates.ts`. Update a page's date when its content changes; never use the build time.
+- **Analytics events** are listed in [docs/analytics-events.md](docs/analytics-events.md). Never attach personal data to an event.
 
 ### Adding an Updates article
 
@@ -124,7 +130,7 @@ docs/                     AUDIT.md (audit log) and DEPLOYMENT.md
    ```
 
 2. Add the path to `PAGES` in `tests/support/site.ts`.
-3. Run `npm run build`. The article page, its OG image, the sitemap entry and structured data are generated automatically.
+3. Run `npm run build`. The article page, its OG image, the sitemap entry, the RSS item (`/updates/feed.xml`) and structured data are generated automatically.
 
 ## Testing and quality checks
 
@@ -133,7 +139,15 @@ npm run lint             # ESLint, zero warnings allowed
 npm run typecheck        # tsc --noEmit
 npm run check:contrast   # WCAG contrast of every token pairing, both themes, incl. glass worst cases
 npm run build
-npm run test:e2e         # Playwright: pages, SEO, navigation, theme, form, a11y (axe), no-JS, screenshots
+npm run test:e2e         # Playwright: pages, SEO, navigation, theme, form, a11y (axe), no-JS, screenshots,
+                         # contact API + rate-limit unit tests, feed, security.txt, funding, mobile overflow
+npm audit --omit=dev --audit-level=high   # production dependencies (also in CI)
+```
+
+The contact API and rate-limit tests (`tests/contact-api.spec.ts`, `tests/rate-limit.spec.ts`) call the route handler in-process with a mocked `fetch`; they need no server and can run alone:
+
+```bash
+E2E_BASE_URL=http://127.0.0.1:9 npx playwright test tests/contact-api.spec.ts tests/rate-limit.spec.ts
 ```
 
 `test:e2e` starts its own production servers (`next start`) and a local webhook sink, so run `npm run build` first. To use an already-installed Chromium instead of Playwright's managed download, set `PLAYWRIGHT_CHROMIUM_PATH=/path/to/chrome`. Screenshots for visual review are saved to `test-results/screenshots/`.
@@ -166,7 +180,7 @@ This website describes the scientific pathway **only at a general level**. Never
 
 ## Deployment
 
-See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for Vercel (recommended) and generic Node hosting.
+See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for Vercel (recommended) and generic Node hosting, and [`docs/production-launch-checklist.md`](docs/production-launch-checklist.md) for the external steps (Upstash, Vercel protection, Search Console, DMARC, legal review). Security headers and the CSP rationale: [`docs/SECURITY-HEADERS.md`](docs/SECURITY-HEADERS.md). Security contact: [`/.well-known/security.txt`](https://www.neorhiza.space/.well-known/security.txt).
 
 ## License
 

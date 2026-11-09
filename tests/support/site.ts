@@ -13,6 +13,7 @@ export const PAGES = [
   "/privacy",
   "/terms",
   "/research-disclaimer",
+  "/funding",
   "/updates/from-patient-cells-to-organized-tissue",
   "/updates/the-difference-between-an-organoid-engineered-tissue-and-a-replacement-organ",
   "/updates/what-a-bioreactor-does",

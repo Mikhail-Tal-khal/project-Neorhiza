@@ -5,6 +5,7 @@ import { getAllArticles, articleCategories } from "@/lib/articles";
 import { createMetadata } from "@/lib/metadata";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { JsonLd } from "@/components/json-ld";
+import { Rss } from "lucide-react";
 
 export const metadata: Metadata = createMetadata({
   title: "Updates",
@@ -37,6 +38,16 @@ export default async function UpdatesPage() {
             </li>
           ))}
         </ul>
+        <p className="mt-8 text-center">
+          <a
+            href="/updates/feed.xml"
+            type="application/rss+xml"
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-teal-700 underline underline-offset-4 hover:text-teal-400 dark:text-teal-200 dark:hover:text-white"
+          >
+            <Rss aria-hidden="true" className="size-4" />
+            Subscribe via RSS
+          </a>
+        </p>
       </section>
 
       <section aria-labelledby="articles-heading">

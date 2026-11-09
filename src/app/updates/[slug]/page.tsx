@@ -9,6 +9,7 @@ import { createMetadata } from "@/lib/metadata";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { JsonLd } from "@/components/json-ld";
 import { disclaimers, site } from "@/lib/site";
+import { TrackOnMount } from "@/components/analytics-click-tracker";
 
 export const dynamicParams = false;
 
@@ -99,6 +100,7 @@ export default async function ArticlePage({
 
       <JsonLd data={articleJsonLd} />
       <JsonLd data={breadcrumb} />
+      <TrackOnMount event="article_opened" slug={article.slug} />
     </div>
   );
 }

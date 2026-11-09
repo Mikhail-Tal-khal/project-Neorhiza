@@ -6,6 +6,8 @@ type SectionHeadingProps = {
   lead?: string;
   align?: "left" | "center";
   as?: "h1" | "h2";
+  /** Heading id, for aria-labelledby on the enclosing section. */
+  id?: string;
   className?: string;
 };
 
@@ -19,6 +21,7 @@ export function SectionHeading({
   lead,
   align = "center",
   as = "h2",
+  id,
   className,
 }: SectionHeadingProps) {
   const Tag = as;
@@ -32,6 +35,7 @@ export function SectionHeading({
     >
       {eyebrow && <p className="label-caps mb-3">{eyebrow}</p>}
       <Tag
+        id={id}
         className={cn(
           "text-balance font-semibold tracking-[0.01em] text-heading",
           as === "h1"

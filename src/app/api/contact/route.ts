@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { contactSchema, fieldErrors } from "@/lib/validation";
 import { rateLimit, clientIpFrom } from "@/lib/rate-limit";
 import { deliverInquiry, isDeliveryConfigured } from "@/lib/contact-delivery";
+import { isAllowedOrigin } from "@/lib/request-origin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,6 +28,10 @@ function fail(status: number, message: string, extra?: Record<string, unknown>, 
 }
 
 export async function POST(request: Request) {
+  if (!isAllowedOrigin(request)) {
+    return fail(403, "This request was not accepted. Please use the contact form on this website.");
+  }
+
   if (!request.headers.get("content-type")?.includes("application/json")) {
     return fail(415, "Invalid request format.");
   }

@@ -2,6 +2,9 @@ import Link from "next/link";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { disclaimers, navItems, site } from "@/lib/site";
 
+/** Pages linked from the footer but kept out of the main menu to avoid crowding it. */
+const moreLinks = [{ href: "/funding", label: "Funding" }];
+
 const legalLinks = [
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
@@ -33,7 +36,7 @@ export function SiteFooter() {
           <nav aria-label="Footer">
             <h2 className="label-caps mb-4 text-mist-200">Explore</h2>
             <ul className="grid gap-2.5">
-              {navItems.map((item) => (
+              {[...navItems, ...moreLinks].map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}

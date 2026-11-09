@@ -8,12 +8,15 @@ export const site = {
   shortName: "Neorhiza",
   descriptor: "Patient-Specific Tissue Engineering Initiative",
   tagline: "Engineering New Beginnings from Living Cells",
-  /** Set NEXT_PUBLIC_SITE_URL in the environment for canonical URLs. */
+  /** Canonical origin; NEXT_PUBLIC_SITE_URL overrides the production default. */
   url:
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-    "https://neorhiza.org",
-  /** Optional public contact address (only published when configured). */
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || undefined,
+    "https://www.neorhiza.space",
+  /**
+   * The project's public, monitored inquiry mailbox. Personal addresses are
+   * never published on the site or in structured data.
+   */
+  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "inquiries@neorhiza.space",
 } as const;
 
 export const navItems = [
@@ -32,6 +35,7 @@ export const footerLinks = [
   "/privacy",
   "/terms",
   "/research-disclaimer",
+  "/funding",
 ] as const;
 
 /**
@@ -57,6 +61,10 @@ export const disclaimers = {
   /** Footer disclaimer (19) */
   footer:
     "Project Neorhiza is an early-stage research initiative. It does not currently provide medical advice, diagnostic services, stem-cell treatment, organ transplantation or clinical care. Information on this website is provided for education, scientific communication and research-development purposes. Future experimental or clinical activities will require qualified institutional supervision and all applicable ethical, scientific and regulatory approvals.",
+
+  /** Funding page — no online donations or payments */
+  noDonations:
+    "Project Neorhiza does not accept or process donations or payments through this website. Funding conversations take place only through professional inquiry, and any support is agreed in writing through appropriate legal and institutional arrangements.",
 
   /** Contact page — people seeking treatment (18) */
   treatment:

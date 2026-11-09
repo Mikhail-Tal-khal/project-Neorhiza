@@ -10,53 +10,85 @@ import { JsonLd } from "@/components/json-ld";
 export const metadata: Metadata = createMetadata({
   title: "Terms",
   description:
-    "Terms of use for the Project Neorhiza website — educational and scientific communication only, with no medical services of any kind.",
+    "Terms of use for the Project Neorhiza website — who operates it, acceptable use, intellectual property, and why it offers no medical services, patient enrollment or payments.",
   path: "/terms",
 });
 
+const EFFECTIVE = "9 November 2026";
+const REVISED = "9 November 2026";
+
+// LEGAL REVIEW: the governing-law and liability sections are a plain-language
+// draft. Have them reviewed by a Kenyan advocate before paid advertising,
+// fundraising or international campaigns (docs/production-launch-checklist.md).
 const sections = [
+  {
+    title: "Who operates this website",
+    body: [
+      `This website is operated by ${site.name}, an early-stage research initiative based in Kenya and founded by Rereu Lemein. It is not yet institutionally affiliated and has no laboratory or clinical operations. Nothing on this website claims that the project is incorporated, a registered charity, tax-exempt or licensed.`,
+      `Contact: ${site.contactEmail}.`,
+    ],
+  },
   {
     title: "Purpose of this website",
     body: [
-      "This website communicates the vision, scientific pathway and governance principles of Project Neorhiza, an early-stage research initiative. Its content is provided for education, scientific communication and research-development purposes.",
-      "Nothing on this website constitutes medical advice, diagnosis or treatment guidance, and nothing on it creates a professional relationship of any kind.",
+      "This website communicates the vision, scientific pathway and governance principles of the project. Its content is provided for education, scientific communication and research-development purposes.",
+      "Nothing on this website constitutes medical advice, diagnosis or treatment guidance, and nothing on it creates a professional, clinical or contractual relationship of any kind.",
     ],
   },
   {
-    title: "No medical services",
+    title: "No medical services or patient enrollment",
     body: [
-      "Project Neorhiza does not provide medical treatments, stem-cell therapies, diagnostic services, organ transplantation or clinical care, and does not accept patients. If you have a medical concern, please contact a licensed healthcare professional.",
+      `${site.name} does not provide medical treatments, stem-cell therapies, diagnostic services, organ transplantation or clinical care, does not enroll patients and does not accept patients. If you have a medical concern, please contact a licensed healthcare professional.`,
     ],
   },
   {
-    title: "Intellectual property and confidentiality",
+    title: "No donations or payments",
     body: [
-      "The Neorhiza name, mark and website content are the property of the project unless otherwise stated. Detailed methodologies, engineering parameters and potentially protectable technical information are deliberately withheld from public materials and remain confidential.",
-      "Materials identified as publicly shareable — such as the public research overview — may be shared for professional purposes with attribution. They may not be republished in modified form in a way that misrepresents the project's statements.",
+      "This website does not accept donations and does not process payments of any kind. Anyone asking you to pay or donate in the name of Project Neorhiza through another channel is not acting for the project — please report it to us. Funding conversations take place only through professional inquiry and are agreed in writing.",
     ],
   },
   {
     title: "Acceptable use",
     body: [
-      "You agree not to misuse this website, including attempting to disrupt its operation, submitting false information through its forms, or using automated systems to spam or probe its services. Inquiry submissions are rate-limited and validated; abusive traffic may be blocked.",
+      "You may use this website for lawful, personal or professional purposes. You agree not to: submit false, misleading or impersonating information; send spam, bulk or automated submissions through the contact form; attempt to gain unauthorized access, probe for vulnerabilities outside responsible disclosure, or disrupt the website or its providers; scrape the site in a way that degrades it for others; or use the site to send unlawful, abusive or harassing content.",
+      "Submissions are validated and rate-limited, and requests from other websites are refused. We may block traffic or ignore inquiries that breach these terms. Security issues should be reported as described in our security policy (/.well-known/security.txt).",
+    ],
+  },
+  {
+    title: "Intellectual property",
+    body: [
+      "The Neorhiza name, logo, mark, text, graphics and website design belong to the project unless otherwise stated, and are protected by applicable intellectual-property laws. You may link to this website and quote short passages with attribution. You may not reproduce the logo or present the project's material in a way that suggests endorsement, affiliation or claims the project has not made.",
+      "Materials identified as publicly shareable — such as the public research overview — may be shared for professional purposes with attribution, but not republished in modified form that misrepresents the project's statements.",
+    ],
+  },
+  {
+    title: "Confidentiality",
+    body: [
+      "Detailed methodologies, engineering parameters and potentially protectable technical information are deliberately withheld from public materials. They are discussed only with qualified institutional collaborators under appropriate written agreements. Please do not send confidential or unpublished material through the contact form; nothing you send creates a confidentiality obligation unless agreed in writing.",
     ],
   },
   {
     title: "No warranties",
     body: [
-      "The website is provided on an \"as available\" basis without warranties of uninterrupted availability. Scientific content is presented in good faith and reviewed for accuracy at publication, but the science of tissue engineering evolves, and statements about open research questions describe the field as understood at the time of writing.",
+      "The website is provided on an \"as is\" and \"as available\" basis without warranties of uninterrupted availability or fitness for a particular purpose. Scientific content is presented in good faith and reviewed for accuracy at publication, but the science of tissue engineering evolves, and statements about open research questions describe the field as understood at the time of writing.",
     ],
   },
   {
     title: "Limitation of liability",
     body: [
-      "To the maximum extent permitted by applicable law, the project is not liable for decisions made in reliance on the general educational content of this website. Professional, medical, scientific or regulatory decisions belong with qualified professionals and institutions.",
+      "To the maximum extent permitted by applicable law, the project is not liable for decisions made in reliance on the general educational content of this website. Professional, medical, scientific or regulatory decisions belong with qualified professionals and institutions. Nothing in these terms limits liability that cannot be limited by law.",
     ],
   },
   {
-    title: "Changes",
+    title: "Governing law and jurisdiction",
     body: [
-      "These terms may be updated as the project develops. The \"last updated\" date at the top of this page reflects the current version.",
+      "These terms are governed by the laws of the Republic of Kenya. Any dispute arising from them or from use of this website is subject to the jurisdiction of the courts of Kenya, without prejudice to any mandatory consumer protections that apply where you live.",
+    ],
+  },
+  {
+    title: "Changes to these terms",
+    body: [
+      `These terms took effect on ${EFFECTIVE} and were last revised on ${REVISED}. They may be updated as the project develops; the revision date on this page always reflects the current version.`,
     ],
   },
 ];
@@ -68,7 +100,7 @@ export default function TermsPage() {
         as="h1"
         eyebrow="Terms"
         title="Terms of Use"
-        lead="Plain-language terms for using this website. Last updated: October 2026."
+        lead={`Plain-language terms for using this website. Effective ${EFFECTIVE} · Last revised ${REVISED}.`}
       />
 
       <div className="mt-12 grid gap-6">
