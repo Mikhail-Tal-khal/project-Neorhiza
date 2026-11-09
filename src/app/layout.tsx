@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/sections/site-header";
 import { SiteFooter } from "@/components/sections/site-footer";
+import { GlassButton } from "@/components/ui/glass-button";
 import { site } from "@/lib/site";
 import { brand } from "@/lib/brand-colors";
 import { JsonLd } from "@/components/json-ld";
@@ -10,6 +11,7 @@ import { AnalyticsClickTracker } from "@/components/analytics-click-tracker";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { feedAlternates } from "@/lib/metadata";
+import { siteVerification } from "@/lib/verification";
 import "@/styles/globals.css";
 
 /**
@@ -24,19 +26,11 @@ const manrope = localFont({
   fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 });
 
-/**
- * Search-console ownership tokens, emitted only when configured. They are
- * public by design (they appear in page source), never secrets.
- */
-const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
-const bingVerification = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION?.trim();
-const verification: Metadata["verification"] =
-  googleVerification || bingVerification
-    ? {
-        ...(googleVerification ? { google: googleVerification } : {}),
-        ...(bingVerification ? { other: { "msvalidate.01": bingVerification } } : {}),
-      }
-    : undefined;
+/** Search-console ownership tokens; inherited by every page. */
+const verification = siteVerification(
+  process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+);
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -143,7 +137,28 @@ export default function RootLayout({
           </a>
 
           <div className="flex min-h-dvh flex-col">
-            <SiteHeader />
+            <SiteHeader
+              cta={
+                <GlassButton
+                  href="/collaboration"
+                  size="md"
+                  className="hidden whitespace-nowrap md:inline-flex"
+                  analytics={{ event: "collaboration_cta_clicked", location: "header" }}
+                >
+                  Collaborate With Neorhiza
+                </GlassButton>
+              }
+              mobileCta={
+                <GlassButton
+                  href="/collaboration"
+                  size="md"
+                  className="flex-1 md:hidden"
+                  analytics={{ event: "collaboration_cta_clicked", location: "mobile-menu" }}
+                >
+                  Collaborate
+                </GlassButton>
+              }
+            />
             <main id="main-content" className="flex-1 pt-[4.5rem] md:pt-[5.25rem]">
               {children}
             </main>

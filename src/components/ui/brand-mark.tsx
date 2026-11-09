@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 import {
   HORIZONTAL_LIGHT_SVG,
   HORIZONTAL_REVERSED_SVG,
@@ -58,21 +58,21 @@ export function BrandMark({
         width={h}
         height={h}
         decoding="async"
-        className={cn("block", className)}
+        className={cx("block", className)}
       />
     );
   }
 
-  const lockupSpan = "brand-lockup block h-full [&>svg]:block [&>svg]:h-full [&>svg]:w-auto";
+  const lockupSpan = "brand-lockup h-full [&>svg]:block [&>svg]:h-full [&>svg]:w-auto";
 
   if (variant === "stacked") {
     return (
       <span
         {...a11y}
         style={{ width: Math.round(h * (360 / 320)), height: h }}
-        className={cn("block shrink-0", className)}
+        className={cx("block shrink-0", className)}
       >
-        <span aria-hidden="true" className={lockupSpan} dangerouslySetInnerHTML={{ __html: STACKED_LIGHT_SVG }} />
+        <span aria-hidden="true" className={cx(lockupSpan, "block")} dangerouslySetInnerHTML={{ __html: STACKED_LIGHT_SVG }} />
       </span>
     );
   }
@@ -81,18 +81,18 @@ export function BrandMark({
     <span
       {...a11y}
       style={{ width: Math.round(h * (600 / 200)), height: h }}
-      className={cn("block shrink-0", className)}
+      className={cx("block shrink-0", className)}
     >
       {tone === "auto" && (
         <span
           aria-hidden="true"
-          className={cn(lockupSpan, "dark:hidden")}
+          className={cx(lockupSpan, "block dark:hidden")}
           dangerouslySetInnerHTML={{ __html: HORIZONTAL_LIGHT_SVG }}
         />
       )}
       <span
         aria-hidden="true"
-        className={cn(lockupSpan, tone === "auto" && "hidden dark:block")}
+        className={cx(lockupSpan, tone === "auto" ? "hidden dark:block" : "block")}
         dangerouslySetInnerHTML={{ __html: HORIZONTAL_REVERSED_SVG }}
       />
     </span>

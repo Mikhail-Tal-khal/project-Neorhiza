@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AlertCircle, CheckCircle2, Send } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 import { contactLimits } from "@/lib/contact-limits";
 import { inquirySlugs, inquiryTypes } from "@/lib/inquiry-types";
 import { trackEvent } from "@/lib/analytics";
@@ -416,7 +416,7 @@ export function ContactForm() {
             aria-describedby={clientErrors.areaOfInterest ? "areaOfInterest-error" : undefined}
             value={values.areaOfInterest}
             onChange={set("areaOfInterest")}
-            className={cn(inputClass, "appearance-none bg-transparent")}
+            className={cx(inputClass, "appearance-none bg-transparent")}
           >
             <option value="" disabled>
               Select an area…
@@ -450,7 +450,7 @@ export function ContactForm() {
             aria-describedby={clientErrors.message ? "message-error" : "message-hint"}
             value={values.message}
             onChange={set("message")}
-            className={cn(inputClass, "resize-y scrollbar-fine")}
+            className={cx(inputClass, "resize-y scrollbar-fine")}
           />
           {clientErrors.message ? (
             <FieldError id="message-error" message={clientErrors.message} />

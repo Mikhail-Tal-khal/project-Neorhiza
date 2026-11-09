@@ -1,21 +1,28 @@
 "use client";
 
 import { GlassModal, GlassModalTrigger, GlassModalContent, GlassModalClose } from "@/components/ui/glass-modal";
-import { GlassButton } from "@/components/ui/glass-button";
 import { trackAttrs } from "@/lib/analytics-events";
 
 /**
  * Public Research Overview request — the overview itself is never
  * auto-distributed; it is sent to qualified professional inquirers
  * through the contact process.
+ *
+ * The trigger and the call to action are rendered by the (server) page and
+ * passed in, so GlassButton and its class merging stay out of the browser
+ * bundle. Each must be a single element that accepts props (Radix asChild).
  */
-export function OverviewRequestModal() {
+export function OverviewRequestModal({
+  trigger,
+  cta,
+}: {
+  trigger: React.ReactElement;
+  cta: React.ReactElement;
+}) {
   return (
     <GlassModal>
       <GlassModalTrigger asChild {...trackAttrs("research_overview_requested", "collaboration-modal")}>
-        <GlassButton variant="secondary" size="lg">
-          Request the Public Research Overview
-        </GlassButton>
+        {trigger}
       </GlassModalTrigger>
       <GlassModalContent
         title="Request the Public Research Overview"
@@ -41,11 +48,7 @@ export function OverviewRequestModal() {
             qualified by role and institutional context; you will receive
             a response from the project team.
           </p>
-          <GlassModalClose asChild>
-            <GlassButton href="/contact" size="md" className="mt-2">
-              Continue to the contact form
-            </GlassButton>
-          </GlassModalClose>
+          <GlassModalClose asChild>{cta}</GlassModalClose>
         </div>
       </GlassModalContent>
     </GlassModal>

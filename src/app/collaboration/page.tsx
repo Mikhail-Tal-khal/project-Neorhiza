@@ -36,7 +36,18 @@ export default function CollaborationPage() {
           <GlassButton href="/funding" variant="secondary" size="lg">
             Support the Foundation Phase
           </GlassButton>
-          <OverviewRequestModal />
+          <OverviewRequestModal
+            trigger={
+              <GlassButton variant="secondary" size="lg">
+                Request the Public Research Overview
+              </GlassButton>
+            }
+            cta={
+              <GlassButton href="/contact" size="md" className="mt-2">
+                Continue to the contact form
+              </GlassButton>
+            }
+          />
         </div>
         <ResearchDisclaimer className="mx-auto mt-8 max-w-3xl">
           {disclaimers.confidentialProcess}

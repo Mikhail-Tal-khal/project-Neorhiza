@@ -2,7 +2,7 @@
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 
 /**
  * GlassModal — frosted-glass dialog with opaque fallback, focus trap and
@@ -29,7 +29,7 @@ export function GlassModalContent({
         className="fixed inset-0 z-50 bg-teal-950/40 backdrop-blur-sm motion-safe:data-[state=open]:animate-in motion-safe:data-[state=open]:fade-in-0"
       />
       <DialogPrimitive.Content
-        className={cn(
+        className={cx(
           "glass fixed left-1/2 top-1/2 z-50 max-h-[85dvh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl p-6 shadow-lift outline-none md:p-8",
           "motion-safe:data-[state=open]:animate-in motion-safe:data-[state=open]:fade-in-0 motion-safe:data-[state=open]:zoom-in-95 scrollbar-fine",
           className

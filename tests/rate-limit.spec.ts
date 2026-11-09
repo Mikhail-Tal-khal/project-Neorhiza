@@ -123,6 +123,53 @@ test.describe("shared rate-limit store", () => {
     expect(rateLimitStoreStatus().store).toBe("shared");
   });
 
+  test("incomplete credential pairs never count as configured", async () => {
+    process.env.VERCEL_ENV = "production";
+    for (const env of <Record<string, string>[]>[
+      { UPSTASH_REDIS_REST_URL: STORE_URL },
+      { UPSTASH_REDIS_REST_TOKEN: STORE_TOKEN },
+      { KV_REST_API_URL: STORE_URL },
+      { KV_REST_API_TOKEN: STORE_TOKEN },
+      // Halves of different schemes must not be combined.
+      { UPSTASH_REDIS_REST_URL: STORE_URL, KV_REST_API_TOKEN: STORE_TOKEN },
+      { KV_REST_API_URL: STORE_URL, UPSTASH_REDIS_REST_TOKEN: STORE_TOKEN },
+      // Blank or whitespace-only values are not credentials.
+      { UPSTASH_REDIS_REST_URL: "  ", UPSTASH_REDIS_REST_TOKEN: STORE_TOKEN },
+      { KV_REST_API_URL: STORE_URL, KV_REST_API_TOKEN: '""' },
+    ]) {
+      for (const k of ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN", "KV_REST_API_URL", "KV_REST_API_TOKEN"]) {
+        delete process.env[k];
+      }
+      Object.assign(process.env, env);
+      calls = [];
+      const status = rateLimitStoreStatus();
+      expect(status.store, JSON.stringify(Object.keys(env))).toBe("memory");
+      expect(status.adequate).toBe(false);
+      expect((await rateLimit(key(), 5, 600_000)).allowed).toBe(true);
+      expect(calls, "no request is sent to a half-configured store").toHaveLength(0);
+    }
+    expectNoSecretsLogged();
+  });
+
+  test("a complete Upstash pair wins over a complete KV pair; values are trimmed and unquoted", async () => {
+    process.env.UPSTASH_REDIS_REST_URL = ` "${STORE_URL}" `;
+    process.env.UPSTASH_REDIS_REST_TOKEN = ` ${STORE_TOKEN}\n`;
+    process.env.KV_REST_API_URL = "https://other-store.example";
+    process.env.KV_REST_API_TOKEN = "other-token";
+    await rateLimit(key(), 5, 600_000);
+    expect(calls[0].url).toBe(`${STORE_URL}/pipeline`);
+    expect(new Headers(calls[0].init.headers).get("authorization")).toBe(`Bearer ${STORE_TOKEN}`);
+  });
+
+  test("a complete KV pair is used when the Upstash pair is incomplete", async () => {
+    process.env.UPSTASH_REDIS_REST_URL = "https://half-configured.example";
+    process.env.KV_REST_API_URL = STORE_URL;
+    process.env.KV_REST_API_TOKEN = STORE_TOKEN;
+    await rateLimit(key(), 5, 600_000);
+    expect(calls[0].url).toBe(`${STORE_URL}/pipeline`);
+    expect(new Headers(calls[0].init.headers).get("authorization")).toBe(`Bearer ${STORE_TOKEN}`);
+  });
+
   test("a store timeout falls back to in-memory limiting and logs no secrets", async () => {
     useUpstash();
     storeReply = () => {

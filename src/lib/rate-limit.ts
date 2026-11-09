@@ -12,6 +12,8 @@
  *    logged (see also `npm run check:config`).
  */
 
+import { envValue } from "@/lib/env";
+
 export type RateLimitResult = {
   allowed: boolean;
   remaining: number;
@@ -100,10 +102,21 @@ export function createUpstashLimiter(url: string, token: string): RateLimiter {
 
 const memory = createMemoryLimiter();
 
+/**
+ * The shared-store credentials, taken only from a complete pair: Upstash
+ * names first, then Vercel KV names. A half-set pair never combines with the
+ * other naming scheme (that would send one store's token to another's URL).
+ */
 function remoteConfig() {
-  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
-  return url && token ? { url, token } : null;
+  for (const [urlName, tokenName] of [
+    ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"],
+    ["KV_REST_API_URL", "KV_REST_API_TOKEN"],
+  ] as const) {
+    const url = envValue(urlName);
+    const token = envValue(tokenName);
+    if (url && token) return { url, token };
+  }
+  return null;
 }
 
 /**

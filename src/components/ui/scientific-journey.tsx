@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/cx";
 import { ResearchDisclaimer } from "@/components/ui/research-disclaimer";
 import { disclaimers } from "@/lib/site";
 
@@ -79,16 +79,18 @@ export function ScientificJourney({ stages }: { stages: JourneyStage[] }) {
             >
               {/* Card — left column on odd rows (desktop) */}
               <div
-                className={cn(
-                  "col-start-2 row-start-1 md:col-start-1 md:pr-14 md:text-right",
-                  index % 2 === 1 && "md:col-start-3 md:row-start-1 md:pl-14 md:text-left"
+                className={cx(
+                  "col-start-2 row-start-1",
+                  index % 2 === 1
+                    ? "md:col-start-3 md:pl-14 md:text-left"
+                    : "md:col-start-1 md:pr-14 md:text-right"
                 )}
               >
                 <button
                   type="button"
                   onClick={() => setActive(index)}
                   aria-current={isCurrent ? "step" : undefined}
-                  className={cn(
+                  className={cx(
                     "glass block w-full rounded-2xl p-5 text-left transition-all duration-300",
                     "hover:shadow-lift",
                     isActive
@@ -112,7 +114,7 @@ export function ScientificJourney({ stages }: { stages: JourneyStage[] }) {
                 className="relative z-10 col-start-1 row-start-1 mt-1 flex size-11 items-center justify-center md:col-start-2 md:justify-center"
               >
                 <span
-                  className={cn(
+                  className={cx(
                     "block rounded-full border-2 transition-all duration-300 ease-out",
                     isActive
                       ? "size-6 border-coral-700 bg-coral-500 shadow-[0_0_0_6px_rgb(227_111_92/0.08)] dark:border-coral-500"
@@ -127,9 +129,9 @@ export function ScientificJourney({ stages }: { stages: JourneyStage[] }) {
               {/* Spacer — opposite column on desktop */}
               <div
                 aria-hidden="true"
-                className={cn(
-                  "hidden md:col-start-3 md:row-start-1 md:block",
-                  index % 2 === 1 && "md:col-start-1"
+                className={cx(
+                  "hidden md:row-start-1 md:block",
+                  index % 2 === 1 ? "md:col-start-1" : "md:col-start-3"
                 )}
               />
             </li>
