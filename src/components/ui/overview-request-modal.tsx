@@ -2,6 +2,7 @@
 
 import { GlassModal, GlassModalTrigger, GlassModalContent, GlassModalClose } from "@/components/ui/glass-modal";
 import { GlassButton } from "@/components/ui/glass-button";
+import { trackAttrs } from "@/lib/analytics-events";
 
 /**
  * Public Research Overview request — the overview itself is never
@@ -11,7 +12,7 @@ import { GlassButton } from "@/components/ui/glass-button";
 export function OverviewRequestModal() {
   return (
     <GlassModal>
-      <GlassModalTrigger asChild>
+      <GlassModalTrigger asChild {...trackAttrs("research_overview_requested", "collaboration-modal")}>
         <GlassButton variant="secondary" size="lg">
           Request the Public Research Overview
         </GlassButton>

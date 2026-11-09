@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { EvidenceCard } from "@/components/ui/evidence-card";
+import { EvidenceCard, EvidenceIconSprite } from "@/components/ui/evidence-card";
 import { ResearchDisclaimer } from "@/components/ui/research-disclaimer";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { scienceTopics } from "@/content/science";
@@ -84,6 +84,7 @@ export default function OurSciencePage() {
         </div>
       </div>
 
+      <EvidenceIconSprite />
       <JsonLd data={breadcrumb} />
     </>
   );

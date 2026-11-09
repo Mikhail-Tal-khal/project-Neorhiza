@@ -31,6 +31,7 @@ const ENV_KEYS = [
   "UPSTASH_REDIS_REST_TOKEN",
   "KV_REST_API_URL",
   "KV_REST_API_TOKEN",
+  "VERCEL_ENV",
 ] as const;
 
 const RESEND = {
@@ -347,5 +348,81 @@ test.describe("contact API — request protection", () => {
     expect(Number(last!.headers.get("retry-after"))).toBeGreaterThan(0);
     expect((await last!.json()).message).toMatch(/Too many inquiries/);
     expect(emails()).toHaveLength(4); // two inquiries × (notification + confirmation)
+  });
+});
+
+test.describe("contact API — cross-site and malformed requests", () => {
+  test("browser requests from another site are refused before anything else runs", async () => {
+    for (const headers of <Record<string, string>[]>[
+      { origin: "https://evil.example" },
+      { origin: "null" },
+      { "sec-fetch-site": "cross-site" },
+      { origin: "https://neorhiza.space.evil.example", "sec-fetch-site": "cross-site" },
+    ]) {
+      const res = await post(VALID, { headers });
+      expect(res.status, JSON.stringify(headers)).toBe(403);
+      const body = await res.json();
+      expect(body.ok).toBe(false);
+      expect(JSON.stringify(body)).not.toMatch(/evil|origin|stack/i);
+    }
+    expect(calls).toHaveLength(0);
+  });
+
+  test("same-origin, configured-site and server-to-server requests are accepted", async () => {
+    for (const headers of <Record<string, string>[]>[
+      { origin: "http://localhost", "sec-fetch-site": "same-origin" },
+      { origin: "https://www.neorhiza.space", "sec-fetch-site": "same-site" },
+      { origin: "https://neorhiza.space" },
+      {}, // no Origin: not a browser request
+    ]) {
+      const res = await post(VALID, { headers });
+      expect(res.status, JSON.stringify(headers)).toBe(200);
+    }
+  });
+
+  test("missing fields get readable messages, never validator internals", async () => {
+    const res = await post({});
+    expect(res.status).toBe(400);
+    const { errors, message } = await res.json();
+    expect(message).toBe("Please correct the highlighted fields and try again.");
+    expect(errors).toEqual({
+      fullName: "Please enter your full name.",
+      professionalEmail: "Please enter a valid professional email address.",
+      areaOfInterest: "Please select an area of interest.",
+      message: "Please provide a short message (at least 20 characters).",
+      consent: "Please confirm consent to be contacted about this inquiry.",
+    });
+  });
+
+  test("wrong field types get readable messages", async () => {
+    const res = await post({ ...VALID, fullName: 42, organization: ["x"], country: { a: 1 } });
+    expect(res.status).toBe(400);
+    const { errors } = await res.json();
+    expect(errors.fullName).toBe("Please enter your full name.");
+    expect(errors.organization).toBe("Organization must be plain text.");
+    expect(errors.country).toBe("Country must be plain text.");
+    expect(JSON.stringify(errors)).not.toMatch(/expected|received|invalid input|undefined/i);
+  });
+
+  test("empty optional fields are accepted and omitted from the email", async () => {
+    const res = await post({ ...VALID, organization: "", professionalRole: "  ", country: undefined });
+    expect(res.status).toBe(200);
+    expect(emails()[0].text).toContain("Organization: —");
+  });
+
+  test("error responses never echo inquiry content, addresses or provider details", async () => {
+    responder = () => new Response('{"message":"ada@example.org: domain not verified","stack":"at x"}', { status: 403 });
+    const failures = [
+      await post(VALID), // 502
+      await post({ ...VALID, professionalEmail: "bad@" }), // 400
+      await post(VALID, { headers: { "content-type": "text/plain" } }), // 415
+    ];
+    for (const res of failures) {
+      const raw = JSON.stringify(await res.json());
+      for (const leak of [VALID.fullName, VALID.professionalEmail, "vascularization", "api.resend.com", "re_test_key", "stack", "domain not verified"]) {
+        expect(raw).not.toContain(leak);
+      }
+    }
+    expectNoPersonalDataLogged();
   });
 });

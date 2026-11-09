@@ -48,10 +48,19 @@ export function CollaborationInvite() {
       </ul>
 
       <div className="mt-10 flex flex-wrap justify-center gap-3">
-        <GlassButton href="/collaboration" size="lg">
-          Discuss a Collaboration
+        <GlassButton
+          href="/collaboration"
+          size="lg"
+          analytics={{ event: "collaboration_cta_clicked", location: "home-invite" }}
+        >
+          Collaborate With Neorhiza
         </GlassButton>
-        <GlassButton href="/contact" variant="secondary" size="lg">
+        <GlassButton
+          href="/contact"
+          variant="secondary"
+          size="lg"
+          analytics={{ event: "research_overview_requested", location: "home-invite" }}
+        >
           Request the Public Research Overview
         </GlassButton>
       </div>

@@ -13,6 +13,7 @@ import { createMetadata } from "@/lib/metadata";
 import { disclaimers, site } from "@/lib/site";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { JsonLd } from "@/components/json-ld";
+import { trackAttrs } from "@/lib/analytics-events";
 
 export const metadata: Metadata = createMetadata({
   title: "Why Neorhiza",
@@ -37,12 +38,12 @@ const founderLinks = [
     icon: Github,
   },
   {
-    label: "Email",
-    value: "rereulemein@gmail.com",
-    href: "mailto:rereulemein@gmail.com",
+    label: "Project email",
+    value: site.contactEmail,
+    href: `mailto:${site.contactEmail}`,
     icon: Mail,
   },
-  { label: "Location", value: "Mombasa, Kenya", icon: MapPin },
+  { label: "Location", value: "Kenya", icon: MapPin },
 ] as const;
 
 export default function WhyNeorhizaPage() {
@@ -208,7 +209,7 @@ export default function WhyNeorhizaPage() {
               <p className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-ink">
                 Rereu Lemein is a software and cybersecurity engineer,
                 entrepreneur, philosopher and community builder based in
-                Mombasa, Kenya. He is the founder of LysHub and Project
+                Kenya. He is the founder of LysHub and Project
                 Neorhiza, with a professional background in building secure,
                 reliable systems and supporting community development.
               </p>
@@ -235,6 +236,9 @@ export default function WhyNeorhizaPage() {
                         <a
                           href={link.href}
                           rel="noopener noreferrer"
+                          {...(link.href.startsWith("https:")
+                            ? trackAttrs("outbound_profile_clicked", label.toLowerCase())
+                            : {})}
                           className="inline-flex min-h-6 items-center text-sm [overflow-wrap:anywhere] font-medium text-teal-700 underline underline-offset-4 hover:text-teal-400 dark:text-teal-200 dark:hover:text-white"
                         >
                           {value}

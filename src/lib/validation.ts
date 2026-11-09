@@ -16,8 +16,10 @@ export function sanitizeText(value: string): string {
     .trim();
 }
 
+// Each z.string() carries its own `error` so a missing or non-text field
+// gets a readable message, never Zod's internal wording.
 const nameRule = z
-  .string()
+  .string({ error: "Please enter your full name." })
   .transform(sanitizeText)
   .pipe(
     z
@@ -28,11 +30,11 @@ const nameRule = z
 
 const optionalText = (max: number, label: string) =>
   z
-    .string()
+    .string({ error: `${label} must be plain text.` })
     .transform(sanitizeText)
     .pipe(z.string().max(max, `${label} is too long.`))
     .optional()
-    .or(z.literal("").transform(() => undefined));
+    .transform((value) => value || undefined);
 
 export const contactSchema = z.object({
   fullName: nameRule,
@@ -40,7 +42,7 @@ export const contactSchema = z.object({
   professionalRole: optionalText(contactLimits.professionalRole.max, "Professional role"),
   country: optionalText(contactLimits.country.max, "Country"),
   professionalEmail: z
-    .string()
+    .string({ error: "Please enter a valid professional email address." })
     .transform(sanitizeText)
     .pipe(z.email("Please enter a valid professional email address."))
     .pipe(z.string().max(contactLimits.professionalEmail.max, "Email is too long.")),
@@ -48,7 +50,7 @@ export const contactSchema = z.object({
     message: "Please select an area of interest.",
   }),
   message: z
-    .string()
+    .string({ error: "Please provide a short message (at least 20 characters)." })
     .transform(sanitizeText)
     .pipe(
       z
@@ -61,7 +63,7 @@ export const contactSchema = z.object({
   }),
   /** Honeypot — must stay empty. Hidden from humans. */
   companyWebsite: z
-    .string()
+    .string({ error: "Submission rejected." })
     .max(0, "Submission rejected.")
     .optional()
     .or(z.literal("").transform(() => "")),

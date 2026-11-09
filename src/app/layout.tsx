@@ -6,6 +6,10 @@ import { SiteFooter } from "@/components/sections/site-footer";
 import { site } from "@/lib/site";
 import { brand } from "@/lib/brand-colors";
 import { JsonLd } from "@/components/json-ld";
+import { AnalyticsClickTracker } from "@/components/analytics-click-tracker";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { feedAlternates } from "@/lib/metadata";
 import "@/styles/globals.css";
 
 /**
@@ -20,8 +24,24 @@ const manrope = localFont({
   fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 });
 
+/**
+ * Search-console ownership tokens, emitted only when configured. They are
+ * public by design (they appear in page source), never secrets.
+ */
+const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
+const bingVerification = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION?.trim();
+const verification: Metadata["verification"] =
+  googleVerification || bingVerification
+    ? {
+        ...(googleVerification ? { google: googleVerification } : {}),
+        ...(bingVerification ? { other: { "msvalidate.01": bingVerification } } : {}),
+      }
+    : undefined;
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
+  alternates: feedAlternates,
+  ...(verification ? { verification } : {}),
   title: {
     default: `${site.name} — ${site.descriptor}`,
     template: `%s — ${site.shortName}`,
@@ -75,7 +95,7 @@ const structuredData = {
       alternateName: "Neorhiza",
       description: `${site.descriptor}. ${site.tagline}.`,
       url: site.url,
-      ...(site.email ? { email: site.email } : {}),
+      email: site.contactEmail,
       logo: `${site.url}/images/logo/neorhiza-icon.svg`,
       image: `${site.url}/images/logo/neorhiza-stacked.svg`,
       foundingDate: "2026",
@@ -132,6 +152,17 @@ export default function RootLayout({
         </ThemeProvider>
 
         <JsonLd data={structuredData} />
+        {/* First-party, cookieless aggregate analytics and Core Web Vitals,
+            served same-origin from /_vercel/*; no advertising trackers.
+            Only builds made on Vercel include them — elsewhere /_vercel/*
+            does not exist and the scripts would 404. */}
+        <AnalyticsClickTracker />
+        {process.env.VERCEL && (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        )}
       </body>
     </html>
   );

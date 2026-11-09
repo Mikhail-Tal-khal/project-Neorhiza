@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { trackAttrs, type AnalyticsEvent } from "@/lib/analytics-events";
 
 type Variant = "primary" | "secondary" | "coral" | "ghost";
 type Size = "md" | "lg";
@@ -31,7 +32,12 @@ type CommonProps = {
   children: React.ReactNode;
 };
 
-type ButtonAsLink = CommonProps & { href: string; external?: boolean };
+type ButtonAsLink = CommonProps & {
+  href: string;
+  external?: boolean;
+  /** Reports a click as a conversion event (see AnalyticsClickTracker). */
+  analytics?: { event: AnalyticsEvent; location?: string };
+};
 type ButtonAsButton = CommonProps &
   React.ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined };
 
@@ -45,16 +51,17 @@ export function GlassButton(props: GlassButtonProps) {
   const classes = cn(base, variants[variant], sizes[size], className);
 
   if (props.href !== undefined) {
-    const { href, external } = props;
+    const { href, external, analytics } = props;
+    const data = analytics ? trackAttrs(analytics.event, analytics.location) : undefined;
     if (external) {
       return (
-        <a href={href} className={classes} rel="noopener noreferrer">
+        <a href={href} className={classes} rel="noopener noreferrer" {...data}>
           {children}
         </a>
       );
     }
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} {...data}>
         {children}
       </Link>
     );

@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AlertCircle, CheckCircle2, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { contactLimits } from "@/lib/contact-limits";
-import { inquiryTypes } from "@/lib/inquiry-types";
+import { inquirySlugs, inquiryTypes } from "@/lib/inquiry-types";
+import { trackEvent } from "@/lib/analytics";
 
 type FieldErrors = Record<string, string>;
 
@@ -57,6 +58,35 @@ export function ContactForm() {
   // Synchronous guard: state updates are async, so a fast double-click or
   // repeated Enter could otherwise send the inquiry twice.
   const submittingRef = useRef(false);
+  // Analytics: each funnel step is reported once per visit to the form.
+  const reported = useRef({ started: false, funding: false });
+
+  /** Form-level input listener: reports funnel starts (honeypot excluded). */
+  function onFormInput(event: React.FormEvent<HTMLFormElement>) {
+    const field = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+    if (!field.name || field.name === "companyWebsite") return;
+    reportStart(field.name === "areaOfInterest" ? field.value : values.areaOfInterest);
+  }
+
+  function reportStart(area: string) {
+    if (!reported.current.started) {
+      reported.current.started = true;
+      trackEvent("contact_form_started");
+    }
+    if (area === inquirySlugs.funding && !reported.current.funding) {
+      reported.current.funding = true;
+      trackEvent("funding_inquiry_started", { location: "contact-form" });
+    }
+  }
+
+  // Preselect the area of interest from ?interest=<slug> (e.g. from the
+  // Funding page). Read after hydration so the static page stays static.
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get("interest");
+    const area = slug ? inquirySlugs[slug] : undefined;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time sync from the URL, which is unavailable during static prerendering
+    if (area) setValues((v) => (v.areaOfInterest ? v : { ...v, areaOfInterest: area }));
+  }, []);
 
   /** Moves focus to the first field with an error so it is announced. */
   function focusFirstError(errors: FieldErrors) {
@@ -144,6 +174,7 @@ export function ContactForm() {
       };
 
       if (response.ok && payload.ok) {
+        trackEvent("inquiry_submitted", { area: values.areaOfInterest });
         setStatus({ kind: "success" });
         setValues(initial);
       } else {
@@ -190,6 +221,33 @@ export function ContactForm() {
           professional inquiries. Please note that we cannot respond to
           treatment requests.
         </p>
+        <div className="mx-auto mt-6 max-w-md text-left">
+          <h4 className="label-caps mb-3">What happens next</h4>
+          <ol className="grid gap-2 text-sm leading-relaxed text-ink">
+            <li className="flex gap-2.5">
+              <span aria-hidden="true" className="font-semibold text-heading">1</span>
+              <span>An automated confirmation of receipt is normally sent to the address you provided.</span>
+            </li>
+            <li className="flex gap-2.5">
+              <span aria-hidden="true" className="font-semibold text-heading">2</span>
+              <span>Qualified professional inquiries receive a reply within about ten working days.</span>
+            </li>
+            <li className="flex gap-2.5">
+              <span aria-hidden="true" className="font-semibold text-heading">3</span>
+              <span>
+                Meanwhile, the{" "}
+                <Link href="/roadmap" className="font-medium text-teal-700 underline underline-offset-4 dark:text-teal-200">
+                  research roadmap
+                </Link>{" "}
+                and{" "}
+                <Link href="/updates" className="font-medium text-teal-700 underline underline-offset-4 dark:text-teal-200">
+                  updates
+                </Link>{" "}
+                show where the project stands.
+              </span>
+            </li>
+          </ol>
+        </div>
         <button
           type="button"
           onClick={() => setStatus({ kind: "idle" })}
@@ -205,6 +263,7 @@ export function ContactForm() {
     <form
       ref={formRef}
       onSubmit={onSubmit}
+      onInput={onFormInput}
       noValidate
       aria-describedby="form-required-note"
       aria-busy={status.kind === "submitting"}
