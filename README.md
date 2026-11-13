@@ -176,7 +176,7 @@ npm run check:palette    # light mode: teal wash < 12%, pure white < 10%; fails 
 
 ## Confidentiality rule for contributors
 
-This website describes the scientific pathway **only at a general level**. Never add project-specific methods, protocols, engineering parameters (concentrations, flow rates, pressures, oxygen levels, cell densities, seeding details, ratios), named reagents, or unpublished results, anywhere: pages, articles, metadata, alt text, comments or commit messages. Never invent results, statistics, partners, testimonials or credentials. Never add donation, payment, investment or patient-enrollment features. See `.github/pull_request_template.md`.
+This website describes the scientific pathway **only at a general level**. Never add project-specific methods, protocols, engineering parameters (concentrations, flow rates, pressures, oxygen levels, cell densities, seeding details, ratios), named reagents, or unpublished results, anywhere: pages, articles, metadata, alt text, comments or commit messages. Never invent results, statistics, partners, testimonials or credentials. Never add investment or patient-enrollment features, or any payment path other than the Stripe Checkout contribution flow documented in [`docs/DONATIONS.md`](docs/DONATIONS.md). See `.github/pull_request_template.md`.
 
 ## Deployment
 

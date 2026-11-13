@@ -41,22 +41,28 @@ jobs:
       - name: Contrast check
         run: npm run check:contrast
 
-      - name: Contact API, rate-limiter and metadata unit tests
+      - name: Contact, donation, rate-limiter and metadata unit tests
         # In-process route-handler tests with a mocked fetch: no browser or
         # server needed (E2E_BASE_URL stops Playwright starting servers).
-        run: npx playwright test tests/contact-api.spec.ts tests/rate-limit.spec.ts tests/verification.spec.ts
+        # Stripe is mocked completely; no Checkout Session is ever created.
+        run: npx playwright test tests/contact-api.spec.ts tests/donations-api.spec.ts tests/rate-limit.spec.ts tests/verification.spec.ts tests/production-config.spec.ts
         env:
           E2E_BASE_URL: http://127.0.0.1:9
 
       - name: Build
         run: npm run build
+        env:
+          # Canary values (not real credentials): the next step proves they
+          # never reach client bundles.
+          STRIPE_SECRET_KEY: sk_test_ciCanaryNotARealKey000000
+          STRIPE_WEBHOOK_SECRET: whsec_ciCanaryNotARealSecret0000
 
       - name: Check build output for source maps and secrets
         run: |
           if find .next/static -name '*.map' | grep -q .; then
             echo "::error::Public source maps were generated in .next/static"; exit 1
           fi
-          if grep -rlE 're_[A-Za-z0-9]{20,}|UPSTASH_REDIS_REST_TOKEN|KV_REST_API_TOKEN|RESEND_API_KEY|gmail\.com' .next/static; then
+          if grep -rlE 're_[A-Za-z0-9]{20,}|UPSTASH_REDIS_REST_TOKEN|KV_REST_API_TOKEN|RESEND_API_KEY|gmail\.com|(sk|rk)_(test|live)_[A-Za-z0-9]{8,}|whsec_[A-Za-z0-9]{8,}|ciCanaryNotAReal|STRIPE_SECRET_KEY|STRIPE_WEBHOOK_SECRET' .next/static; then
             echo "::error::A secret name, key or personal email appears in client bundles"; exit 1
           fi
 

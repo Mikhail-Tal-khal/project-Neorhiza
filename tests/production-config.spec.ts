@@ -65,6 +65,49 @@ test.describe("check-production-config", () => {
     expect(out).not.toContain(FAKE_URL);
   });
 
+  test("treats Stripe as optional and validates it when present, printing no values", () => {
+    const store = { UPSTASH_REDIS_REST_URL: FAKE_URL, UPSTASH_REDIS_REST_TOKEN: FAKE_TOKEN };
+    const fakeKey = ["sk", "live", "FAKEkeyForConfigCheck0000"].join("_"); // concatenated: avoids secret-scanner false positives
+    const fakeHook = "whsec_FAKEsigningSecretForCheck000";
+
+    const without = runCheck({ ...base, ...store });
+    expect(without.code).toBe(0);
+    expect(without.out).toMatch(/INFO.*STRIPE_SECRET_KEY is set/);
+
+    const complete = runCheck({ ...base, ...store, STRIPE_SECRET_KEY: fakeKey, STRIPE_WEBHOOK_SECRET: fakeHook });
+    expect(complete.code).toBe(0);
+    expect(complete.out).toMatch(/PASS.*STRIPE_WEBHOOK_SECRET is set when Stripe is enabled/);
+    expect(complete.out).not.toContain(fakeKey);
+    expect(complete.out).not.toContain(fakeHook);
+
+    const noHook = runCheck({ ...base, ...store, STRIPE_SECRET_KEY: fakeKey });
+    expect(noHook.code).toBe(1);
+    expect(noHook.out).toMatch(/FAIL.*STRIPE_WEBHOOK_SECRET is set when Stripe is enabled/);
+
+    const testKey = runCheck({ ...base, ...store, STRIPE_SECRET_KEY: "sk_test_FAKE0000", STRIPE_WEBHOOK_SECRET: fakeHook });
+    expect(testKey.out).toMatch(/WARN.*live-mode key in production/);
+    expect(testKey.out).not.toContain("sk_test_FAKE0000");
+
+    const bad = runCheck({
+      ...base,
+      ...store,
+      STRIPE_SECRET_KEY: "pk_live_publishable",
+      STRIPE_WEBHOOK_SECRET: fakeHook,
+      DONATION_CURRENCY: "jpy",
+      DONATION_MIN_AMOUNT: "100",
+      DONATION_MAX_AMOUNT: "10",
+    });
+    expect(bad.code).toBe(1);
+    expect(bad.out).toMatch(/FAIL.*looks like a Stripe secret key/);
+    expect(bad.out).toMatch(/FAIL.*DONATION_CURRENCY is supported/);
+    expect(bad.out).toMatch(/FAIL.*DONATION_MIN_AMOUNT is lower than DONATION_MAX_AMOUNT/);
+    expect(bad.out).not.toContain("pk_live_publishable");
+
+    const leaked = runCheck({ ...base, ...store, NEXT_PUBLIC_STRIPE_SECRET_KEY: "x" });
+    expect(leaked.code).toBe(1);
+    expect(leaked.out).toMatch(/FAIL.*No secret-looking variable uses the NEXT_PUBLIC_ prefix/);
+  });
+
   test("does not combine halves of different naming schemes", () => {
     const { code, out } = runCheck({ ...base, NEORHIZA_KV_REST_API_URL: FAKE_URL, KV_REST_API_TOKEN: FAKE_TOKEN });
     expect(code).toBe(1);

@@ -16,8 +16,21 @@ Headers are set for every route in `next.config.ts`.
 | `Origin-Agent-Cluster` | `?1` | |
 | `Cache-Control` (`/api/*`) | `no-store` | |
 
-The contact API additionally rejects browser requests whose `Sec-Fetch-Site`
-is `cross-site` or whose `Origin` is not this site (`src/lib/request-origin.ts`).
+The contact and donation-checkout APIs additionally reject browser requests
+whose `Sec-Fetch-Site` is `cross-site` or whose `Origin` is not this site
+(`src/lib/request-origin.ts`).
+
+### Stripe Checkout needs no header changes
+
+Contributions use Stripe-hosted Checkout created server-side: the browser
+`fetch`es `/api/donations/checkout` (same origin, covered by `connect-src 'self'`)
+and then navigates the top-level window to `checkout.stripe.com`. Top-level
+navigation is not governed by CSP, no Stripe script, frame or image is
+loaded, and no form posts cross-origin (`form-action 'self'` is unaffected).
+`Permissions-Policy: payment=()` only disables the Payment Request API on this
+origin; Stripe's page runs on its own origin. The CSP and other headers are
+therefore unchanged. If Stripe.js or embedded Checkout is ever adopted, add only
+the hosts Stripe documents for it.
 
 ## Content-Security-Policy
 

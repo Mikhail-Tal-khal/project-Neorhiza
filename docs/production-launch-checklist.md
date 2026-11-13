@@ -34,6 +34,18 @@ Production needs a shared store.
 - [ ] `NEXT_PUBLIC_SITE_URL=https://www.neorhiza.space` is set for **Production only** (previews then fall back to the same default; that is fine).
 - [ ] `.env*` files and `.vercel/` stay out of Git (`.gitignore` covers both — check with `git status` before committing).
 
+## 2a. Online contributions (Stripe)
+
+Optional until you are ready to accept contributions; the site works without it. Details: [DONATIONS.md](DONATIONS.md).
+
+- [ ] Add the registered limited company's legal name (and registration number, if desired) to the Terms ("Who operates this website") and confirm the Privacy Policy's controller wording for contribution records.
+- [ ] Legal review of the contribution wording in Terms/Privacy and the Funding page (see the LEGAL REVIEW note in `src/app/terms/page.tsx`), including refund handling and any fundraising rules where contributors live.
+- [ ] Stripe account activated for the company; public business name, support email and statement descriptor set; *Successful payments* receipts enabled; Checkout branding set.
+- [ ] Vercel → Environment Variables (Production, **Sensitive**): `STRIPE_SECRET_KEY` (live), `STRIPE_WEBHOOK_SECRET` (live endpoint). Optional: `DONATION_CURRENCY`, `DONATION_MIN_AMOUNT`, `DONATION_MAX_AMOUNT`.
+- [ ] Stripe (live mode) → Webhooks → endpoint `https://www.neorhiza.space/api/stripe/webhook` with `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`.
+- [ ] Redeploy, then make one small real contribution and refund it from the Dashboard: the success page confirms it, the webhook shows a 200 delivery, the function log shows one `stripe.donation` line.
+- [ ] Optional: Vercel Firewall rate-limit rule on `/api/donations/checkout` (10 requests / 600 s per IP).
+
 ## 3. Email delivery
 
 - [x] Resend shows `mail.neorhiza.space` as **Verified** (live delivery confirmed 2026-11-09).

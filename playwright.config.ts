@@ -3,7 +3,9 @@ import { defineConfig, devices } from "@playwright/test";
 /**
  * E2E suite. Runs against the production build (`npm run build` first).
  *  - :3000  site with a real delivery target (local webhook sink on :4599)
- *  - :3001  site with NO delivery configured (verifies honest failure)
+ *  - :3001  site with NO delivery or Stripe configured (verifies honest failure)
+ *  :3000 also has a placeholder Stripe key so the contribution form is
+ *  enabled; tests intercept checkout requests and never reach Stripe.
  *
  * Set PLAYWRIGHT_CHROMIUM_PATH to use a locally cached Chromium instead of
  * the Playwright-managed download. Set E2E_BASE_URL to test a server you
@@ -46,6 +48,10 @@ export default defineConfig({
         CONTACT_WEBHOOK_TOKEN: "e2e-test-token",
         CONTACT_RATE_LIMIT_MAX: "5",
         CONTACT_RATE_LIMIT_WINDOW_SECONDS: "600",
+        // Non-functional placeholder: enables the contribution form. Browser
+        // tests intercept every checkout request, so Stripe is never called.
+        STRIPE_SECRET_KEY: "sk_test_e2ePlaceholderNotARealKey",
+        STRIPE_WEBHOOK_SECRET: "",
       },
     },
     {
@@ -53,7 +59,7 @@ export default defineConfig({
       url: "http://localhost:3001",
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
-      env: { CONTACT_WEBHOOK_URL: "", RESEND_API_KEY: "" },
+      env: { CONTACT_WEBHOOK_URL: "", RESEND_API_KEY: "", STRIPE_SECRET_KEY: "", STRIPE_WEBHOOK_SECRET: "" },
     },
   ],
 });

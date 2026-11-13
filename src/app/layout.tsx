@@ -8,8 +8,7 @@ import { site } from "@/lib/site";
 import { brand } from "@/lib/brand-colors";
 import { JsonLd } from "@/components/json-ld";
 import { AnalyticsClickTracker } from "@/components/analytics-click-tracker";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { VercelInsights } from "@/components/vercel-insights";
 import { feedAlternates } from "@/lib/metadata";
 import { siteVerification } from "@/lib/verification";
 import "@/styles/globals.css";
@@ -172,12 +171,7 @@ export default function RootLayout({
             Only builds made on Vercel include them — elsewhere /_vercel/*
             does not exist and the scripts would 404. */}
         <AnalyticsClickTracker />
-        {process.env.VERCEL && (
-          <>
-            <Analytics />
-            <SpeedInsights />
-          </>
-        )}
+        {process.env.VERCEL && <VercelInsights />}
       </body>
     </html>
   );

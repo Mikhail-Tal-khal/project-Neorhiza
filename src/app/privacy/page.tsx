@@ -10,18 +10,19 @@ import { JsonLd } from "@/components/json-ld";
 export const metadata: Metadata = createMetadata({
   title: "Privacy",
   description:
-    "How Project Neorhiza collects, uses, shares and protects the minimal information submitted through this website, and the rights you have under Kenyan data-protection law.",
+    "How Project Neorhiza collects, uses, shares and protects the minimal information submitted through this website — including contributions processed by Stripe — and the rights you have under Kenyan data-protection law.",
   path: "/privacy",
 });
 
 const EFFECTIVE = "9 November 2026";
-const REVISED = "9 November 2026";
+const REVISED = "12 November 2026";
 
 const sections = [
   {
     title: "Who is responsible for your information",
     body: [
       `${site.name} is an early-stage research initiative based in Kenya, not yet institutionally affiliated. The data controller for information collected through this website is the project's founder, Rereu Lemein, acting for ${site.name}.`,
+      `Online contributions are received by the registered limited company through which ${site.name} operates, which is responsible for contribution records.`,
     ],
   },
   {
@@ -34,13 +35,14 @@ const sections = [
     title: "What we collect",
     body: [
       "Through the contact form: your full name and professional email address (required), your organization, professional role and country (optional), the area of interest you select, your message, and your confirmation that you consent to us processing the inquiry.",
-      "Automatically, when you use the site: the IP address of your connection, which our servers use briefly to limit how many inquiries can be sent in a short period; standard request information (such as IP address, browser type and the page requested) that our hosting provider records in its operational logs; and aggregate, cookieless usage and performance measurements described under “Analytics and tracking”.",
+      "When you make a contribution: the payment itself takes place on a checkout page hosted by Stripe, where you enter your email address and payment details (and billing details where Stripe requires them). Our website sends Stripe only the amount and currency you chose. Afterwards, the project can see a transaction record in its Stripe account — such as the amount, currency, date, payment status, the email address you entered and a payment reference — but never your full card number or security code.",
+      "Automatically, when you use the site: the IP address of your connection, which our servers use briefly to limit how many inquiries or checkout attempts can be made in a short period; standard request information (such as IP address, browser type and the page requested) that our hosting provider records in its operational logs; and aggregate, cookieless usage and performance measurements described under “Analytics and tracking”.",
     ],
   },
   {
     title: "What we do not collect",
     body: [
-      "We do not collect medical records, patient histories, diagnoses, genetic information or any other health data, and we ask you not to include such information in a message. We do not collect payment, donation or other financial information — this website processes no payments of any kind. We do not use advertising cookies, advertising trackers or cross-site profiling.",
+      "We do not collect medical records, patient histories, diagnoses, genetic information or any other health data, and we ask you not to include such information in a message. Project Neorhiza does not directly receive or store full card details: card numbers and security codes are entered on Stripe's checkout page and handled by Stripe. Our website does not keep its own database of contributions. We do not use advertising cookies, advertising trackers or cross-site profiling.",
     ],
   },
   {
@@ -48,7 +50,8 @@ const sections = [
     body: [
       "To review and respond to your professional inquiry in line with the collaboration framework described on the Collaboration page, including — for qualified inquiries — sending the public research overview or arranging a meeting.",
       "To send one automated email confirming that your inquiry was received. It does not repeat your message.",
-      "To keep the website and the contact form secure and available, including detecting and limiting spam and abuse.",
+      "To process a contribution you choose to make, show you a confirmation, answer questions or refund requests about it, and meet accounting, legal and fraud-prevention obligations.",
+      "To keep the website, the contact form and the contribution checkout secure and available, including detecting and limiting spam, fraud and abuse.",
       "To understand, in aggregate, which pages are useful and how quickly they load, so we can improve the site.",
       "We do not sell, rent or share your information for marketing, and we do not send newsletters or promotional email.",
     ],
@@ -57,7 +60,8 @@ const sections = [
     title: "Our lawful bases",
     body: [
       "Consent: we process the information you submit through the contact form, and send the confirmation email, because you consent to it when you submit the form. You can withdraw consent at any time; withdrawal does not affect processing that already took place.",
-      "Legitimate interests: we process connection data (such as IP addresses) for security, abuse prevention and rate limiting, and use aggregate analytics to keep the site working well. These uses are limited to what is necessary and do not identify you to us.",
+      "Contract and legal obligation: when you make a contribution, its transaction record is processed to complete the payment you requested and is retained to meet accounting and legal obligations.",
+      "Legitimate interests: we process connection data (such as IP addresses) for security, abuse prevention and rate limiting, and use aggregate analytics to keep the site working well. Fraud prevention for contributions also relies on this basis. These uses are limited to what is necessary and do not identify you to us.",
     ],
   },
   {
@@ -66,8 +70,9 @@ const sections = [
       "Website hosting, operational logs, Web Analytics and Speed Insights: Vercel.",
       "Transactional email (delivering inquiries to our inbox and sending your confirmation): Resend.",
       "Our inquiry mailbox: Namecheap Private Email.",
+      "Payment processing: Stripe. Payments are processed by Stripe, which may process payment, billing, fraud-prevention and transaction information under its own privacy policy (stripe.com/privacy), including for its own legal and fraud-prevention purposes.",
       "Rate limiting, where enabled: a managed Redis service (Upstash) that holds short-lived counters keyed to the connection's IP address.",
-      "These providers act on our instructions and process information only to deliver their service to us.",
+      "Apart from the independent uses Stripe describes in its own policy, these providers act on our instructions and process information only to deliver their service to us.",
     ],
   },
   {
@@ -81,6 +86,7 @@ const sections = [
     body: [
       "Inquiries that do not lead to ongoing correspondence are deleted within 12 months of receipt.",
       "Where an inquiry leads to an ongoing professional relationship, related correspondence is kept while that relationship is active and deleted or anonymized within 24 months of the last contact, unless a written agreement or a legal obligation requires us to keep it longer.",
+      "Contribution records may be retained for accounting, legal and fraud-prevention purposes for as long as the law requires — which can be several years after the contribution — in Stripe and in the project's accounting records.",
       "Rate-limit counters expire automatically at the end of the rate-limit window (10 minutes by default) and are never stored with your inquiry. Hosting logs and email-delivery records are kept by Vercel and Resend for limited periods under their own retention settings.",
     ],
   },
@@ -101,14 +107,14 @@ const sections = [
     title: "Analytics and tracking",
     body: [
       "This website uses Vercel Web Analytics and Vercel Speed Insights. Both are first-party (served from this website's own domain), do not set cookies and report only aggregate information — such as page views, referring sites, country, device type and page-load performance. According to Vercel, visitors are not tracked across websites and no persistent identifier is stored on your device.",
-      "We also count a small number of aggregate events — for example, that a contact form was started or a collaboration button was clicked. These events never include your name, email address, message or anything else you type.",
+      "We also count a small number of aggregate events — for example, that a contact form was started or a collaboration button was clicked. Contribution events record only that a contribution button was clicked or that checkout was started, failed or completed. These events never include your name, email address, message, contribution amount, payment details, Stripe identifiers or anything else you type.",
       "We do not use advertising trackers, social-media pixels, session recording or cross-site behavioral profiling. If we ever add another analytics or measurement tool, it will be described on this page before it is switched on.",
     ],
   },
   {
     title: "How your information is protected",
     body: [
-      "All traffic to this website is encrypted (HTTPS with HSTS). Submissions are validated, sanitized and rate-limited on our servers, and the contact form refuses requests sent from other websites. Our operational logs record only technical outcomes, never the content of inquiries. Access to submitted inquiries is limited to the people responsible for responding to them.",
+      "All traffic to this website is encrypted (HTTPS with HSTS). Submissions are validated, sanitized and rate-limited on our servers, and the contact and contribution forms refuse requests sent from other websites. Payment details are entered only on Stripe's checkout page, never on this website. Our operational logs record only technical outcomes, never the content of inquiries. Access to submitted inquiries is limited to the people responsible for responding to them.",
     ],
   },
   {

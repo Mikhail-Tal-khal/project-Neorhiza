@@ -59,6 +59,35 @@ for (const [url, token] of redisPairs) {
   }
 }
 
+// Online contributions (optional; without a key the donate button is disabled)
+const isLive = env.VERCEL_ENV ? env.VERCEL_ENV === "production" : true;
+if (has("STRIPE_SECRET_KEY")) {
+  const key = unquote(env.STRIPE_SECRET_KEY);
+  const keyOk = /^(sk|rk)_(test|live)_[A-Za-z0-9_]+$/.test(key);
+  check("required", "STRIPE_SECRET_KEY looks like a Stripe secret key (sk_… or rk_…)", keyOk, "the donate button stays disabled until it does");
+  if (keyOk && isLive) {
+    check("recommended", "STRIPE_SECRET_KEY is a live-mode key in production", /^(sk|rk)_live_/.test(key), "a test-mode key takes no real payments");
+  }
+  check("required", "STRIPE_WEBHOOK_SECRET is set when Stripe is enabled", has("STRIPE_WEBHOOK_SECRET"), "webhook events would be rejected (503) and retried by Stripe");
+} else {
+  check("optional", "STRIPE_SECRET_KEY is set (online contributions)", false, "the Funding page shows \"Secure donations are being prepared\"");
+}
+if (has("STRIPE_WEBHOOK_SECRET")) {
+  check("required", "STRIPE_WEBHOOK_SECRET has the whsec_ prefix", unquote(env.STRIPE_WEBHOOK_SECRET).startsWith("whsec_"), "copy the endpoint's signing secret from the Stripe Dashboard");
+}
+if (has("DONATION_CURRENCY")) {
+  check("required", "DONATION_CURRENCY is supported (usd, eur, gbp, cad, aud, chf, kes)", ["usd", "eur", "gbp", "cad", "aud", "chf", "kes"].includes(unquote(env.DONATION_CURRENCY).toLowerCase()), "falls back to usd");
+}
+const units = (name) => (has(name) ? (/^\d{1,6}$/.test(unquote(env[name])) && Number(unquote(env[name])) >= 1 ? Number(unquote(env[name])) : NaN) : undefined);
+const minUnits = units("DONATION_MIN_AMOUNT");
+const maxUnits = units("DONATION_MAX_AMOUNT");
+for (const [name, value] of [["DONATION_MIN_AMOUNT", minUnits], ["DONATION_MAX_AMOUNT", maxUnits]]) {
+  if (Number.isNaN(value)) check("required", `${name} is a whole number from 1 to 999999`, false, "falls back to the default");
+}
+if ((minUnits ?? 5) >= (maxUnits ?? 50000)) {
+  check("required", "DONATION_MIN_AMOUNT is lower than DONATION_MAX_AMOUNT", false, "both fall back to 5 / 50000");
+}
+
 // Secrets must never be public
 const leaked = Object.keys(env).filter((n) => n.startsWith("NEXT_PUBLIC_") && /KEY|TOKEN|SECRET|PASSWORD|PRIVATE/i.test(n));
 check("required", "No secret-looking variable uses the NEXT_PUBLIC_ prefix", leaked.length === 0, leaked.length ? `rename: ${leaked.join(", ")}` : "");

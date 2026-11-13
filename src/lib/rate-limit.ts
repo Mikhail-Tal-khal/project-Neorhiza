@@ -120,7 +120,7 @@ export const REDIS_CREDENTIAL_PAIRS = [
  * order above. A half-set pair never combines with another naming scheme
  * (that would send one store's token to another store's URL).
  */
-function remoteConfig() {
+export function sharedStoreConfig() {
   for (const [urlName, tokenName] of REDIS_CREDENTIAL_PAIRS) {
     const url = envValue(urlName);
     const token = envValue(tokenName);
@@ -153,7 +153,7 @@ export type RateLimitStoreStatus = {
  * URLs or tokens — only whether they are present.
  */
 export function rateLimitStoreStatus(): RateLimitStoreStatus {
-  if (remoteConfig()) {
+  if (sharedStoreConfig()) {
     return { store: "shared", adequate: true, message: "Shared rate-limit store configured." };
   }
   if (isProductionDeployment()) {
@@ -190,7 +190,7 @@ export async function rateLimit(
   max: number,
   windowMs: number
 ): Promise<RateLimitResult> {
-  const remote = remoteConfig();
+  const remote = sharedStoreConfig();
   if (remote) {
     try {
       return await createUpstashLimiter(remote.url, remote.token).limit(key, max, windowMs);

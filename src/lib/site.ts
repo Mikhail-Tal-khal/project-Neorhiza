@@ -62,9 +62,13 @@ export const disclaimers = {
   footer:
     "Project Neorhiza is an early-stage research initiative. It does not currently provide medical advice, diagnostic services, stem-cell treatment, organ transplantation or clinical care. Information on this website is provided for education, scientific communication and research-development purposes. Future experimental or clinical activities will require qualified institutional supervision and all applicable ethical, scientific and regulatory approvals.",
 
-  /** Funding page — no online donations or payments */
-  noDonations:
-    "Project Neorhiza does not accept or process donations or payments through this website. Funding conversations take place only through professional inquiry, and any support is agreed in writing through appropriate legal and institutional arrangements.",
+  /** Online contributions — nature of a contribution (required wording) */
+  contributions:
+    "Contributions support Project Neorhiza’s early-stage research and development activities. They are not investments, do not provide equity or ownership, and should not be assumed to be tax-deductible unless independently confirmed under the donor’s applicable laws.",
+
+  /** Online contributions — how payment is handled */
+  stripeProcessing:
+    "Payments are processed securely by Stripe. Card details are entered on Stripe’s checkout page and are never received or stored by Project Neorhiza.",
 
   /** Contact page — people seeking treatment (18) */
   treatment:
