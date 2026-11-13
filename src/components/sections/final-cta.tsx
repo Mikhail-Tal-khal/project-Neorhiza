@@ -54,10 +54,10 @@ export function FinalCta() {
               Start a Professional Inquiry
             </GlassButton>
             <GlassButton
-              href="/funding"
+              href="/funding#contribute"
               size="lg"
               className="border border-white/30 bg-transparent text-white hover:bg-white/10 dark:bg-transparent dark:text-white"
-              analytics={{ event: "funding_inquiry_started", location: "home-final" }}
+              analytics={{ event: "donation_cta_clicked", location: "home-final" }}
             >
               Support the Foundation Phase
             </GlassButton>

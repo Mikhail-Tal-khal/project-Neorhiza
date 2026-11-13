@@ -36,6 +36,8 @@ Project Settings → Environment Variables. Add for **Production** (and for Prev
 | `CONTACT_TO_EMAIL` | inbox that receives inquiries |
 | `CONTACT_FROM_EMAIL` | e.g. `Project Neorhiza <website@mail.your-domain.org>`, using a domain verified in Resend |
 | `CONTACT_WEBHOOK_URL` / `CONTACT_WEBHOOK_TOKEN` | *(alternative or additional)* webhook delivery |
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | *(optional)* online contributions; mark both **Sensitive**. Use test keys on Preview only together with a Preview `NEXT_PUBLIC_SITE_URL`, otherwise Checkout returns to the production domain. See [DONATIONS.md](DONATIONS.md). |
+| `DONATION_CURRENCY`, `DONATION_MIN_AMOUNT`, `DONATION_MAX_AMOUNT` | *(optional)* defaults `usd`, `5`, `50000` |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Rate-limit store. If you add Upstash through **Storage → Marketplace**, Vercel injects `KV_REST_API_URL` / `KV_REST_API_TOKEN` instead (or `NEORHIZA_KV_REST_API_URL` / `NEORHIZA_KV_REST_API_TOKEN` when connected with the custom prefix `NEORHIZA`); all three naming schemes work, and only a complete URL + token pair counts. |
 
 `NEXT_PUBLIC_*` values are inlined at build time, so **redeploy after changing them**.
@@ -79,6 +81,7 @@ Run these against the production URL (`SITE=https://your-domain.org`):
 - [ ] **Theme works**: toggle light / dark / system in the header; reload keeps the choice; no flash of the wrong theme.
 - [ ] **All pages load**: `BASE_URL=$SITE npm run check:links` → zero broken links or anchors; the custom 404 renders.
 - [ ] **Form sends**: submit a real test inquiry on `/contact` → "Inquiry received", and the message arrives in `CONTACT_TO_EMAIL` or at the webhook. With Resend, replying to the notification addresses the visitor, and the visitor's address receives "We received your inquiry — Project Neorhiza".
+- [ ] **Contributions**: `/funding#contribute` shows the enabled form (or "Secure donations are being prepared" without Stripe keys). With live keys, the webhook endpoint shows successful deliveries in the Stripe Dashboard. Full test-mode walkthrough: [DONATIONS.md](DONATIONS.md#local-testing-with-stripe-test-mode).
 - [ ] **Form fails honestly** (optional, on a preview without delivery variables): the form shows "temporarily unavailable".
 - [ ] **Sitemap and robots**: `curl -s $SITE/sitemap.xml` lists every page on the real domain; `curl -s $SITE/robots.txt` shows `Sitemap: $SITE/sitemap.xml`.
 - [ ] **OG image renders**: open `$SITE/opengraph-image` and an article's `/opengraph-image`; validate with <https://www.opengraph.xyz> or the LinkedIn Post Inspector.

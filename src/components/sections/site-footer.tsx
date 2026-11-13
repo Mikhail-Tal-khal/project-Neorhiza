@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { disclaimers, navItems, site } from "@/lib/site";
+import { trackAttrs } from "@/lib/analytics-events";
 
 /** Pages linked from the footer but kept out of the main menu to avoid crowding it. */
 const moreLinks = [{ href: "/funding", label: "Funding" }];
@@ -30,6 +31,16 @@ export function SiteFooter() {
             </p>
             <p className="mt-1 text-sm text-mist-200">{site.descriptor}</p>
             <p className="mt-1 text-sm text-mist-200">{site.tagline}</p>
+            <p className="mt-6 max-w-xs text-sm leading-relaxed text-mist-200">
+              Support early-stage research with a secure one-time contribution.{" "}
+              <Link
+                href="/funding#contribute"
+                className="font-medium text-white underline underline-offset-4 hover:text-mist-200"
+                {...trackAttrs("donation_cta_clicked", "footer")}
+              >
+                Contribute
+              </Link>
+            </p>
           </div>
 
           {/* Site pages */}

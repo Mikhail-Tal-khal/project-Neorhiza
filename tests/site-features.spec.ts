@@ -100,10 +100,19 @@ test.describe("funding page", () => {
     await expect(page.locator("h1")).toHaveText("Support the Foundation Phase");
     const text = await page.locator("main").innerText();
     expect(text).toMatch(/No laboratory work will start/);
-    expect(text).toMatch(/does not process donations or payments/);
     expect(text).toMatch(/do not claim charitable, tax-exempt or tax-deductible status/);
-    // No funding amounts or targets are published.
-    expect(text).not.toMatch(/\$\s?\d|KES\s?\d|USD\s?\d|€\s?\d|£\s?\d/i);
+    expect(text).toContain(
+      "They are not investments, do not provide equity or ownership, and should not be assumed to be tax-deductible"
+    );
+    // No funding amounts or targets are published outside the contribution picker.
+    const outsidePicker = await page
+      .locator("main")
+      .evaluate((main) => {
+        const clone = main.cloneNode(true) as HTMLElement;
+        clone.querySelector("#contribute")?.remove();
+        return clone.innerText;
+      });
+    expect(outsidePicker).not.toMatch(/\$\s?\d|KES\s?\d|USD\s?\d|€\s?\d|£\s?\d/i);
     for (const heading of ["Current Status", "What Support Enables"]) {
       await expect(page.getByRole("heading", { level: 2, name: heading })).toBeVisible();
     }

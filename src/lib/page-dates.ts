@@ -5,17 +5,17 @@
  * every page changed on every deploy. Article dates come from frontmatter.
  */
 export const pageDates = {
-  "/": "2026-11-09",
+  "/": "2026-11-12",
   "/why-neorhiza": "2026-11-09",
   "/our-science": "2026-10-23",
   "/roadmap": "2026-10-23",
   "/human-impact": "2026-10-23",
   "/collaboration": "2026-11-09",
-  "/funding": "2026-11-09",
+  "/funding": "2026-11-12",
   "/updates": "2026-11-09",
   "/contact": "2026-11-09",
-  "/privacy": "2026-11-09",
-  "/terms": "2026-11-09",
+  "/privacy": "2026-11-12",
+  "/terms": "2026-11-12",
   "/research-disclaimer": "2026-10-23",
 } as const;
 

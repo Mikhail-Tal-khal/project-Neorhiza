@@ -14,12 +14,19 @@ export const analyticsEvents = [
   "funding_inquiry_started",
   "article_opened",
   "outbound_profile_clicked",
+  "donation_cta_clicked",
+  "donation_checkout_started",
+  "donation_checkout_failed",
+  "donation_success_viewed",
 ] as const;
 
 export type AnalyticsEvent = (typeof analyticsEvents)[number];
 
-/** Allowed property keys; values must be code-defined labels or slugs. */
-export type AnalyticsProps = Partial<Record<"location" | "area" | "slug", string>>;
+/**
+ * Allowed property keys; values must be code-defined labels or slugs.
+ * Donation events never carry amounts, currencies, emails or Stripe IDs.
+ */
+export type AnalyticsProps = Partial<Record<"location" | "area" | "slug" | "reason", string>>;
 
 /** Attributes for an element tracked by <AnalyticsClickTracker />. */
 export function trackAttrs(event: AnalyticsEvent, location?: string) {

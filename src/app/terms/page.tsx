@@ -10,21 +10,23 @@ import { JsonLd } from "@/components/json-ld";
 export const metadata: Metadata = createMetadata({
   title: "Terms",
   description:
-    "Terms of use for the Project Neorhiza website — who operates it, acceptable use, intellectual property, and why it offers no medical services, patient enrollment or payments.",
+    "Terms of use for the Project Neorhiza website — who operates it, acceptable use, intellectual property, and why it offers no medical services or patient enrollment, and how online contributions work.",
   path: "/terms",
 });
 
 const EFFECTIVE = "9 November 2026";
-const REVISED = "9 November 2026";
+const REVISED = "12 November 2026";
 
-// LEGAL REVIEW: the governing-law and liability sections are a plain-language
-// draft. Have them reviewed by a Kenyan advocate before paid advertising,
-// fundraising or international campaigns (docs/production-launch-checklist.md).
+// LEGAL REVIEW: the governing-law, liability and contribution/refund sections
+// are a plain-language draft. Have them reviewed by a Kenyan advocate before
+// accepting live contributions, paid advertising, fundraising or international
+// campaigns, and add the operating company's legal name
+// (docs/production-launch-checklist.md, section 2a).
 const sections = [
   {
     title: "Who operates this website",
     body: [
-      `This website is operated by ${site.name}, an early-stage research initiative based in Kenya and founded by Rereu Lemein. It is not yet institutionally affiliated and has no laboratory or clinical operations. Nothing on this website claims that the project is incorporated, a registered charity, tax-exempt or licensed.`,
+      `This website is operated by ${site.name}, an early-stage research initiative based in Kenya and founded by Rereu Lemein. It operates through a registered limited company. It is not yet institutionally affiliated and has no laboratory or clinical operations. Nothing on this website claims that the project is a registered charity, tax-exempt or licensed.`,
       `Contact: ${site.contactEmail}.`,
     ],
   },
@@ -42,16 +44,26 @@ const sections = [
     ],
   },
   {
-    title: "No donations or payments",
+    title: "Online contributions",
     body: [
-      "This website does not accept donations and does not process payments of any kind. Anyone asking you to pay or donate in the name of Project Neorhiza through another channel is not acting for the project — please report it to us. Funding conversations take place only through professional inquiry and are agreed in writing.",
+      "You can make a voluntary one-time contribution through the contribution form on the Funding page, which takes you to a checkout page hosted by Stripe. This is the only online payment channel for Project Neorhiza. Anyone asking you to pay or donate in the name of Project Neorhiza through another channel is not acting for the project — please report it to us. Institutional or conditional support is agreed separately, in writing, through a funding conversation.",
+      disclaimers.contributions,
+      "A contribution is a gift toward early-stage work. It does not purchase goods or services, and it gives no right to research results, influence over scientific conclusions, ethical review or project decisions, or any return. Project Neorhiza makes no promise of medical outcomes, treatments or guaranteed research results.",
+    ],
+  },
+  {
+    title: "Payments, refunds and records",
+    body: [
+      "Payments are processed by Stripe. Card details are entered on Stripe’s checkout page; Project Neorhiza does not directly receive or store full card details. Your use of Stripe’s checkout is also subject to Stripe’s own terms and privacy policy.",
+      `Refund requests are reviewed according to applicable law and Stripe transaction records. To request a refund or report a payment you do not recognize, write to ${site.contactEmail} with the payment reference shown on your confirmation page or Stripe receipt.`,
+      "Contribution records may be retained for accounting, legal and fraud-prevention purposes, as described in the Privacy Policy.",
     ],
   },
   {
     title: "Acceptable use",
     body: [
-      "You may use this website for lawful, personal or professional purposes. You agree not to: submit false, misleading or impersonating information; send spam, bulk or automated submissions through the contact form; attempt to gain unauthorized access, probe for vulnerabilities outside responsible disclosure, or disrupt the website or its providers; scrape the site in a way that degrades it for others; or use the site to send unlawful, abusive or harassing content.",
-      "Submissions are validated and rate-limited, and requests from other websites are refused. We may block traffic or ignore inquiries that breach these terms. Security issues should be reported as described in our security policy (/.well-known/security.txt).",
+      "You may use this website for lawful, personal or professional purposes. You agree not to: submit false, misleading or impersonating information; send spam, bulk or automated submissions through the contact or contribution forms; make or attempt fraudulent or unauthorized payments; attempt to gain unauthorized access, probe for vulnerabilities outside responsible disclosure, or disrupt the website or its providers; scrape the site in a way that degrades it for others; or use the site to send unlawful, abusive or harassing content.",
+      "Submissions and checkout requests are validated and rate-limited, and requests from other websites are refused. We may block traffic or ignore inquiries that breach these terms. Security issues should be reported as described in our security policy (/.well-known/security.txt).",
     ],
   },
   {

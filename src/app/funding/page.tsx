@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { GlassCard, GlassPanel } from "@/components/ui/glass-panel";
 import { GlassButton } from "@/components/ui/glass-button";
@@ -8,10 +9,13 @@ import { createMetadata } from "@/lib/metadata";
 import { disclaimers, site } from "@/lib/site";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { JsonLd } from "@/components/json-ld";
+import { connection } from "next/server";
+import { DonationSection } from "@/components/sections/donation-section";
+import { donationSettings, isDonationConfigured } from "@/lib/donations/config";
 
 const title = "Funding the Foundation Phase";
 const description =
-  "How research funders, institutions, foundations and responsible sponsors can support Project Neorhiza's Foundation Phase — governance, evidence review, scientific advising and institutional partnerships. No donations are processed online.";
+  "How research funders, institutions, foundations and responsible sponsors can support Project Neorhiza's Foundation Phase — governance, evidence review, scientific advising and institutional partnerships, and how individuals can make a secure one-time contribution.";
 
 export const metadata: Metadata = createMetadata({ title, description, path: "/funding" });
 
@@ -32,7 +36,7 @@ const webPage = {
 };
 
 /** Where the project stands today — every line is a current fact, not a goal. */
-const currentStatus = [
+const currentStatus = (donationsOpen: boolean) => [
   {
     label: "Development phase",
     text: "Foundation Phase: evidence review, scientific advising, partnership building and project governance.",
@@ -50,8 +54,10 @@ const currentStatus = [
     text: "None. The project offers no treatment, diagnosis or patient enrollment.",
   },
   {
-    label: "Online donations",
-    text: "Not accepted. This website does not process donations or payments of any kind.",
+    label: "Online contributions",
+    text: donationsOpen
+      ? "Open. One-time contributions are processed securely by Stripe. Institutional support is still agreed in writing through a funding conversation."
+      : "Being prepared. Secure online contributions will open once payment processing is fully configured.",
   },
 ];
 
@@ -117,11 +123,18 @@ const commitments = [
   "We do not publish funding targets or amounts we cannot justify yet.",
   "We make no medical promises and claim no guaranteed outcomes.",
   "We do not claim charitable, tax-exempt or tax-deductible status.",
+  "Contributions are not investments and carry no equity, ownership or returns.",
   "Support never buys influence over scientific conclusions or ethical review.",
   "Progress, limitations and setbacks will be reported honestly on the Updates page.",
 ];
 
-export default function FundingPage() {
+export default async function FundingPage() {
+  // Rendered per request so the contribution form reflects the live
+  // Stripe configuration (keys can be added without a code change).
+  await connection();
+  const settings = donationSettings();
+  const donationsOpen = isDonationConfigured();
+
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-24 md:px-8">
       <section aria-labelledby="funding-heading" className="py-16 lg:py-24">
@@ -144,13 +157,22 @@ export default function FundingPage() {
           >
             Start a Funding Conversation
           </GlassButton>
-          <GlassButton href="/roadmap" variant="secondary" size="lg">
-            View the Research Roadmap
+          <GlassButton
+            href="#contribute"
+            variant="secondary"
+            size="lg"
+            analytics={{ event: "donation_cta_clicked", location: "funding-hero" }}
+          >
+            Make a Contribution
           </GlassButton>
         </div>
-        <ResearchDisclaimer className="mx-auto mt-8 max-w-3xl" title="Donations notice">
-          {disclaimers.noDonations}
-        </ResearchDisclaimer>
+        <p className="mt-5 text-center text-sm text-muted">
+          Or explore the{" "}
+          <Link href="/roadmap" className="font-medium text-teal-700 underline underline-offset-4 dark:text-teal-200">
+            research roadmap
+          </Link>{" "}
+          first.
+        </p>
       </section>
 
       {/* Current status */}
@@ -163,7 +185,7 @@ export default function FundingPage() {
         />
         <GlassPanel className="mx-auto mt-12 max-w-4xl overflow-hidden p-0">
           <dl className="divide-y divide-border">
-            {currentStatus.map((item) => (
+            {currentStatus(donationsOpen).map((item) => (
               <div key={item.label} className="grid gap-1 p-5 sm:grid-cols-[13rem_1fr] sm:gap-6 md:p-6">
                 <dt className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-heading">
                   {item.label}
@@ -195,6 +217,8 @@ export default function FundingPage() {
           ))}
         </ul>
       </section>
+
+      <DonationSection settings={settings} enabled={donationsOpen} />
 
       {/* Who we want to hear from */}
       <section aria-labelledby="audiences-heading" className="py-10">
