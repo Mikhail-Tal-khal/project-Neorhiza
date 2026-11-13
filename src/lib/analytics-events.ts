@@ -11,7 +11,7 @@ export const analyticsEvents = [
   "inquiry_submitted",
   "collaboration_cta_clicked",
   "research_overview_requested",
-  "funding_inquiry_started",
+  "partnership_inquiry_started",
   "article_opened",
   "outbound_profile_clicked",
   "donation_cta_clicked",

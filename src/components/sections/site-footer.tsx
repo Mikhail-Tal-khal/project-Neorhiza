@@ -34,11 +34,11 @@ export function SiteFooter() {
             <p className="mt-6 max-w-xs text-sm leading-relaxed text-mist-200">
               Support early-stage research with a secure one-time contribution.{" "}
               <Link
-                href="/funding#contribute"
+                href="/funding#donate"
                 className="font-medium text-white underline underline-offset-4 hover:text-mist-200"
                 {...trackAttrs("donation_cta_clicked", "footer")}
               >
-                Contribute
+                Donate Now
               </Link>
             </p>
           </div>

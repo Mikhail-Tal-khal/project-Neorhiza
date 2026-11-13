@@ -130,7 +130,7 @@ docs/                     AUDIT.md (audit log) and DEPLOYMENT.md
    ```
 
 2. Add the path to `PAGES` in `tests/support/site.ts`.
-3. Run `npm run build`. The article page, its OG image, the sitemap entry, the RSS item (`/updates/feed.xml`) and structured data are generated automatically.
+3. Run `npm run build`. The article page, its OG image, the sitemap entry and structured data are generated automatically.
 
 ## Testing and quality checks
 
@@ -140,7 +140,7 @@ npm run typecheck        # tsc --noEmit
 npm run check:contrast   # WCAG contrast of every token pairing, both themes, incl. glass worst cases
 npm run build
 npm run test:e2e         # Playwright: pages, SEO, navigation, theme, form, a11y (axe), no-JS, screenshots,
-                         # contact API + rate-limit unit tests, feed, security.txt, funding, mobile overflow
+                         # contact API + rate-limit unit tests, security.txt, funding, mobile overflow
 npm audit --omit=dev --audit-level=high   # production dependencies (also in CI)
 ```
 

@@ -113,7 +113,7 @@ The root domain currently publishes `v=DMARC1; p=none;` (monitoring only).
 - [ ] Confirm the retention periods (12 months / 24 months) are achievable in practice, and set a calendar reminder to purge the mailbox.
 - [ ] Confirm the cross-border transfer wording for Vercel, Resend, Namecheap and Upstash, and keep their data-processing terms on file.
 - [ ] Confirm the governing-law and liability clauses in the Terms.
-- [ ] Confirm no fundraising language implies charitable or tax-exempt status before any funding conversation becomes a campaign.
+- [ ] Confirm no fundraising language implies charitable or tax-exempt status before any donation campaign is promoted.
 
 ## 9. Verify after each production deploy
 
@@ -121,7 +121,6 @@ The root domain currently publishes `v=DMARC1; p=none;` (monitoring only).
 SITE=https://www.neorhiza.space
 curl -sI $SITE | grep -iE "^(strict-transport|content-security|cross-origin|x-permitted|origin-agent)"
 curl -s  $SITE/.well-known/security.txt
-curl -sI $SITE/updates/feed.xml | grep -i content-type
 BASE_URL=$SITE npm run check:links
 ```
 

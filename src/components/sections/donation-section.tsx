@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { DonationForm } from "@/components/ui/donation-form";
 import { formatMoney, type DonationSettings } from "@/lib/donations/amount";
 import { disclaimers } from "@/lib/site";
+import { trackAttrs } from "@/lib/analytics-events";
 
 /** What contributions are used for. Purposes only — no outcomes are promised. */
 export const contributionUses = [
@@ -38,9 +39,9 @@ const linkClass = "font-medium text-teal-700 underline underline-offset-4 dark:t
  */
 export function DonationSection({ settings, enabled }: { settings: DonationSettings; enabled: boolean }) {
   return (
-    <section id="contribute" aria-labelledby="contribute-heading" className="scroll-mt-28 py-16">
+    <section id="donate" aria-labelledby="donate-heading" className="scroll-mt-28 pb-16">
       <SectionHeading
-        id="contribute-heading"
+        id="donate-heading"
         eyebrow="Online contributions"
         title="Contribute to the Foundation Phase"
         lead="Individuals can support Project Neorhiza's early-stage work with a secure one-time contribution. Every contribution is processed by Stripe; no account is needed."
@@ -61,12 +62,8 @@ export function DonationSection({ settings, enabled }: { settings: DonationSetti
               <div>
                 <p className="font-semibold text-heading">Secure donations are being prepared</p>
                 <p className="mt-1 text-sm leading-relaxed text-muted">
-                  Online contributions will open once secure payment processing is fully configured. Until then,
-                  you can{" "}
-                  <Link href="/contact?interest=funding#inquiry-form" className={linkClass}>
-                    start a funding conversation
-                  </Link>
-                  .
+                  Online contributions will open once secure payment processing is fully configured. No payment
+                  can be taken until then. Please check back soon.
                 </p>
               </div>
             </div>
@@ -114,11 +111,15 @@ export function DonationSection({ settings, enabled }: { settings: DonationSetti
             <p className="label-caps mb-2">Please note</p>
             <p className="text-pretty">{disclaimers.contributions}</p>
             <p className="mt-3 text-muted">
-              Institutions and organizations considering larger or conditional support should{" "}
-              <Link href="/contact?interest=funding#inquiry-form" className={linkClass}>
-                start a funding conversation
-              </Link>{" "}
-              instead. See the{" "}
+              Institutions and organizations considering a formal partnership can send an{" "}
+              <Link
+                href="/contact?interest=institutional#inquiry-form"
+                className={linkClass}
+                {...trackAttrs("partnership_inquiry_started", "funding-donate-note")}
+              >
+                institutional partnership inquiry
+              </Link>
+              . See the{" "}
               <Link href="/terms" className={linkClass}>
                 Terms
               </Link>{" "}

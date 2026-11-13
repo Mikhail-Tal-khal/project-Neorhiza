@@ -21,7 +21,7 @@ async function mockStripePage(page: Page) {
 
 /** Clicks the visible amount pill, as a visitor would (the radio itself is visually hidden). */
 async function pick(page: Page, label: string) {
-  await page.locator("#contribute").getByText(label, { exact: true }).click();
+  await page.locator("#donate").getByText(label, { exact: true }).click();
 }
 
 async function seriousViolations(page: Page) {
@@ -39,7 +39,7 @@ test.describe("contribution form (Stripe configured)", () => {
   test("shows presets, a $100 default and the required statement", async ({ page }) => {
     const problems = trackConsole(page);
     await gotoHydrated(page, "/funding");
-    const section = page.locator("#contribute");
+    const section = page.locator("#donate");
     await expect(section.getByRole("heading", { level: 2, name: "Contribute to the Foundation Phase" })).toBeVisible();
 
     const group = section.getByRole("group", { name: /Choose a one-time amount/ });
@@ -81,21 +81,21 @@ test.describe("contribution form (Stripe configured)", () => {
     const donate = page.getByRole("button", { name: "Donate securely with Stripe" });
 
     await donate.click();
-    await expect(page.locator("#contribute").getByRole("alert")).toHaveText("Please enter an amount.");
+    await expect(page.locator("#donate").getByRole("alert")).toHaveText("Please enter an amount.");
 
     await input.fill("3");
     await donate.click();
-    await expect(page.locator("#contribute").getByRole("alert")).toHaveText("The minimum contribution is $5.");
+    await expect(page.locator("#donate").getByRole("alert")).toHaveText("The minimum contribution is $5.");
     await expect(input).toHaveAttribute("aria-invalid", "true");
     await expect(input).toBeFocused();
 
     await input.fill("60000");
     await donate.click();
-    await expect(page.locator("#contribute").getByRole("alert")).toContainText("The maximum online contribution is $50,000.");
+    await expect(page.locator("#donate").getByRole("alert")).toContainText("The maximum online contribution is $50,000.");
 
     await input.fill("12.345");
     await donate.click();
-    await expect(page.locator("#contribute").getByRole("alert")).toContainText("Please enter a valid amount");
+    await expect(page.locator("#donate").getByRole("alert")).toContainText("Please enter a valid amount");
 
     await input.fill("$1,250.50");
     await expect(page.getByText("Contribution: $1,250.50 USD, one time")).toBeVisible();
@@ -182,13 +182,14 @@ test.describe("contribution form (Stripe configured)", () => {
 test.describe("contribution form (Stripe not configured)", () => {
   test("disables donating and explains that secure donations are being prepared", async ({ page }) => {
     await gotoHydrated(page, `${UNCONFIGURED}/funding`);
-    const section = page.locator("#contribute");
+    const section = page.locator("#donate");
     await expect(section.getByText("Secure donations are being prepared")).toBeVisible();
     await expect(section.getByRole("button", { name: "Donate securely with Stripe" })).toBeDisabled();
     await expect(section.getByRole("radio", { name: "$100", exact: true })).toBeDisabled();
     await expect(page.getByText("Being prepared. Secure online contributions will open")).toBeVisible();
-    // The rest of the page still works.
-    await expect(page.getByRole("link", { name: "Start a Funding Conversation" }).first()).toBeVisible();
+    // A professional notice, never a redirect to the contact form.
+    await expect(section).toContainText("No payment can be taken until then. Please check back soon.");
+    await expect(page.locator('a[href*="interest=funding"]')).toHaveCount(0);
     expect((await seriousViolations(page)).map((v) => v.id)).toEqual([]);
   });
 
@@ -217,7 +218,7 @@ test.describe("success and cancellation pages", () => {
   test("success reports unavailability when Stripe cannot be asked", async ({ page }) => {
     await page.goto(`${UNCONFIGURED}/funding/success?session_id=cs_test_a1B2c3D4e5F6g7H8`);
     await expect(page.locator("h1")).toHaveText("We can’t confirm your contribution right now");
-    await expect(page.getByRole("link", { name: "Return to Funding" })).toHaveAttribute("href", "/funding#contribute");
+    await expect(page.getByRole("link", { name: "Return to Funding" })).toHaveAttribute("href", "/funding#donate");
     await expect(page.getByRole("link", { name: "Read Project Updates" })).toHaveAttribute("href", "/updates");
     expect((await seriousViolations(page)).map((v) => v.id)).toEqual([]);
   });
@@ -229,7 +230,7 @@ test.describe("success and cancellation pages", () => {
     await expect(page.locator("h1")).toHaveText("Your contribution was not completed");
     await expect(page.locator("main")).toContainText("no payment was taken");
     const retry = page.getByRole("link", { name: "Try Again" });
-    await expect(retry).toHaveAttribute("href", "/funding#contribute");
+    await expect(retry).toHaveAttribute("href", "/funding#donate");
     await expect(retry).toHaveAttribute("data-analytics-event", "donation_cta_clicked");
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
     expect((await seriousViolations(page)).map((v) => v.id)).toEqual([]);
@@ -244,24 +245,55 @@ test.describe("success and cancellation pages", () => {
 });
 
 test.describe("calls to action", () => {
-  test("home and footer link to the contribution section, tracked without amounts", async ({ page }) => {
+  test("home and footer donate directly, tracked without amounts", async ({ page }) => {
     await page.goto("/");
-    const home = page.locator('#cta-heading ~ div a[href="/funding#contribute"]');
+    const home = page.locator("#cta-heading ~ div").getByRole("link", { name: "Support Neorhiza" });
+    await expect(home).toHaveAttribute("href", "/funding#donate");
     await expect(home).toHaveAttribute("data-analytics-event", "donation_cta_clicked");
     await expect(home).toHaveAttribute("data-analytics-location", "home-final");
-    const footer = page.getByRole("contentinfo").getByRole("link", { name: "Contribute" });
-    await expect(footer).toHaveAttribute("href", "/funding#contribute");
+    const footer = page.getByRole("contentinfo").getByRole("link", { name: "Donate Now" });
+    await expect(footer).toHaveAttribute("href", "/funding#donate");
     await expect(footer).toHaveAttribute("data-analytics-location", "footer");
 
     await footer.click();
-    await page.waitForURL(/\/funding#contribute$/);
-    await expect(page.locator("#contribute")).toBeInViewport();
+    await page.waitForURL(/\/funding#donate$/);
+    await expect(page.locator("#donate")).toBeInViewport();
   });
 
-  test("the funding hero jumps to the contribution form", async ({ page }) => {
+  test("collaboration and contact pages send supporters straight to the donation form", async ({ page }) => {
+    await page.goto("/collaboration");
+    const collab = page.getByRole("link", { name: "Support Neorhiza" });
+    await expect(collab).toHaveAttribute("href", "/funding#donate");
+    await expect(collab).toHaveAttribute("data-analytics-location", "collaboration-hero");
+
+    await page.goto("/contact");
+    const routes = page.getByRole("navigation", { name: "Choose your inquiry route" });
+    const supporters = routes.getByRole("link", { name: /Supporters/ });
+    await expect(supporters).toHaveAttribute("href", "/funding#donate");
+    await expect(supporters).toHaveAttribute("data-analytics-event", "donation_cta_clicked");
+  });
+
+  test("the funding hero's Donate Now jumps to the amount picker", async ({ page }) => {
     await gotoHydrated(page, "/funding");
-    await page.getByRole("link", { name: "Make a Contribution" }).click();
-    await expect(page).toHaveURL(/#contribute$/);
-    await expect(page.locator("#contribute")).toBeInViewport();
+    await page.getByRole("link", { name: "Donate Now" }).first().click();
+    await expect(page).toHaveURL(/#donate$/);
+    await expect(page.locator("#donate")).toBeInViewport();
+  });
+
+  test("the amount picker and Stripe button come right after the hero", async ({ page }) => {
+    await gotoHydrated(page, "/funding");
+    const order = await page
+      .locator("main section[aria-labelledby]")
+      .evaluateAll((els) => els.slice(0, 2).map((el) => el.getAttribute("aria-labelledby")));
+    expect(order).toEqual(["funding-heading", "donate-heading"]);
+    await expect(page.locator("#donate").getByRole("button", { name: "Donate securely with Stripe" })).toBeVisible();
+  });
+
+  test("no funding link leads to the contact form", async ({ page }) => {
+    for (const path of ["/", "/funding", "/collaboration", "/contact", "/funding/cancelled"]) {
+      await page.goto(path);
+      await expect(page.locator('a[href*="interest=funding"]'), path).toHaveCount(0);
+      await expect(page.getByRole("link", { name: /Funding Conversation/i }), path).toHaveCount(0);
+    }
   });
 });

@@ -19,7 +19,8 @@ const description =
 
 export const metadata: Metadata = createMetadata({ title, description, path: "/funding" });
 
-const FUNDING_CONTACT = "/contact?interest=funding#inquiry-form";
+/** Secondary route for organizations; individuals donate directly on this page. */
+const PARTNERSHIP_CONTACT = "/contact?interest=institutional#inquiry-form";
 
 const breadcrumb = breadcrumbJsonLd([{ name: "Funding", path: "/funding" }]);
 
@@ -56,7 +57,7 @@ const currentStatus = (donationsOpen: boolean) => [
   {
     label: "Online contributions",
     text: donationsOpen
-      ? "Open. One-time contributions are processed securely by Stripe. Institutional support is still agreed in writing through a funding conversation."
+      ? "Open. One-time contributions are processed securely by Stripe. Institutional partnerships are agreed separately, in writing."
       : "Being prepared. Secure online contributions will open once payment processing is fully configured.",
   },
 ];
@@ -102,8 +103,8 @@ const audiences = [
 
 const steps = [
   {
-    title: "Start a conversation",
-    text: "Submit a professional inquiry and select “Funding and foundation support”, with your organization and the kind of support you have in mind.",
+    title: "Get in touch",
+    text: "Submit a professional inquiry describing your organization and the kind of partnership or support you have in mind.",
   },
   {
     title: "Review",
@@ -143,7 +144,7 @@ export default async function FundingPage() {
           id="funding-heading"
           eyebrow="Funding"
           title="Support the Foundation Phase"
-          lead="Project Neorhiza is seeking research funders, institutions, foundations and responsible sponsors to support the governance, evidence and partnership work that must come before any laboratory research."
+          lead="A secure one-time donation supports the governance, evidence and partnership work that must come before any laboratory research. Institutions and foundations can also inquire about formal partnerships."
         />
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <StatusBadge>Early-Stage Research Initiative</StatusBadge>
@@ -151,19 +152,11 @@ export default async function FundingPage() {
         </div>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
           <GlassButton
-            href={FUNDING_CONTACT}
-            size="lg"
-            analytics={{ event: "funding_inquiry_started", location: "funding-hero" }}
-          >
-            Start a Funding Conversation
-          </GlassButton>
-          <GlassButton
-            href="#contribute"
-            variant="secondary"
+            href="#donate"
             size="lg"
             analytics={{ event: "donation_cta_clicked", location: "funding-hero" }}
           >
-            Make a Contribution
+            Donate Now
           </GlassButton>
         </div>
         <p className="mt-5 text-center text-sm text-muted">
@@ -174,6 +167,8 @@ export default async function FundingPage() {
           first.
         </p>
       </section>
+
+      <DonationSection settings={settings} enabled={donationsOpen} />
 
       {/* Current status */}
       <section aria-labelledby="status-heading" className="py-10">
@@ -218,8 +213,6 @@ export default async function FundingPage() {
         </ul>
       </section>
 
-      <DonationSection settings={settings} enabled={donationsOpen} />
-
       {/* Who we want to hear from */}
       <section aria-labelledby="audiences-heading" className="py-10">
         <SectionHeading
@@ -242,7 +235,7 @@ export default async function FundingPage() {
         <SectionHeading
           id="funding-process-heading"
           eyebrow="How it works"
-          title="How a Funding Conversation Proceeds"
+          title="How Institutional Partnerships Proceed"
         />
         <ol className="mt-12 grid gap-4 md:grid-cols-4">
           {steps.map((item, i) => (
@@ -264,7 +257,7 @@ export default async function FundingPage() {
       <section aria-labelledby="commitments-heading" className="py-10">
         <GlassPanel className="mx-auto max-w-4xl p-7 md:p-10">
           <h2 id="commitments-heading" className="text-2xl font-semibold tracking-[0.01em] text-heading md:text-3xl">
-            Our Commitments to Funders
+            Our Commitments to Supporters
           </h2>
           <ul className="mt-6 grid gap-3">
             {commitments.map((item) => (
@@ -276,11 +269,19 @@ export default async function FundingPage() {
           </ul>
           <div className="mt-8 flex flex-wrap gap-3">
             <GlassButton
-              href={FUNDING_CONTACT}
+              href="#donate"
               size="lg"
-              analytics={{ event: "funding_inquiry_started", location: "funding-commitments" }}
+              analytics={{ event: "donation_cta_clicked", location: "funding-commitments" }}
             >
-              Start a Funding Conversation
+              Donate Now
+            </GlassButton>
+            <GlassButton
+              href={PARTNERSHIP_CONTACT}
+              variant="secondary"
+              size="lg"
+              analytics={{ event: "partnership_inquiry_started", location: "funding-commitments" }}
+            >
+              Institutional Partnership Inquiry
             </GlassButton>
           </div>
           <ResearchDisclaimer className="mt-8">{disclaimers.services}</ResearchDisclaimer>

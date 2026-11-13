@@ -9,7 +9,6 @@ import { brand } from "@/lib/brand-colors";
 import { JsonLd } from "@/components/json-ld";
 import { AnalyticsClickTracker } from "@/components/analytics-click-tracker";
 import { VercelInsights } from "@/components/vercel-insights";
-import { feedAlternates } from "@/lib/metadata";
 import { siteVerification } from "@/lib/verification";
 import "@/styles/globals.css";
 
@@ -33,7 +32,6 @@ const verification = siteVerification(
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  alternates: feedAlternates,
   ...(verification ? { verification } : {}),
   title: {
     default: `${site.name} — ${site.descriptor}`,
