@@ -24,10 +24,21 @@ const breadcrumb = breadcrumbJsonLd([{ name: "Contact", path: "/contact" }]);
  * preselected area on mount, and the page stays statically rendered.
  */
 const routes = [
-  { label: "Researchers", text: "Scientific or engineering collaboration", interest: "scientific" },
-  { label: "Institutions", text: "Hosting, supervision or partnership", interest: "institutional" },
-  { label: "Funders", text: "Funding and foundation support", interest: "funding" },
-  { label: "Media", text: "Press and interview requests", interest: "media" },
+  { label: "Researchers", text: "Scientific or engineering collaboration", href: "/contact?interest=scientific#inquiry-form" },
+  {
+    label: "Institutions",
+    text: "Hosting, supervision or partnership",
+    href: "/contact?interest=institutional#inquiry-form",
+    track: trackAttrs("partnership_inquiry_started", "contact-routes"),
+  },
+  // Individual support skips the form and goes straight to Stripe Checkout.
+  {
+    label: "Supporters",
+    text: "Donate securely online",
+    href: "/funding#donate",
+    track: trackAttrs("donation_cta_clicked", "contact-routes"),
+  },
+  { label: "Media", text: "Press and interview requests", href: "/contact?interest=media#inquiry-form" },
 ];
 
 const notes = [
@@ -68,12 +79,10 @@ export default function ContactPage() {
         <nav aria-label="Choose your inquiry route" className="mx-auto mt-10 max-w-5xl">
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {routes.map((route) => (
-              <li key={route.interest}>
+              <li key={route.label}>
                 <a
-                  href={`/contact?interest=${route.interest}#inquiry-form`}
-                  {...(route.interest === "funding"
-                    ? trackAttrs("funding_inquiry_started", "contact-routes")
-                    : {})}
+                  href={route.href}
+                  {...route.track}
                   className="glass group flex h-full min-h-11 items-center justify-between gap-3 rounded-2xl p-4 transition-shadow duration-300 hover:shadow-lift"
                 >
                   <span>

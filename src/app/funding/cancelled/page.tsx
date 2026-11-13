@@ -30,7 +30,7 @@ export default function DonationCancelledPage() {
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <GlassButton
-            href="/funding#contribute"
+            href="/funding#donate"
             size="lg"
             analytics={{ event: "donation_cta_clicked", location: "checkout-cancelled" }}
           >

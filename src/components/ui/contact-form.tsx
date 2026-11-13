@@ -59,7 +59,7 @@ export function ContactForm() {
   // repeated Enter could otherwise send the inquiry twice.
   const submittingRef = useRef(false);
   // Analytics: each funnel step is reported once per visit to the form.
-  const reported = useRef({ started: false, funding: false });
+  const reported = useRef({ started: false, partnership: false });
 
   /** Form-level input listener: reports funnel starts (honeypot excluded). */
   function onFormInput(event: React.FormEvent<HTMLFormElement>) {
@@ -73,14 +73,14 @@ export function ContactForm() {
       reported.current.started = true;
       trackEvent("contact_form_started");
     }
-    if (area === inquirySlugs.funding && !reported.current.funding) {
-      reported.current.funding = true;
-      trackEvent("funding_inquiry_started", { location: "contact-form" });
+    if (area === inquirySlugs.institutional && !reported.current.partnership) {
+      reported.current.partnership = true;
+      trackEvent("partnership_inquiry_started", { location: "contact-form" });
     }
   }
 
   // Preselect the area of interest from ?interest=<slug> (e.g. from the
-  // Funding page). Read after hydration so the static page stays static.
+  // contact page's audience routes). Read after hydration so the static page stays static.
   useEffect(() => {
     const slug = new URLSearchParams(window.location.search).get("interest");
     const area = slug ? inquirySlugs[slug] : undefined;

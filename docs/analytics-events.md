@@ -29,9 +29,9 @@ that supports them; page views work regardless.
 | `inquiry_submitted` | API confirms delivery (HTTP 200) | `area` — the selected inquiry type (fixed list) | `contact-form.tsx` |
 | `collaboration_cta_clicked` | Any "Collaborate With Neorhiza" button | `location`: `header`, `mobile-menu`, `home-hero`, `home-invite`, `home-final` | header, hero, home sections |
 | `research_overview_requested` | "Request the Public Research Overview" button or modal | `location`: `home-invite`, `collaboration-modal` | home, collaboration |
-| `funding_inquiry_started` | Funding CTA clicked, Funders route chosen, or "Funding and foundation support" selected in the form | `location`: `funding-hero`, `funding-commitments`, `contact-routes`, `contact-form` | funding, home, contact |
+| `partnership_inquiry_started` | Secondary "Institutional Partnership Inquiry" link, the Institutions route, or "Institutional collaboration" selected in the form | `location`: `funding-commitments`, `funding-donate-note`, `contact-routes`, `contact-form` | funding, contact |
 | `article_opened` | An article page is viewed | `slug` — the article's URL slug | `updates/[slug]` |
-| `donation_cta_clicked` | A link to the contribution form | `location`: `funding-hero`, `home-final`, `footer`, `checkout-cancelled` | funding, home, footer, cancelled page |
+| `donation_cta_clicked` | A "Donate Now" / "Support Neorhiza" link to the donation form (`/funding#donate`) | `location`: `funding-hero`, `funding-commitments`, `home-final`, `collaboration-hero`, `contact-routes`, `footer`, `checkout-cancelled` | funding, home, collaboration, contact, footer, cancelled page |
 | `donation_checkout_started` | "Donate securely with Stripe" passes client validation and the request is sent | — | `donation-form.tsx` |
 | `donation_checkout_failed` | The checkout request fails | `reason`: `rate_limited`, `unavailable`, `invalid_amount`, `checkout_error`, `network` | `donation-form.tsx` |
 | `donation_success_viewed` | The success page shows a payment Stripe confirmed as paid | — | `funding/success` |
@@ -48,7 +48,7 @@ Contributions: `donation_cta_clicked` → `donation_checkout_started`
 
 Inquiries:
 
-`funding_inquiry_started` / `collaboration_cta_clicked`
+`partnership_inquiry_started` / `collaboration_cta_clicked`
 → `contact_form_started` → `inquiry_submitted` (by `area`).
 
 A large drop between `contact_form_started` and `inquiry_submitted` suggests

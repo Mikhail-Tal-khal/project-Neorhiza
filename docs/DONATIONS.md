@@ -8,7 +8,7 @@ contributions (see [Persistence](#persistence-and-receipts)).
 ## How it works
 
 ```
-/funding#contribute ──POST {amount, currency}──▶ /api/donations/checkout
+/funding#donate ──POST {amount, currency}──▶ /api/donations/checkout
    (DonationForm)                                  origin check · 1 KB body cap · rate limit
                                                    server-side amount validation → cents
                                                    stripe.checkout.sessions.create(...)
@@ -118,7 +118,7 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook \
 npm run dev
 ```
 
-4. Open <http://localhost:3000/funding#contribute>, choose an amount and click
+4. Open <http://localhost:3000/funding#donate>, choose an amount and click
    **Donate securely with Stripe**.
 5. On Stripe's test page use any email and card `4242 4242 4242 4242`, any
    future expiry, any CVC and postal code. Other cards: `4000 0000 0000 0002`

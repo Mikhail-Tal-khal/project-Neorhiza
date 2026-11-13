@@ -46,7 +46,7 @@ const sections = [
   {
     title: "Online contributions",
     body: [
-      "You can make a voluntary one-time contribution through the contribution form on the Funding page, which takes you to a checkout page hosted by Stripe. This is the only online payment channel for Project Neorhiza. Anyone asking you to pay or donate in the name of Project Neorhiza through another channel is not acting for the project — please report it to us. Institutional or conditional support is agreed separately, in writing, through a funding conversation.",
+      "You can make a voluntary one-time contribution through the contribution form on the Funding page, which takes you to a checkout page hosted by Stripe. This is the only online payment channel for Project Neorhiza. Anyone asking you to pay or donate in the name of Project Neorhiza through another channel is not acting for the project — please report it to us. Institutional or conditional support is agreed separately, in writing.",
       disclaimers.contributions,
       "A contribution is a gift toward early-stage work. It does not purchase goods or services, and it gives no right to research results, influence over scientific conclusions, ethical review or project decisions, or any return. Project Neorhiza makes no promise of medical outcomes, treatments or guaranteed research results.",
     ],

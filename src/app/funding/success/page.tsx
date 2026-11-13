@@ -143,7 +143,7 @@ function StatusPanel({ icon: Icon, eyebrow, title, body }: Copy) {
         .
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <GlassButton href="/funding#contribute" size="lg">
+        <GlassButton href="/funding#donate" size="lg">
           Return to Funding
         </GlassButton>
         <GlassButton href="/updates" variant="secondary" size="lg">

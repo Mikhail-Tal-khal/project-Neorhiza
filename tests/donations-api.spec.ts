@@ -269,7 +269,7 @@ test.describe("POST /api/donations/checkout", () => {
 
   for (const [label, amount, message] of [
     ["below the minimum", "4.99", "The minimum contribution is $5."],
-    ["above the maximum", "50000.01", "The maximum online contribution is $50,000. For larger support, please start a funding conversation."],
+    ["above the maximum", "50000.01", "The maximum online contribution is $50,000. For larger support, please contact the project team."],
     ["negative", "-25", "Please enter a valid amount, for example 50 or 75.50."],
     ["three decimals", "25.001", "Please enter a valid amount, for example 50 or 75.50."],
     ["an exponent", "5e3", "Please enter a valid amount, for example 50 or 75.50."],

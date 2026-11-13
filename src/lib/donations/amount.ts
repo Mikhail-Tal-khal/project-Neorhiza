@@ -112,7 +112,7 @@ export function parseAmountToCents(
     return {
       ok: false,
       reason: "above-maximum",
-      message: `The maximum online contribution is ${formatMoney(limits.maxAmount, limits.currency)}. For larger support, please start a funding conversation.`,
+      message: `The maximum online contribution is ${formatMoney(limits.maxAmount, limits.currency)}. For larger support, please contact the project team.`,
     };
   }
   return { ok: true, cents };

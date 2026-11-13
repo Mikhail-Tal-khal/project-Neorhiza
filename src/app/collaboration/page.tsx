@@ -33,8 +33,13 @@ export default function CollaborationPage() {
           <GlassButton href="/contact" size="lg">
             Start a Professional Inquiry
           </GlassButton>
-          <GlassButton href="/funding" variant="secondary" size="lg">
-            Support the Foundation Phase
+          <GlassButton
+            href="/funding#donate"
+            variant="secondary"
+            size="lg"
+            analytics={{ event: "donation_cta_clicked", location: "collaboration-hero" }}
+          >
+            Support Neorhiza
           </GlassButton>
           <OverviewRequestModal
             trigger={

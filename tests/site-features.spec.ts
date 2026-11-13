@@ -3,7 +3,7 @@ import { PAGES, gotoHydrated, uniqueIp } from "./support/site";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.neorhiza.space";
 const ARTICLES = PAGES.filter((p) => p.startsWith("/updates/"));
-/** Converts an absolute site URL from a sitemap or feed into a local path. */
+/** Converts an absolute site URL from the sitemap into a local path. */
 const toPath = (url: string) => url.replace(SITE_URL, "") || "/";
 
 test.describe("security.txt", () => {
@@ -31,70 +31,20 @@ test.describe("security.txt", () => {
   });
 });
 
-test.describe("RSS feed", () => {
-  test("is well-formed RSS listing every article with canonical URLs and dates", async ({ page, request }) => {
-    const res = await request.get("/updates/feed.xml");
-    expect(res.status()).toBe(200);
-    expect(res.headers()["content-type"]).toBe("application/rss+xml; charset=utf-8");
-    const xml = await res.text();
-
-    await page.goto("/updates");
-    const parsed = await page.evaluate((source) => {
-      const doc = new DOMParser().parseFromString(source, "application/xml");
-      const text = (el: Element, tag: string) => el.getElementsByTagName(tag)[0]?.textContent ?? "";
-      return {
-        error: doc.getElementsByTagName("parsererror").length > 0,
-        root: doc.documentElement.nodeName,
-        version: doc.documentElement.getAttribute("version"),
-        self: doc.getElementsByTagNameNS("http://www.w3.org/2005/Atom", "link")[0]?.getAttribute("href"),
-        channelTitle: text(doc.getElementsByTagName("channel")[0], "title"),
-        items: [...doc.getElementsByTagName("item")].map((item) => ({
-          title: text(item, "title"),
-          link: text(item, "link"),
-          guid: text(item, "guid"),
-          pubDate: text(item, "pubDate"),
-          description: text(item, "description"),
-        })),
-      };
-    }, xml);
-
-    expect(parsed.error).toBe(false);
-    expect(parsed.root).toBe("rss");
-    expect(parsed.version).toBe("2.0");
-    expect(parsed.self).toBe(`${SITE_URL}/updates/feed.xml`);
-    expect(parsed.channelTitle).toContain("Project Neorhiza");
-    expect(parsed.items.map((i) => toPath(i.link)).sort()).toEqual([...ARTICLES].sort());
-
-    const dates = parsed.items.map((i) => Date.parse(i.pubDate));
-    expect([...dates].sort((a, b) => b - a)).toEqual(dates); // newest first
-    for (const item of parsed.items) {
-      expect(item.guid).toBe(item.link);
-      expect(Number.isNaN(Date.parse(item.pubDate))).toBe(false);
-      expect(item.title.length).toBeGreaterThan(5);
-      expect(item.description.length).toBeGreaterThan(20);
-      // Item title matches the article page's H1.
-      await page.goto(toPath(item.link));
-      await expect(page.locator("h1")).toHaveText(item.title);
-    }
-  });
-
-  test("is advertised in page metadata and linked visibly on Updates", async ({ page }) => {
-    for (const path of ["/", "/updates", "/funding"]) {
+test.describe("removed RSS feed", () => {
+  test("/updates/feed.xml is gone and nothing advertises or links to a feed", async ({ page, request }) => {
+    expect((await request.get("/updates/feed.xml")).status()).toBe(404);
+    for (const path of ["/", "/updates", "/funding", ARTICLES[0]]) {
       await page.goto(path);
-      await expect(page.locator('link[rel="alternate"][type="application/rss+xml"]')).toHaveAttribute(
-        "href",
-        `${SITE_URL}/updates/feed.xml`
-      );
+      await expect(page.locator('link[rel="alternate"][type="application/rss+xml"]'), path).toHaveCount(0);
+      await expect(page.locator('a[href*="feed.xml"], a[type="application/rss+xml"]'), path).toHaveCount(0);
+      await expect(page.getByText(/RSS/), path).toHaveCount(0);
     }
-    await page.goto("/updates");
-    const link = page.getByRole("link", { name: "Subscribe via RSS" });
-    await expect(link).toBeVisible();
-    await expect(link).toHaveAttribute("href", "/updates/feed.xml");
   });
 });
 
 test.describe("funding page", () => {
-  test("explains the Foundation Phase truthfully and routes to a funding inquiry", async ({ page }) => {
+  test("explains the Foundation Phase truthfully and leads with a direct donation", async ({ page }) => {
     const res = await page.goto("/funding");
     expect(res?.status()).toBe(200);
     await expect(page.locator("h1")).toHaveText("Support the Foundation Phase");
@@ -109,7 +59,7 @@ test.describe("funding page", () => {
       .locator("main")
       .evaluate((main) => {
         const clone = main.cloneNode(true) as HTMLElement;
-        clone.querySelector("#contribute")?.remove();
+        clone.querySelector("#donate")?.remove();
         return clone.innerText;
       });
     expect(outsidePicker).not.toMatch(/\$\s?\d|KES\s?\d|USD\s?\d|€\s?\d|£\s?\d/i);
@@ -117,20 +67,30 @@ test.describe("funding page", () => {
       await expect(page.getByRole("heading", { level: 2, name: heading })).toBeVisible();
     }
 
-    const cta = page.getByRole("link", { name: "Start a Funding Conversation" }).first();
-    await expect(cta).toHaveAttribute("href", "/contact?interest=funding#inquiry-form");
-    await expect(cta).toHaveAttribute("data-analytics-event", "funding_inquiry_started");
+    const cta = page.getByRole("link", { name: "Donate Now" }).first();
+    await expect(cta).toHaveAttribute("href", "#donate");
+    await expect(cta).toHaveAttribute("data-analytics-event", "donation_cta_clicked");
+    // Partnerships remain a secondary option, never a funding-inquiry form.
+    const partner = page.getByRole("link", { name: "Institutional Partnership Inquiry", exact: true });
+    await expect(partner).toHaveAttribute("href", "/contact?interest=institutional#inquiry-form");
+    await expect(partner).toHaveAttribute("data-analytics-event", "partnership_inquiry_started");
+    await expect(page.locator('a[href*="interest=funding"]')).toHaveCount(0);
 
     const ld = (await page.locator('script[type="application/ld+json"]').allTextContents()).join(" ");
     expect(ld).toContain('"@type":"WebPage"');
   });
 
-  test("the funding CTA preselects the funding inquiry type", async ({ page }) => {
+  test("the secondary partnership link preselects institutional collaboration", async ({ page }) => {
     await page.setExtraHTTPHeaders({ "x-forwarded-for": uniqueIp() });
     await gotoHydrated(page, "/funding");
-    await page.getByRole("link", { name: "Start a Funding Conversation" }).first().click();
-    await page.waitForURL(/\/contact\?interest=funding/);
-    await expect(page.getByLabel("Area of interest")).toHaveValue("Funding and foundation support");
+    await page.getByRole("link", { name: "Institutional Partnership Inquiry", exact: true }).click();
+    await page.waitForURL(/\/contact\?interest=institutional/);
+    await expect(page.getByLabel("Area of interest")).toHaveValue("Institutional collaboration");
+  });
+
+  test("the retired ?interest=funding slug preselects nothing", async ({ page }) => {
+    await gotoHydrated(page, "/contact?interest=funding");
+    await expect(page.getByLabel("Area of interest")).toHaveValue("");
   });
 
   test("audience routes on the contact page preselect the right area", async ({ page }) => {
@@ -139,7 +99,6 @@ test.describe("funding page", () => {
     for (const [label, area] of [
       ["Researchers", "Scientific collaboration"],
       ["Institutions", "Institutional collaboration"],
-      ["Funders", "Funding and foundation support"],
       ["Media", "Media inquiry"],
     ] as const) {
       await routes.getByRole("link", { name: new RegExp(label) }).click();
@@ -206,8 +165,8 @@ test.describe("search readiness", () => {
 });
 
 test.describe("personal information", () => {
-  test("no personal email or precise location appears in pages, feed or structured data", async ({ request }) => {
-    const sources = [...PAGES, "/updates/feed.xml", "/sitemap.xml", "/.well-known/security.txt"];
+  test("no personal email or precise location appears in pages or structured data", async ({ request }) => {
+    const sources = [...PAGES, "/sitemap.xml", "/.well-known/security.txt"];
     for (const path of sources) {
       const body = await (await request.get(path)).text();
       expect(body, path).not.toMatch(/gmail\.com|rereulemein@/i);
