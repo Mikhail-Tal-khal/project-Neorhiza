@@ -7,7 +7,8 @@ import { VesselDivider } from "@/components/ui/vessel-divider";
 import { AnnotatedMark } from "@/components/ui/annotated-mark";
 import { BrandMark } from "@/components/ui/brand-mark";
 import Image from "next/image";
-import { Github, Globe, Mail, MapPin } from "lucide-react";
+import { Globe, Mail, MapPin } from "lucide-react";
+import { GithubIcon } from "@/components/icons/github-icon";
 import { notList, values } from "@/content/why";
 import { createMetadata } from "@/lib/metadata";
 import { disclaimers, site } from "@/lib/site";
@@ -35,7 +36,7 @@ const founderLinks = [
     label: "GitHub",
     value: "Mikhail-Tal-khal",
     href: "https://github.com/Mikhail-Tal-khal",
-    icon: Github,
+    icon: GithubIcon,
   },
   {
     label: "Project email",
