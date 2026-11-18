@@ -11,10 +11,13 @@ export function ProjectStatus({
   headingId = "project-status-heading",
   eyebrow = "Public transparency",
   className,
+  extra = [],
 }: {
   headingId?: string;
   eyebrow?: string;
   className?: string;
+  /** Page-specific present facts appended to the shared list. */
+  extra?: readonly { label: string; value: string }[];
 }) {
   return (
     <section aria-labelledby={headingId} className={cn("py-10", className)}>
@@ -26,7 +29,7 @@ export function ProjectStatus({
       />
       <GlassPanel className="mx-auto mt-12 max-w-4xl overflow-hidden p-0">
         <dl className="divide-y divide-border">
-          {projectStatus.map((item) => (
+          {[...projectStatus, ...extra].map((item) => (
             <div key={item.label} className="grid gap-1 p-5 sm:grid-cols-[16rem_1fr] sm:gap-6 md:px-7">
               <dt className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-heading">
                 {item.label}

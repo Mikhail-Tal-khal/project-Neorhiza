@@ -55,7 +55,7 @@ test("governance page explains structure, oversight, reporting and status", asyn
   }
   await expect(main).toContainText("planned expenditure clearly separate from money actually spent");
   // Unconfirmed particulars are placeholders, never invented values.
-  await expect(main.getByText("Pending publication")).toHaveCount(2);
+  await expect(main.getByText("Pending publication", { exact: true })).toHaveCount(2);
   // Independent oversight is not claimed.
   await expect(main).toContainText("Independent financial audit or external financial oversight");
   await expect(main).toContainText("independent financial review has not yet been arranged");

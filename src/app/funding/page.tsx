@@ -202,7 +202,18 @@ export default async function FundingPage() {
         </GlassPanel>
       </section>
 
-      <ProjectStatus headingId="status-heading" eyebrow="Transparency" />
+      <ProjectStatus
+        headingId="status-heading"
+        eyebrow="Transparency"
+        extra={[
+          {
+            label: "Online contributions",
+            value: donationsOpen
+              ? "Open. One-time contributions are processed securely by Stripe. Sponsorship and partnerships are agreed separately, in writing."
+              : "Being prepared. Secure online contributions will open once payment processing is fully configured.",
+          },
+        ]}
+      />
 
       {/* Who we want to hear from */}
       <section aria-labelledby="audiences-heading" className="py-16">
