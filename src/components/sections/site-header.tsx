@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { navItems } from "@/lib/site";
+import { aboutNav, desktopNav, navItems } from "@/lib/site";
 import { cx } from "@/lib/cx";
 
 /**
@@ -31,8 +31,11 @@ export function SiteHeader({
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const aboutRef = useRef<HTMLLIElement>(null);
+  const aboutButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -53,8 +56,46 @@ export function SiteHeader({
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // The About disclosure closes on Escape (returning focus), on a click or
+  // focus move outside it, and after navigation.
+  useEffect(() => {
+    if (!aboutOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setAboutOpen(false);
+        aboutButtonRef.current?.focus();
+      }
+    };
+    const onOutside = (event: Event) => {
+      if (!aboutRef.current?.contains(event.target as Node)) setAboutOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onOutside);
+    document.addEventListener("focusin", onOutside);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onOutside);
+      document.removeEventListener("focusin", onOutside);
+    };
+  }, [aboutOpen]);
+
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const aboutActive = aboutNav.some((item) => isActive(item.href));
+
+  const desktopLinkClass = (active: boolean) =>
+    cx(
+      "relative flex min-h-11 items-center whitespace-nowrap rounded-full px-1.5 text-[0.8rem] font-medium transition-colors",
+      active
+        ? "text-teal-700 dark:text-white"
+        : "text-muted hover:text-teal-700 dark:hover:text-white"
+    );
+  const activeDot = (
+    <span
+      aria-hidden="true"
+      className="absolute bottom-1.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-coral-500"
+    />
+  );
 
   return (
     <header className="fixed inset-x-0 top-0 z-40 pt-3 md:pt-4">
@@ -77,29 +118,63 @@ export function SiteHeader({
             <BrandMark variant="horizontal" height={40} decorative />
           </Link>
 
-          {/* Desktop links */}
+          {/* Desktop links — the About group collapses into a disclosure */}
           <ul className="hidden items-center xl:flex">
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  aria-current={isActive(item.href) ? "page" : undefined}
-                  className={cx(
-                    "relative flex min-h-11 items-center whitespace-nowrap rounded-full px-1.5 text-[0.8rem] font-medium transition-colors",
-                    isActive(item.href)
-                      ? "text-teal-700 dark:text-white"
-                      : "text-muted hover:text-teal-700 dark:hover:text-white"
-                  )}
-                >
-                  {item.label}
-                  {isActive(item.href) && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute bottom-1.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-coral-500"
-                    />
-                  )}
-                </Link>
-              </li>
+            {desktopNav.map((item) => (
+              <Fragment key={item.href}>
+                <li className="relative">
+                  <Link
+                    href={item.href}
+                    aria-current={isActive(item.href) ? "page" : undefined}
+                    className={desktopLinkClass(isActive(item.href))}
+                  >
+                    {item.label}
+                    {isActive(item.href) && activeDot}
+                  </Link>
+                </li>
+                {item.href === "/" && (
+                  <li ref={aboutRef} className="relative">
+                    <button
+                      ref={aboutButtonRef}
+                      type="button"
+                      aria-expanded={aboutOpen}
+                      aria-controls="about-navigation"
+                      onClick={() => setAboutOpen((v) => !v)}
+                      className={cx(desktopLinkClass(aboutActive), "gap-0.5 pl-2.5")}
+                    >
+                      About
+                      <ChevronDown
+                        aria-hidden="true"
+                        className={cx("size-3.5 transition-transform", aboutOpen && "rotate-180")}
+                      />
+                      {aboutActive && activeDot}
+                    </button>
+                    <ul
+                      id="about-navigation"
+                      hidden={!aboutOpen}
+                      className="glass-strong absolute left-0 top-full z-50 mt-2 grid min-w-60 gap-1 rounded-2xl p-2 shadow-lift"
+                    >
+                      {aboutNav.map((sub) => (
+                        <li key={sub.href}>
+                          <Link
+                            href={sub.href}
+                            aria-current={isActive(sub.href) ? "page" : undefined}
+                            onClick={() => setAboutOpen(false)}
+                            className={cx(
+                              "flex min-h-11 items-center whitespace-nowrap rounded-xl px-3 text-sm font-medium transition-colors",
+                              isActive(sub.href)
+                                ? "bg-teal-700 text-white dark:bg-white/90 dark:text-teal-950"
+                                : "text-ink hover:bg-white/60 dark:hover:bg-white/10"
+                            )}
+                          >
+                            {sub.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
+              </Fragment>
             ))}
           </ul>
 
@@ -133,7 +208,7 @@ export function SiteHeader({
           id="mobile-navigation"
           ref={panelRef}
           hidden={!open}
-          className="glass-strong mt-2 overflow-hidden rounded-3xl p-3 xl:hidden"
+          className="glass-strong mt-2 max-h-[calc(100dvh-5.5rem)] overflow-y-auto overscroll-contain rounded-3xl p-3 xl:hidden"
         >
           <ul className="grid gap-1">
             {navItems.map((item) => (

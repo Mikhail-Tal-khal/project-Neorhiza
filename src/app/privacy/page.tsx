@@ -3,7 +3,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { ResearchDisclaimer } from "@/components/ui/research-disclaimer";
 import { createMetadata } from "@/lib/metadata";
-import { disclaimers, site } from "@/lib/site";
+import { company, disclaimers, site } from "@/lib/site";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { JsonLd } from "@/components/json-ld";
 
@@ -15,20 +15,20 @@ export const metadata: Metadata = createMetadata({
 });
 
 const EFFECTIVE = "9 November 2026";
-const REVISED = "12 November 2026";
+const REVISED = "17 November 2026";
 
 const sections = [
   {
     title: "Who is responsible for your information",
     body: [
-      `${site.name} is an early-stage research initiative based in Kenya, not yet institutionally affiliated. The data controller for information collected through this website is the project's founder, Rereu Lemein, acting for ${site.name}.`,
-      `Online contributions are received by the registered limited company through which ${site.name} operates, which is responsible for contribution records.`,
+      `${site.name} is an early-stage research initiative operated by ${company.name}, a company registered in ${company.jurisdiction}. It is not yet institutionally affiliated. ${company.name} is responsible for information collected through this website, with the project's founder, Rereu Lemein, overseeing how it is handled.`,
+      `Online contributions are received by ${company.name}, which is responsible for contribution records.`,
     ],
   },
   {
     title: "How to contact us",
     body: [
-      `For any question about this policy or to exercise your rights, write to ${site.contactEmail}. You can also use the contact form and select “General inquiry”.`,
+      `For any question about this policy or to exercise your rights, write to ${site.contactEmail}. You can also use the contact form and select “General inquiry”, or call the official business contact, ${company.phone}.`,
     ],
   },
   {

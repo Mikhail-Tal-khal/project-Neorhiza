@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/sections/site-header";
 import { SiteFooter } from "@/components/sections/site-footer";
 import { GlassButton } from "@/components/ui/glass-button";
-import { site } from "@/lib/site";
+import { company, site } from "@/lib/site";
 import { brand } from "@/lib/brand-colors";
 import { JsonLd } from "@/components/json-ld";
 import { AnalyticsClickTracker } from "@/components/analytics-click-tracker";
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     default: `${site.name} — ${site.descriptor}`,
     template: `%s — ${site.shortName}`,
   },
-  description: `${site.tagline}. ${site.name} is an early-stage regenerative-medicine research initiative advancing patient-specific tissue engineering through responsible, partnership-driven science.`,
+  description: `${site.tagline}. ${site.name} is an early-stage patient-specific tissue-engineering research initiative operated by ${company.name}, Kenya, advancing regenerative-medicine research through responsible, partnership-driven science.`,
   applicationName: site.name,
   keywords: [
     "tissue engineering",
@@ -87,6 +87,15 @@ const structuredData = {
       description: `${site.descriptor}. ${site.tagline}.`,
       url: site.url,
       email: site.contactEmail,
+      telephone: company.phoneE164,
+      parentOrganization: {
+        "@type": "Organization",
+        "@id": `${site.url}/#operator`,
+        name: company.name,
+        legalName: company.legalName,
+        telephone: company.phoneE164,
+        address: { "@type": "PostalAddress", addressCountry: "KE" },
+      },
       logo: `${site.url}/images/logo/neorhiza-icon.svg`,
       image: `${site.url}/images/logo/neorhiza-stacked.svg`,
       foundingDate: "2026",
@@ -137,22 +146,24 @@ export default function RootLayout({
             <SiteHeader
               cta={
                 <GlassButton
-                  href="/collaboration"
+                  href="/funding"
+                  variant="coral"
                   size="md"
                   className="hidden whitespace-nowrap md:inline-flex"
-                  analytics={{ event: "collaboration_cta_clicked", location: "header" }}
+                  analytics={{ event: "donation_cta_clicked", location: "header" }}
                 >
-                  Collaborate With Neorhiza
+                  Support Neorhiza
                 </GlassButton>
               }
               mobileCta={
                 <GlassButton
-                  href="/collaboration"
+                  href="/funding"
+                  variant="coral"
                   size="md"
                   className="flex-1 md:hidden"
-                  analytics={{ event: "collaboration_cta_clicked", location: "mobile-menu" }}
+                  analytics={{ event: "donation_cta_clicked", location: "mobile-menu" }}
                 >
-                  Collaborate
+                  Support Neorhiza
                 </GlassButton>
               }
             />

@@ -38,8 +38,13 @@ Production needs a shared store.
 
 Optional until you are ready to accept contributions; the site works without it. Details: [DONATIONS.md](DONATIONS.md).
 
-- [ ] Add the registered limited company's legal name (and registration number, if desired) to the Terms ("Who operates this website") and confirm the Privacy Policy's controller wording for contribution records.
+- [x] Operating company named: **LYSHUB LIMITED**, Kenya (confirmed by the Founder 2026-11-17; `company` in `src/lib/site.ts`). Shown in the footer, Terms, Privacy, Funding, Governance and structured data.
+- [ ] Supply the company's registration number and registered office (shown as "Pending publication" on `/governance`; `companyParticulars` in `src/content/organization.ts`). Never guess them.
+- [ ] A Kenyan advocate and accountant approve, **before public fundraising is promoted**: the contribution classification, the Funding page's legal and financial disclosure (`disclaimers.contributionTerms`), tax wording, payment and refund terms, the Privacy Policy's statement that Lyshub Limited is responsible for personal data (Data Protection Act 2019 controller/registration position), and the footer copyright line naming Lyshub Limited.
+- [ ] Confirm Lyshub Limited is **not** described anywhere as a charity, PBO or tax-exempt body unless verified.
 - [ ] Legal review of the contribution wording in Terms/Privacy and the Funding page (see the LEGAL REVIEW note in `src/app/terms/page.tsx`), including refund handling and any fundraising rules where contributors live.
+- [ ] Verify in the Stripe Dashboard that the account's legal entity is **Lyshub Limited** (Settings → Business details) and that the public business name / statement descriptor identify it, so the checkout page and receipts match the site's statement that contributions are received by Lyshub Limited. The code does not set the recipient; the Stripe account does.
+- [ ] Decide the financial-reporting frequency and publish the first report on `/updates` (the Governance page says none has been published yet).
 - [ ] Stripe account activated for the company; public business name, support email and statement descriptor set; *Successful payments* receipts enabled; Checkout branding set.
 - [ ] Vercel → Environment Variables (Production, **Sensitive**): `STRIPE_SECRET_KEY` (live), `STRIPE_WEBHOOK_SECRET` (live endpoint). Optional: `DONATION_CURRENCY`, `DONATION_MIN_AMOUNT`, `DONATION_MAX_AMOUNT`.
 - [ ] Stripe (live mode) → Webhooks → endpoint `https://www.neorhiza.space/api/stripe/webhook` with `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`.

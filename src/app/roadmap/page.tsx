@@ -3,6 +3,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { ExpandableRoadmap } from "@/components/ui/expandable-roadmap";
 import { ResearchDisclaimer } from "@/components/ui/research-disclaimer";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { GlassPanel } from "@/components/ui/glass-panel";
 import { roadmapStages } from "@/content/roadmap";
 import { createMetadata } from "@/lib/metadata";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
@@ -33,6 +34,29 @@ export default function RoadmapPage() {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <StatusBadge>Current Position: Foundation Phase</StatusBadge>
         </div>
+
+        {/* First proposed research programme — status stated explicitly */}
+        <GlassPanel className="mt-12 p-6 md:p-8">
+          <p className="label-caps mb-2">First proposed research programme</p>
+          <h2 className="text-xl font-semibold tracking-[0.01em] text-heading md:text-2xl">
+            Neorhiza Liver Tissue Program
+          </h2>
+          <p className="mt-2 text-sm font-medium text-ink">
+            Status: Proposed research programme — institutional collaboration
+            and qualified scientific supervision required.
+          </p>
+          <p className="mt-4 text-pretty leading-relaxed text-ink">
+            Initial research question: can controlled perfusion improve the
+            sustained function and viability of a small multicellular
+            liver-tissue construct compared with an equivalent non-perfused
+            construct?
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-muted">
+            No laboratory research has yet begun. Neorhiza has not produced a
+            functional liver, replacement organ, transplantable tissue or
+            clinical treatment.
+          </p>
+        </GlassPanel>
       </section>
 
       <div className="band">

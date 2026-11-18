@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/ui/brand-mark";
-import { disclaimers, navItems, site } from "@/lib/site";
+import { company, disclaimers, navItems, site } from "@/lib/site";
 import { trackAttrs } from "@/lib/analytics-events";
 
 /** Pages linked from the footer but kept out of the main menu to avoid crowding it. */
-const moreLinks = [{ href: "/funding", label: "Funding" }];
+const moreLinks = [{ href: "/human-impact", label: "Human Impact" }];
 
 const legalLinks = [
   { href: "/privacy", label: "Privacy" },
@@ -31,6 +31,18 @@ export function SiteFooter() {
             </p>
             <p className="mt-1 text-sm text-mist-200">{site.descriptor}</p>
             <p className="mt-1 text-sm text-mist-200">{site.tagline}</p>
+            <p className="mt-6 max-w-sm text-sm leading-relaxed text-white">
+              {company.operatorStatement}
+            </p>
+            <p className="mt-3 text-sm text-mist-200">
+              Official business contact:{" "}
+              <a
+                href={`tel:${company.phoneE164}`}
+                className="whitespace-nowrap font-medium text-white underline underline-offset-4 hover:text-mist-200"
+              >
+                {company.phone}
+              </a>
+            </p>
             <p className="mt-6 max-w-xs text-sm leading-relaxed text-mist-200">
               Support early-stage research with a secure one-time contribution.{" "}
               <Link
@@ -38,7 +50,7 @@ export function SiteFooter() {
                 className="font-medium text-white underline underline-offset-4 hover:text-mist-200"
                 {...trackAttrs("donation_cta_clicked", "footer")}
               >
-                Donate Now
+                Support Neorhiza
               </Link>
             </p>
           </div>
@@ -91,8 +103,10 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-8 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-mist-200/80 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} {site.name}. All rights reserved.</p>
-          <p>Early-Stage Research Initiative</p>
+          <p>
+            © {year} {company.name}. {site.name}. All rights reserved.
+          </p>
+          <p>Early-Stage Research Initiative · Foundation Phase</p>
         </div>
       </div>
     </footer>

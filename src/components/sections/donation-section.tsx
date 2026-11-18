@@ -44,7 +44,7 @@ export function DonationSection({ settings, enabled }: { settings: DonationSetti
         id="donate-heading"
         eyebrow="Online contributions"
         title="Contribute to the Foundation Phase"
-        lead="Individuals can support Project Neorhiza's early-stage work with a secure one-time contribution. Every contribution is processed by Stripe; no account is needed."
+        lead="Individuals can support Project Neorhiza's early-stage work with a secure one-time contribution. Contributions are received by Lyshub Limited, the Kenyan company that operates the project, and are processed by Stripe; no account is needed."
       />
 
       <div className="mx-auto mt-12 grid max-w-6xl gap-6 lg:grid-cols-[1.05fr_1fr] lg:items-start">
@@ -95,7 +95,11 @@ export function DonationSection({ settings, enabled }: { settings: DonationSetti
             </ul>
             <p className="mt-5 text-sm leading-relaxed text-muted">
               Contributions fund groundwork, not promises: they do not guarantee research results, treatments or
-              medical outcomes. Progress and setbacks are reported on the{" "}
+              medical outcomes. See the full list of{" "}
+              <Link href="#priorities" className={linkClass}>
+                funding priorities
+              </Link>
+              . Progress and setbacks are reported on the{" "}
               <Link href="/updates" className={linkClass}>
                 Updates
               </Link>{" "}
@@ -110,6 +114,13 @@ export function DonationSection({ settings, enabled }: { settings: DonationSetti
           >
             <p className="label-caps mb-2">Please note</p>
             <p className="text-pretty">{disclaimers.contributions}</p>
+            <p className="mt-3 text-pretty">
+              Contributions are received by Lyshub Limited, Kenya. Read the{" "}
+              <Link href="#disclosure" className={linkClass}>
+                legal and financial disclosure
+              </Link>{" "}
+              before contributing.
+            </p>
             <p className="mt-3 text-muted">
               Institutions and organizations considering a formal partnership can send an{" "}
               <Link
