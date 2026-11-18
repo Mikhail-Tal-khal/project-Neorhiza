@@ -145,10 +145,13 @@ test.describe("contact form", () => {
     const options = await page.getByLabel("Area of interest").locator("option:not([disabled])").allTextContents();
     expect(options).toEqual([
       "Scientific collaboration",
+      "Researcher application",
       "Institutional collaboration",
+      "University collaboration",
       "Clinical advisory",
       "Engineering collaboration",
       "Ethics and regulation",
+      "Research sponsorship",
       "Funding and foundation support",
       "Media inquiry",
       "General inquiry",

@@ -47,10 +47,12 @@ test.describe("funding page", () => {
   test("explains the Foundation Phase truthfully and leads with a direct donation", async ({ page }) => {
     const res = await page.goto("/funding");
     expect(res?.status()).toBe(200);
-    await expect(page.locator("h1")).toHaveText("Support the Foundation Phase");
+    await expect(page.locator("h1")).toHaveText("Help Establish the Scientific Foundation for Neorhiza");
     const text = await page.locator("main").innerText();
-    expect(text).toMatch(/No laboratory work will start/);
-    expect(text).toMatch(/do not claim charitable, tax-exempt or tax-deductible status/);
+    expect(text).toMatch(/Laboratory research\s+Not yet commenced/i);
+    expect(text).toContain("Contributions made through the Neorhiza research-support programme are received by the operating company");
+    expect(text).toContain("Research support does not automatically confer shares, company ownership, repayment rights or financial returns.");
+    expect(text).toMatch(/do not claim charitable, public-benefit, tax-exempt or tax-deductible status/);
     expect(text).toContain(
       "They are not investments, do not provide equity or ownership, and should not be assumed to be tax-deductible"
     );
@@ -63,11 +65,11 @@ test.describe("funding page", () => {
         return clone.innerText;
       });
     expect(outsidePicker).not.toMatch(/\$\s?\d|KES\s?\d|USD\s?\d|€\s?\d|£\s?\d/i);
-    for (const heading of ["Current Status", "What Support Enables"]) {
+    for (const heading of ["Where Neorhiza Stands Today", "What Research Funding Will Support", "Who Receives Contributions, and What They Are"]) {
       await expect(page.getByRole("heading", { level: 2, name: heading })).toBeVisible();
     }
 
-    const cta = page.getByRole("link", { name: "Donate Now" }).first();
+    const cta = page.getByRole("main").getByRole("link", { name: "Contribute Now" }).first();
     await expect(cta).toHaveAttribute("href", "#donate");
     await expect(cta).toHaveAttribute("data-analytics-event", "donation_cta_clicked");
     // Partnerships remain a secondary option, never a funding-inquiry form.
@@ -97,8 +99,8 @@ test.describe("funding page", () => {
     await gotoHydrated(page, "/contact");
     const routes = page.getByRole("navigation", { name: "Choose your inquiry route" });
     for (const [label, area] of [
-      ["Researchers", "Scientific collaboration"],
-      ["Institutions", "Institutional collaboration"],
+      ["Scientific collaboration", "Scientific collaboration"],
+      ["Institutional partnerships", "Institutional collaboration"],
       ["Media", "Media inquiry"],
     ] as const) {
       await routes.getByRole("link", { name: new RegExp(label) }).click();
@@ -107,10 +109,10 @@ test.describe("funding page", () => {
     }
   });
 
-  test("is in the footer, but not crowding the main menu", async ({ page }) => {
+  test("is in the main menu and the footer", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("contentinfo").getByRole("link", { name: "Funding" })).toHaveAttribute("href", "/funding");
-    await expect(page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Funding" })).toHaveCount(0);
+    await expect(page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Funding", exact: true }).first()).toHaveAttribute("href", "/funding");
   });
 });
 
@@ -175,7 +177,7 @@ test.describe("personal information", () => {
   });
 
   test("the founder section and organization data use the project mailbox", async ({ page }) => {
-    await page.goto("/why-neorhiza");
+    await page.goto("/leadership");
     const founderLinks = page.getByRole("list", { name: "Founder's professional links" });
     await expect(founderLinks.getByRole("link", { name: "inquiries@neorhiza.space" })).toHaveAttribute(
       "href",

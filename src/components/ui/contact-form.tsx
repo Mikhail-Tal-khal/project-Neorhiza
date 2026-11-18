@@ -481,8 +481,9 @@ export function ContactForm() {
               htmlFor="consent"
               className="text-sm leading-relaxed text-muted"
             >
-              I consent to Project Neorhiza processing the information in
-              this form to respond to my inquiry, in line with the{" "}
+              I consent to Lyshub Limited, operator of Project Neorhiza,
+              processing the information in this form to respond to my
+              inquiry, in line with the{" "}
               <Link
                 href="/privacy"
                 className="font-medium text-teal-700 underline underline-offset-4 dark:text-teal-200"

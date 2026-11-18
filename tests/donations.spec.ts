@@ -251,7 +251,7 @@ test.describe("calls to action", () => {
     await expect(home).toHaveAttribute("href", "/funding#donate");
     await expect(home).toHaveAttribute("data-analytics-event", "donation_cta_clicked");
     await expect(home).toHaveAttribute("data-analytics-location", "home-final");
-    const footer = page.getByRole("contentinfo").getByRole("link", { name: "Donate Now" });
+    const footer = page.getByRole("contentinfo").getByRole("link", { name: "Support Neorhiza" });
     await expect(footer).toHaveAttribute("href", "/funding#donate");
     await expect(footer).toHaveAttribute("data-analytics-location", "footer");
 
@@ -262,20 +262,20 @@ test.describe("calls to action", () => {
 
   test("collaboration and contact pages send supporters straight to the donation form", async ({ page }) => {
     await page.goto("/collaboration");
-    const collab = page.getByRole("link", { name: "Support Neorhiza" });
+    const collab = page.getByRole("main").getByRole("link", { name: "Support Neorhiza" });
     await expect(collab).toHaveAttribute("href", "/funding#donate");
     await expect(collab).toHaveAttribute("data-analytics-location", "collaboration-hero");
 
     await page.goto("/contact");
     const routes = page.getByRole("navigation", { name: "Choose your inquiry route" });
-    const supporters = routes.getByRole("link", { name: /Supporters/ });
+    const supporters = routes.getByRole("link", { name: /Individual contributions/ });
     await expect(supporters).toHaveAttribute("href", "/funding#donate");
     await expect(supporters).toHaveAttribute("data-analytics-event", "donation_cta_clicked");
   });
 
-  test("the funding hero's Donate Now jumps to the amount picker", async ({ page }) => {
+  test("the funding hero's Contribute Now jumps to the amount picker", async ({ page }) => {
     await gotoHydrated(page, "/funding");
-    await page.getByRole("link", { name: "Donate Now" }).first().click();
+    await page.getByRole("main").getByRole("link", { name: "Contribute Now" }).first().click();
     await expect(page).toHaveURL(/#donate$/);
     await expect(page.locator("#donate")).toBeInViewport();
   });

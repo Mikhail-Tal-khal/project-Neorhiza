@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { GlassPanel } from "@/components/ui/glass-panel";
 
@@ -60,6 +61,17 @@ export function Transparency() {
               advances, including research-stage changes, governance
               developments and honest accounts of setbacks. Where results are
               negative or inconclusive, they will be described as such.
+            </p>
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              Project Neorhiza is operated by Lyshub Limited, Kenya. See{" "}
+              <Link
+                href="/governance"
+                className="font-medium text-teal-700 underline underline-offset-4 dark:text-teal-200"
+              >
+                Governance &amp; Transparency
+              </Link>{" "}
+              for its oversight, current status and financial reporting
+              commitment.
             </p>
           </GlassPanel>
         </div>

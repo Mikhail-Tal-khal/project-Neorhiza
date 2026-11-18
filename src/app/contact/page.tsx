@@ -3,9 +3,9 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { ContactForm } from "@/components/ui/contact-form";
 import { ResearchDisclaimer } from "@/components/ui/research-disclaimer";
 import { GlassPanel } from "@/components/ui/glass-panel";
-import { ShieldCheck, FileText, Clock, ArrowRight } from "lucide-react";
+import { ShieldCheck, FileText, Clock, ArrowRight, Phone } from "lucide-react";
 import { createMetadata } from "@/lib/metadata";
-import { disclaimers } from "@/lib/site";
+import { company, disclaimers, site } from "@/lib/site";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { JsonLd } from "@/components/json-ld";
 import { trackAttrs } from "@/lib/analytics-events";
@@ -13,7 +13,7 @@ import { trackAttrs } from "@/lib/analytics-events";
 export const metadata: Metadata = createMetadata({
   title: "Contact",
   description:
-    "Submit a professional inquiry to Project Neorhiza — scientific, institutional, clinical, engineering, ethics and regulatory collaboration, funding and foundation support, or media and general inquiries.",
+    "Contact Project Neorhiza, operated by Lyshub Limited, Kenya — scientific collaboration, researcher applications, institutional and university partnerships, research sponsorship and general enquiries. Official business contact: +254 768 871 004.",
   path: "/contact",
 });
 
@@ -24,21 +24,35 @@ const breadcrumb = breadcrumbJsonLd([{ name: "Contact", path: "/contact" }]);
  * preselected area on mount, and the page stays statically rendered.
  */
 const routes = [
-  { label: "Researchers", text: "Scientific or engineering collaboration", href: "/contact?interest=scientific#inquiry-form" },
+  { label: "Scientific collaboration", text: "Researchers proposing collaboration", href: "/contact?interest=scientific#inquiry-form" },
+  { label: "Researcher applications", text: "Join the scientific network", href: "/contact?interest=researcher#inquiry-form" },
   {
-    label: "Institutions",
+    label: "Institutional partnerships",
     text: "Hosting, supervision or partnership",
     href: "/contact?interest=institutional#inquiry-form",
     track: trackAttrs("partnership_inquiry_started", "contact-routes"),
   },
+  {
+    label: "University collaboration",
+    text: "Academic departments and research groups",
+    href: "/contact?interest=university#inquiry-form",
+    track: trackAttrs("partnership_inquiry_started", "contact-routes-university"),
+  },
+  {
+    label: "Research sponsorship",
+    text: "Organizations sponsoring research",
+    href: "/contact?interest=sponsorship#inquiry-form",
+    track: trackAttrs("partnership_inquiry_started", "contact-routes-sponsorship"),
+  },
   // Individual support skips the form and goes straight to Stripe Checkout.
   {
-    label: "Supporters",
-    text: "Donate securely online",
+    label: "Individual contributions",
+    text: "Contribute securely online",
     href: "/funding#donate",
     track: trackAttrs("donation_cta_clicked", "contact-routes"),
   },
   { label: "Media", text: "Press and interview requests", href: "/contact?interest=media#inquiry-form" },
+  { label: "General enquiries", text: "Anything else", href: "/contact?interest=general#inquiry-form" },
 ];
 
 const notes = [
@@ -70,7 +84,7 @@ export default function ContactPage() {
           as="h1"
           eyebrow="Contact"
           title="Start a Professional Conversation"
-          lead="Whether you are a scientist, an institution, a clinician, an engineer, an ethicist or a journalist — this form routes your inquiry to the right conversation."
+          lead="Whether you are a researcher, a university, an institution, a sponsor, an ethicist or a journalist — this form routes your enquiry to the right conversation."
         />
         <ResearchDisclaimer className="mx-auto mt-8 max-w-3xl" title="Treatment notice">
           {disclaimers.treatment}
@@ -104,6 +118,36 @@ export default function ContactPage() {
           </div>
 
           <div className="grid content-start gap-4">
+            <GlassPanel tone="strong" className="flex gap-4 p-6">
+              <span
+                aria-hidden="true"
+                className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-tint text-heading"
+              >
+                <Phone className="size-5" />
+              </span>
+              <div>
+                <h2 className="font-semibold tracking-[0.01em] text-heading">Official business contact</h2>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                  {company.name}, operator of {site.name}
+                </p>
+                <a
+                  href={`tel:${company.phoneE164}`}
+                  className="mt-2 inline-flex min-h-11 items-center text-lg font-semibold text-teal-700 underline underline-offset-4 dark:text-teal-200"
+                >
+                  {company.phone}
+                </a>
+                <p className="text-sm leading-relaxed text-muted">
+                  Written enquiries:{" "}
+                  <a
+                    href={`mailto:${site.contactEmail}`}
+                    className="font-medium text-teal-700 underline underline-offset-4 dark:text-teal-200"
+                  >
+                    {site.contactEmail}
+                  </a>
+                </p>
+              </div>
+            </GlassPanel>
+
             {notes.map(({ Icon, title, text }) => (
               <GlassPanel key={title} className="flex gap-4 p-6">
                 <span
@@ -126,11 +170,14 @@ export default function ContactPage() {
             <GlassPanel className="p-6">
               <h2 className="label-caps mb-3">Data we collect</h2>
               <p className="text-sm leading-relaxed text-muted">
-                This form collects only what you enter, for the purpose of
-                responding to your inquiry. We never request medical records,
+                Enquiries are handled by {company.name}, which operates{" "}
+                {site.name}. This form collects only what you enter, for the
+                purpose of responding to your enquiry. We never request medical records,
                 patient histories, genetic information or sensitive health
-                data — and we ask you not to send them. Submissions are
-                validated and rate-limited on our servers; see the{" "}
+                data — and we ask you not to send them. Submissions travel
+                over an encrypted connection, are validated and
+                rate-limited on our servers, and are never used for
+                marketing; see the{" "}
                 <a
                   href="/privacy"
                   className="font-medium text-teal-700 underline underline-offset-4 dark:text-teal-200"

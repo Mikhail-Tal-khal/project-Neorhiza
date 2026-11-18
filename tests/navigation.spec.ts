@@ -2,14 +2,21 @@ import { expect, test } from "@playwright/test";
 import { gotoHydrated } from "./support/site";
 
 const NAV = [
-  ["Why Neorhiza", "/why-neorhiza"],
   ["Our Science", "/our-science"],
   ["Research Roadmap", "/roadmap"],
-  ["Human Impact", "/human-impact"],
   ["Collaboration", "/collaboration"],
+  ["Funding", "/funding"],
   ["Updates", "/updates"],
   ["Contact", "/contact"],
   ["Home", "/"],
+] as const;
+
+/** Grouped under the desktop "About" disclosure. */
+const ABOUT = [
+  ["About Neorhiza", "/why-neorhiza"],
+  ["Leadership", "/leadership"],
+  ["Scientific Network", "/scientific-network"],
+  ["Governance & Transparency", "/governance"],
 ] as const;
 
 test.describe("desktop navigation", () => {
@@ -23,6 +30,31 @@ test.describe("desktop navigation", () => {
       await expect(page).toHaveURL(href);
       await expect(nav.getByRole("link", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
     }
+  });
+
+  test("About disclosure opens, navigates, marks current and closes", async ({ page }) => {
+    await gotoHydrated(page, "/");
+    const nav = page.getByRole("navigation", { name: "Primary" });
+    const about = nav.getByRole("button", { name: "About" });
+    for (const [label, href] of ABOUT) {
+      await about.click();
+      await expect(about).toHaveAttribute("aria-expanded", "true");
+      await nav.getByRole("link", { name: label, exact: true }).click();
+      await expect(page).toHaveURL(href);
+      await expect(about).toHaveAttribute("aria-expanded", "false");
+      await about.click();
+      await expect(nav.getByRole("link", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
+      await page.keyboard.press("Escape");
+      await expect(nav.locator("#about-navigation")).toBeHidden();
+      await expect(about).toBeFocused();
+    }
+  });
+
+  test("header carries a prominent Support Neorhiza call to action", async ({ page }) => {
+    await gotoHydrated(page, "/");
+    const cta = page.getByRole("banner").getByRole("link", { name: "Support Neorhiza" });
+    await expect(cta).toBeVisible();
+    await expect(cta).toHaveAttribute("href", "/funding");
   });
 
   test("navigation pill does not overflow at desktop widths", async ({ page }) => {
@@ -66,6 +98,9 @@ test.describe("mobile menu", () => {
     // Tab moves from the toggle into the panel's first link.
     await page.keyboard.press("Tab");
     await expect(panel.getByRole("link", { name: "Home" })).toBeFocused();
+    for (const label of ["About Neorhiza", "Leadership", "Scientific Network", "Funding", "Governance & Transparency"]) {
+      await expect(panel.getByRole("link", { name: label, exact: true })).toBeVisible();
+    }
     await panel.getByRole("link", { name: "Our Science" }).focus();
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL("/our-science");

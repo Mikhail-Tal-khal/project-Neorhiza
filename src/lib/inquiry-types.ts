@@ -4,10 +4,13 @@
  */
 export const inquiryTypes = [
   "Scientific collaboration",
+  "Researcher application",
   "Institutional collaboration",
+  "University collaboration",
   "Clinical advisory",
   "Engineering collaboration",
   "Ethics and regulation",
+  "Research sponsorship",
   "Funding and foundation support",
   "Media inquiry",
   "General inquiry",
@@ -17,12 +20,16 @@ export type InquiryType = (typeof inquiryTypes)[number];
 
 /**
  * Short URL slugs that preselect an area of interest, e.g.
- * /contact?interest=institutional. Unknown slugs are ignored. There is no
- * funding slug: individual support goes straight to /funding#donate.
+ * /contact?interest=institutional. Unknown slugs are ignored. Individual
+ * contributions go straight to /funding#donate; "sponsorship" is for
+ * organizations and professionals discussing research sponsorship.
  */
 export const inquirySlugs: Record<string, InquiryType> = {
   scientific: "Scientific collaboration",
+  researcher: "Researcher application",
   institutional: "Institutional collaboration",
+  university: "University collaboration",
+  sponsorship: "Research sponsorship",
   clinical: "Clinical advisory",
   engineering: "Engineering collaboration",
   ethics: "Ethics and regulation",

@@ -3,7 +3,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { ResearchDisclaimer } from "@/components/ui/research-disclaimer";
 import { createMetadata } from "@/lib/metadata";
-import { disclaimers, site } from "@/lib/site";
+import { company, disclaimers, site } from "@/lib/site";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { JsonLd } from "@/components/json-ld";
 
@@ -15,19 +15,20 @@ export const metadata: Metadata = createMetadata({
 });
 
 const EFFECTIVE = "9 November 2026";
-const REVISED = "12 November 2026";
+const REVISED = "17 November 2026";
 
 // LEGAL REVIEW: the governing-law, liability and contribution/refund sections
 // are a plain-language draft. Have them reviewed by a Kenyan advocate before
 // accepting live contributions, paid advertising, fundraising or international
-// campaigns, and add the operating company's legal name
-// (docs/production-launch-checklist.md, section 2a).
+// campaigns (docs/production-launch-checklist.md, section 2a). The operating
+// company's name (Lyshub Limited) was confirmed by the Founder on
+// 2026-11-17; its registration number and registered office were not.
 const sections = [
   {
     title: "Who operates this website",
     body: [
-      `This website is operated by ${site.name}, an early-stage research initiative based in Kenya and founded by Rereu Lemein. It operates through a registered limited company. It is not yet institutionally affiliated and has no laboratory or clinical operations. Nothing on this website claims that the project is a registered charity, tax-exempt or licensed.`,
-      `Contact: ${site.contactEmail}.`,
+      `This website is operated by ${company.name}, a company registered in ${company.jurisdiction}, for ${site.name}, an early-stage research initiative founded by Rereu Lemein. In these terms, “we”, “us” and “the project” mean ${company.name} acting for ${site.name}. The project is not yet institutionally affiliated and has no laboratory or clinical operations. Nothing on this website claims that ${company.name} or the project is a registered charity, public benefit organization, tax-exempt or licensed.`,
+      `Contact: ${site.contactEmail}. Official business contact: ${company.phone}.`,
     ],
   },
   {
@@ -48,6 +49,7 @@ const sections = [
     body: [
       "You can make a voluntary one-time contribution through the contribution form on the Funding page, which takes you to a checkout page hosted by Stripe. This is the only online payment channel for Project Neorhiza. Anyone asking you to pay or donate in the name of Project Neorhiza through another channel is not acting for the project — please report it to us. Institutional or conditional support is agreed separately, in writing.",
       disclaimers.contributions,
+      ...disclaimers.contributionTerms,
       "A contribution is a gift toward early-stage work. It does not purchase goods or services, and it gives no right to research results, influence over scientific conclusions, ethical review or project decisions, or any return. Project Neorhiza makes no promise of medical outcomes, treatments or guaranteed research results.",
     ],
   },

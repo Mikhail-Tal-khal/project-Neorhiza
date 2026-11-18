@@ -38,7 +38,8 @@ export function ProgramFeature() {
               Neorhiza Liver Tissue Program
             </h3>
             <StatusBadge>
-              Proposed Program — Institutional Collaboration Required
+              Proposed research programme — institutional collaboration and
+              qualified scientific supervision required.
             </StatusBadge>
           </div>
 
@@ -51,6 +52,11 @@ export function ProgramFeature() {
             . It is to investigate how defined cell populations, tissue
             organization and controlled perfusion may work together to
             support measurable tissue function.
+          </p>
+          <p className="mt-4 max-w-3xl text-pretty font-medium leading-relaxed text-heading">
+            No laboratory research has yet begun. Neorhiza has not produced
+            a functional liver, replacement organ, transplantable tissue or
+            clinical treatment.
           </p>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
