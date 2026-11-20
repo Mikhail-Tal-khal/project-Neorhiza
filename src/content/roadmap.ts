@@ -20,7 +20,7 @@ export const roadmapPreview: RoadmapPhase[] = [
   {
     name: "Integration Phase",
     description:
-      "Multicellular organization, controlled perfusion and reproducibility studies.",
+      "Integration and reproducibility studies, building on feasibility results.",
   },
   {
     name: "Preclinical Development",
@@ -116,9 +116,9 @@ export const roadmapStages: RoadmapStage[] = [
     number: 6,
     name: "Scale and Integration Research",
     purpose:
-      "Study how multicellular organization and transport support behave as constructs become larger and more integrated — strictly as research, not manufacturing.",
+      "Study how research constructs behave as they become larger and more integrated — strictly as research, not manufacturing.",
     expectedOutput:
-      "Comparative research data on organization, transport behavior and consistency across study scales.",
+      "Comparative research data on consistency across study scales.",
     advancementRequirement:
       "Peer-reviewed or institutionally reviewed evidence that scaling questions are being answered reliably.",
     principalRisks:
