@@ -13,7 +13,7 @@ export type ScienceTopic = {
 };
 
 /**
- * The thirteen topics of the Our Science page. Every topic separates
+ * The twelve topics of the Our Science page. Every topic separates
  * established evidence from open questions and explicit non-claims, using
  * the four-row EvidenceCard format. Content is educational and high-level;
  * no confidential methods, protocols or parameters appear anywhere.
@@ -24,11 +24,11 @@ export const scienceTopics: ScienceTopic[] = [
     question: "Why DNA alone cannot be grown into an organ",
     title: "Instructions are not builders",
     established:
-      "Genome sequencing has shown that DNA carries the instructions cells use to build proteins and respond to signals. Developmental biology has equally shown that an organ emerges from cells that read, interpret and act on those instructions inside a structured, three-dimensional, signal-rich environment.",
+      "Genome sequencing has shown that DNA carries the instructions cells use to build proteins and respond to signals. Developmental biology has equally shown that an organ emerges from cells that read, interpret and act on those instructions over the course of development.",
     experimental:
       "No method exists to turn a genome, by itself, into organized living tissue. Assembling functional organ-level structure from component parts remains an open research frontier across the entire field.",
     explores:
-      "Project Neorhiza treats living cells — not abstract genetic information — as the working material of tissue engineering, and studies how cellular communities organize themselves under controlled conditions.",
+      "Project Neorhiza treats living cells — not abstract genetic information — as the working material of tissue engineering.",
     notClaiming:
       "Neorhiza does not claim to grow organs from DNA, to possess a method for doing so, or to be close to one.",
   },
@@ -63,11 +63,11 @@ export const scienceTopics: ScienceTopic[] = [
     question: "What directed differentiation means",
     title: "Guiding cells toward specialized roles",
     established:
-      "Research has demonstrated that pluripotent cells can be guided, in stages, toward specialized identities — for example, neural, cardiac or hepatic-like populations — by mimicking aspects of natural developmental signaling.",
+      "Research has demonstrated that pluripotent cells can be guided, in stages, toward specialized identities — for example, neural, cardiac or hepatic-like populations.",
     experimental:
       "Achieving the precise maturity, purity and stability that functional tissue would require remains difficult. Differentiation outcomes vary, and long-term behavior requires careful study.",
     explores:
-      "Neorhiza describes directed cell development as a research stage: generating specialized cell populations required by a selected tissue, with identity and behavior verified before any further step.",
+      "Neorhiza describes directed cell development as one stage of its long-term research pathway.",
     notClaiming:
       "Neorhiza does not publish differentiation methods, claim clinical-grade cell production, or promise any specific differentiation outcome.",
   },
@@ -80,33 +80,20 @@ export const scienceTopics: ScienceTopic[] = [
     experimental:
       "Coordinating several cell populations so that they assemble, communicate and mature together remains a central unsolved problem in tissue engineering.",
     explores:
-      "Neorhiza's proposed research direction explicitly includes multicellular organization: studying how defined populations behave together within supportive three-dimensional environments.",
+      "Neorhiza's long-term research interests include how multiple cell populations function together.",
     notClaiming:
-      "Neorhiza does not claim to have produced multicellular tissue with organ-level function, or to hold validated multicellular assembly methods.",
-  },
-  {
-    slug: "3d-organization",
-    question: "Why three-dimensional organization matters",
-    title: "Architecture is part of the function",
-    established:
-      "Organ function depends on three-dimensional architecture: where cells sit, how they contact one another, and how transport networks thread through the structure. Flat, two-dimensional cultures cannot reproduce this geometry.",
-    experimental:
-      "Building and maintaining accurate three-dimensional organization at meaningful sizes remains an open engineering and biological challenge.",
-    explores:
-      "Neorhiza treats three-dimensional environments as a core research interest — how cells attach, communicate and organize within structures designed for study.",
-    notClaiming:
-      "Neorhiza does not claim to have solved three-dimensional tissue assembly at organ scale.",
+      "Neorhiza does not claim to have produced multicellular tissue with organ-level function, or to hold validated methods for doing so.",
   },
   {
     slug: "vascularization",
     question: "Why vascularization remains difficult",
     title: "Every cell needs a delivery line",
     established:
-      "In natural tissue, vessels deliver oxygen and nutrients and remove waste within tens to hundreds of micrometers of nearly every cell. Research has repeatedly shown that engineered tissue thicker than this limit fails without transport support.",
+      "In natural tissue, vessels deliver oxygen and nutrients and remove waste close to nearly every cell. Research has repeatedly shown that engineered tissue beyond a small size fails without transport support.",
     experimental:
       "Creating stable, connected, appropriately patterned vessel-like networks inside engineered tissue is widely regarded as one of the field's greatest unsolved challenges.",
     explores:
-      "Neorhiza's pathway names transport and vascular support as an explicit research stage, and controlled perfusion as a proposed subject of study in its first program.",
+      "Neorhiza's pathway names transport and vascular support as a research stage.",
     notClaiming:
       "Neorhiza does not claim to have solved vascularization or to possess validated vascularization technology.",
   },
@@ -115,11 +102,11 @@ export const scienceTopics: ScienceTopic[] = [
     question: "What a bioreactor does",
     title: "A controlled environment for growing tissue",
     established:
-      "Bioreactors are laboratory systems that maintain controlled environmental conditions — such as movement of fluids, gas exchange and physical signals — for biological cultures. They are established tools of cell culture and tissue research.",
+      "Bioreactors are laboratory systems that maintain controlled conditions for biological cultures. They are established tools of cell culture and tissue research.",
     experimental:
       "Determining the conditions that help engineered tissue mature reliably is an active research question, and results depend strongly on tissue type and design choices.",
     explores:
-      "Neorhiza's pathway includes controlled maturation in systems that provide appropriate flow and environmental signals, studied under supervision with defined measurements.",
+      "Neorhiza's pathway includes a controlled maturation stage, to be studied only under supervision with defined measurements.",
     notClaiming:
       "Neorhiza does not publish bioreactor specifications, claim validated maturation protocols, or operate bioreactor systems at this time.",
   },

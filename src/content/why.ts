@@ -9,7 +9,7 @@ export const whyPanels = [
   },
   {
     title: "Cross-Disciplinary Engineering",
-    text: "Connect biology, medicine, materials science and mechanical engineering. The hard problems live between disciplines, not inside any single one.",
+    text: "Connect biology, medicine and engineering. The hard problems live between disciplines, not inside any single one.",
   },
   {
     title: "Accessible Innovation",

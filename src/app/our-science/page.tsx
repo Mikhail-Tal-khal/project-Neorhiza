@@ -12,7 +12,7 @@ import { JsonLd } from "@/components/json-ld";
 export const metadata: Metadata = createMetadata({
   title: "Our Science",
   description:
-    "Thirteen honest questions at the heart of tissue engineering — what science has demonstrated, what remains experimental, what Project Neorhiza proposes to explore, and what it is not yet claiming.",
+    "Twelve honest questions at the heart of tissue engineering — what science has demonstrated, what remains experimental, what Project Neorhiza proposes to explore, and what it is not yet claiming.",
   path: "/our-science",
 });
 
@@ -43,7 +43,7 @@ export default function OurSciencePage() {
           </p>
           <p className="mt-4 text-sm leading-relaxed text-muted">
             Each arrow represents a stage of dedicated research, with open
-            questions at every step. The thirteen topics below explain why
+            questions at every step. The twelve topics below explain why
             each stage is scientifically demanding — and honest about what
             is not yet known.
           </p>
