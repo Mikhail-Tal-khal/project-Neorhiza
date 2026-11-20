@@ -119,7 +119,7 @@ Consequences:
 | donate / fund / invest / campaign / payment / pay / crowdfund | Pass | "donated organs" / "donation and transplantation" (organ-transplant context: human-need, human-impact, vision); "No payment processing, donation handling…" (privacy disclaimer); "investigate" (word stem). README/PR template mention them only as prohibitions. `Permissions-Policy: payment=()` disables the Payment API |
 | "apply for treatment", "enroll", "book a consultation" | Pass | "does not offer medical treatment or patient enrollment" (required disclaimer, contact + footer) |
 | testimonial, "clinically proven", "guaranteed", "cure", unsourced stats | Pass | "not guaranteed" / "No guaranteed outcomes" / "A guaranteed medical solution" (in the *What Neorhiza is not* list) are all negations. Stats: "2012 Nobel Prize" (iPSC, public fact); "tens to hundreds of micrometers" (general diffusion limit, educational) |
-| Confidential parameters (concentrations, flow, pressure, O₂ %, densities, seeding, ratios, reagents, genes as methods) | Pass | None. "oxygen and nutrients" and "pressure cycles" are physiology descriptions; "seeding vessel-associated cells" is a literature-level description without parameters |
+| Confidential parameters and methods | Pass | None. Method-level wording was further reduced in the 2026-11-19 disclosure review |
 | Invented founder credentials | Pass | Only owner-supplied credentials appear (Computer Science, Technical University of Mombasa; OSINT Forensic Analysis Operations; Google Cybersecurity Professional Certificate) |
 
 ### 1.8 Forms (spec §18)
