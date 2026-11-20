@@ -75,8 +75,8 @@ export default function ScientificNetworkPage() {
               </h2>
               <p className="mt-4 text-pretty leading-relaxed text-ink">
                 The first proposed research programme — a liver-tissue
-                perfusion feasibility study — needs expertise across biology,
-                engineering and research ethics. Neorhiza is seeking qualified
+                feasibility study — needs expertise across biology,
+                engineering, clinical practice, ethics and regulation. Neorhiza is seeking qualified
                 professionals willing to advise, review or collaborate.
               </p>
               <p className="mt-4 text-sm leading-relaxed text-muted">

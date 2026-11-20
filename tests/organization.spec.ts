@@ -93,7 +93,7 @@ test("scientific network separates appointed, confirmed, prospective and open ro
     const card = main.getByRole("listitem").filter({ has: page.getByRole("heading", { name: title }) });
     await expect(card, title).toContainText(status);
   }
-  await expect(main.getByText("Bioreactor engineers")).toBeVisible();
+  await expect(main.getByText("Regulatory professionals")).toBeVisible();
   await expect(main.getByRole("link", { name: "Apply or Express Interest" })).toHaveAttribute(
     "href",
     "/contact?interest=researcher#inquiry-form"

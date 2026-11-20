@@ -70,15 +70,11 @@ export const networkCategories = [
 
 /** Disciplines Neorhiza intends to recruit (brief, section 3). */
 export const recruitmentDisciplines = [
-  "Stem-cell biology researchers",
-  "PhD-level tissue-engineering specialists",
-  "Regenerative medicine scientists",
-  "Biomedical engineers",
-  "Mechanical engineers",
-  "Hepatology and liver biology specialists",
-  "Vascular biology specialists",
-  "Bioreactor engineers",
-  "Bioethics and regulatory professionals",
+  "Biology researchers",
+  "Engineers",
+  "Clinicians",
+  "Ethics professionals",
+  "Regulatory professionals",
 ] as const;
 
 /** Funding priorities (brief, section 4). No allocations or targets. */
@@ -104,12 +100,8 @@ export const fundingPriorities = [
     text: "Securing access to appropriate facilities through institutional arrangements.",
   },
   {
-    title: "Research equipment and bioreactor development",
-    text: "Equipment needed for supervised perfusion and bioreactor research.",
-  },
-  {
-    title: "Cell-culture materials and biomaterials",
-    text: "Consumables and materials for future approved research.",
+    title: "Research equipment and consumables",
+    text: "Research equipment and consumables for future approved research.",
   },
   {
     title: "Feasibility studies and scientific testing",
