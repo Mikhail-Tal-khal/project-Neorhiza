@@ -2,14 +2,14 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { VesselDivider } from "@/components/ui/vessel-divider";
 
 const fields = [
-  { name: "Stem-cell biology", note: "The living starting material" },
+  { name: "Cell biology", note: "The living starting material" },
   { name: "Tissue engineering", note: "Structure that supports function" },
-  { name: "Biomaterials", note: "Environments cells can inhabit" },
-  { name: "Vascular biology", note: "Transport for every cell" },
-  { name: "Bioreactor engineering", note: "Controlled maturation systems" },
+  { name: "Engineering", note: "Measurable research systems" },
+  { name: "Clinical medicine", note: "Grounded in patient need" },
   { name: "Functional testing", note: "Evidence over appearance" },
   { name: "Quality systems", note: "Consistency and traceability" },
-  { name: "Ethical and regulatory science", note: "Responsible translation" },
+  { name: "Research ethics", note: "Oversight from the first day" },
+  { name: "Regulatory science", note: "Responsible translation" },
 ];
 
 /**

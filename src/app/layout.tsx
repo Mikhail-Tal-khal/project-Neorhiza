@@ -102,15 +102,10 @@ const structuredData = {
       founder: {
         "@type": "Person",
         name: "Rereu Lemein",
-        url: "https://lemein.vercel.app",
-        sameAs: ["https://github.com/Mikhail-Tal-khal"],
       },
       knowsAbout: [
         "Tissue engineering",
         "Regenerative medicine research",
-        "Vascular biology",
-        "Biomaterials",
-        "Bioreactor engineering",
         "Research ethics",
       ],
     },

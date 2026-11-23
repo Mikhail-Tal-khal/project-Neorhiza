@@ -1,23 +1,10 @@
 import Image from "next/image";
-import { Globe, Mail, MapPin } from "lucide-react";
-import { GithubIcon } from "@/components/icons/github-icon";
+import { Mail, MapPin } from "lucide-react";
 import { GlassCard, GlassPanel } from "@/components/ui/glass-panel";
 import { site } from "@/lib/site";
 import { trackAttrs } from "@/lib/analytics-events";
 
 const founderLinks = [
-  {
-    label: "Portfolio",
-    value: "lemein.vercel.app",
-    href: "https://lemein.vercel.app",
-    icon: Globe,
-  },
-  {
-    label: "GitHub",
-    value: "Mikhail-Tal-khal",
-    href: "https://github.com/Mikhail-Tal-khal",
-    icon: GithubIcon,
-  },
   {
     label: "Project email",
     value: site.contactEmail,
@@ -141,9 +128,7 @@ export function FounderProfile({ headingId = "founder-name" }: { headingId?: str
           </p>
           <p className="mt-4 leading-relaxed text-ink">
             He holds a Computer Science qualification from the
-            Technical University of Mombasa, an OSINT Forensic Analysis
-            Operations certification and the Google Cybersecurity
-            Professional Certificate. He has also mentored junior
+            Technical University of Mombasa. He has also mentored junior
             engineers and trained thousands of people in digital
             safety and fraud awareness.
           </p>

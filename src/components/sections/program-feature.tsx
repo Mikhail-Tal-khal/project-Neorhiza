@@ -4,20 +4,9 @@ import { GlassPanel } from "@/components/ui/glass-panel";
 import { ResearchDisclaimer } from "@/components/ui/research-disclaimer";
 import { disclaimers } from "@/lib/site";
 
-const measurementCategories = [
-  "Cell survival",
-  "Tissue organization",
-  "Protein production",
-  "Metabolic activity",
-  "Transport behavior",
-  "Reproducibility",
-  "Process consistency",
-];
-
 /**
- * First proposed program — a focused feasibility question. Public
- * measurement categories only; no exact assays, thresholds, process
- * conditions or experimental settings are published anywhere.
+ * First proposed program — a focused feasibility question. No methods
+ * or settings are published anywhere.
  */
 export function ProgramFeature() {
   return (
@@ -49,9 +38,7 @@ export function ProgramFeature() {
             <strong className="font-semibold">
               not to manufacture a transplantable liver
             </strong>
-            . It is to investigate how defined cell populations, tissue
-            organization and controlled perfusion may work together to
-            support measurable tissue function.
+            . It is to answer one focused, measurable research question.
           </p>
           <p className="mt-4 max-w-3xl text-pretty font-medium leading-relaxed text-heading">
             No laboratory research has yet begun. Neorhiza has not produced
@@ -59,7 +46,7 @@ export function ProgramFeature() {
             clinical treatment.
           </p>
 
-          <div className="mt-8 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="mt-8">
             <div className="glass rounded-2xl p-6">
               <h4 className="label-caps mb-3">Proposed research question</h4>
               <p className="text-pretty text-lg font-medium leading-relaxed text-heading">
@@ -67,25 +54,6 @@ export function ProgramFeature() {
                 viability of a small multicellular liver-tissue construct
                 compared with an equivalent non-perfused construct?
               </p>
-            </div>
-            <div className="glass rounded-2xl p-6">
-              <h4 className="label-caps mb-3">
-                Public measurement categories
-              </h4>
-              <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {measurementCategories.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-2.5 text-sm leading-relaxed text-muted"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="mt-[0.5rem] size-1.5 shrink-0 rounded-full bg-coral-500"
-                    />
-                    {item}
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
 

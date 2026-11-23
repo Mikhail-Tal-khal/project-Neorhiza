@@ -1,9 +1,8 @@
 import type { JourneyStage } from "@/components/ui/scientific-journey";
 
 /**
- * The seven-stage scientific pathway shown on the home page (verbatim
- * stage copy from the brand specification). High-level only — no methods,
- * parameters or procedures.
+ * The seven-stage scientific pathway shown on the home page. High-level
+ * only — no methods, parameters or procedures.
  */
 export const journeyStages: JourneyStage[] = [
   {
@@ -24,7 +23,7 @@ export const journeyStages: JourneyStage[] = [
   {
     number: 4,
     title: "Tissue Organization",
-    text: "Cells require a suitable three-dimensional environment in which to attach, communicate and organize.",
+    text: "Specialized cells must come together and organize into tissue-like structure.",
   },
   {
     number: 5,
@@ -34,7 +33,7 @@ export const journeyStages: JourneyStage[] = [
   {
     number: 6,
     title: "Controlled Maturation",
-    text: "Engineered tissue may be maintained in systems that provide appropriate flow and environmental signals.",
+    text: "Engineered tissue may be maintained under controlled laboratory conditions while it develops.",
   },
   {
     number: 7,
